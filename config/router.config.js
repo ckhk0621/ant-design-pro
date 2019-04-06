@@ -46,6 +46,19 @@ export default [
           },
         ],
       },
+      // posts
+      {
+        path: '/posts',
+        icon: 'post',
+        name: 'posts',
+        routes: [
+          {
+            path: '/posts/basic-form',
+            name: 'basicform',
+            component: './Forms/BasicForm',
+          },
+        ],
+      },
       // forms
       {
         path: '/form',
