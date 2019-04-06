@@ -7,6 +7,8 @@ export default {
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',
   'menu.dashboard.workplace': 'Workplace',
+  'menu.posts': 'Posts',
+  'menu.posts.basicform': 'Basic Form',
   'menu.form': 'Form',
   'menu.form.basicform': 'Basic Form',
   'menu.form.stepform': 'Step Form',

@@ -77,6 +77,7 @@ export default {
         ...state,
         status: payload.status,
         type: payload.type,
+        token: payload.token,
       };
     },
   },
