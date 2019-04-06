@@ -1,5 +1,6 @@
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { createLogger } from 'redux-logger';
 
 const persistConfig = {
   key: 'redux-storage',
@@ -21,6 +22,7 @@ export const dva = {
       console.error(err.message);
     },
     extraEnhancers: [persistEnhancer()],
+    onAction: createLogger(),
   },
 };
 
