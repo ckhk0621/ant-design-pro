@@ -22,7 +22,7 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 @connect(({ loading }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+  submitting: loading.effects['notice/submitRegularForm'],
 }))
 @Form.create()
 class BasicForms extends PureComponent {
@@ -32,7 +32,7 @@ class BasicForms extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
-          type: 'form/submitRegularForm',
+          type: 'notice/submitRegularForm',
           payload: values,
         });
       }
