@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { fakeSubmitForm } from '@/services/api';
+import { fakeSubmitForm, submitNoticeForm } from '@/services/api';
 
 export default {
   namespace: 'notice',
@@ -15,12 +15,16 @@ export default {
   },
 
   effects: {
-    *submitRegularForm({ payload }, { call }) {
-      yield call(fakeSubmitForm, payload);
-      message.success('提交成功');
+    *submitRegularForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitNoticeForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('成功提交了');
+      }
+      // message.success('真的提交成功');
     },
     *submitStepForm({ payload }, { call, put }) {
-      yield call(fakeSubmitForm, payload);
+      yield call(submitNoticeForm, payload);
       yield put({
         type: 'saveStepFormData',
         payload,
