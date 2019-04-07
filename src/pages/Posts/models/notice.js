@@ -12,6 +12,7 @@ export default {
       receiverName: '',
       amount: '',
     },
+    images: null,
   },
 
   effects: {
@@ -22,6 +23,12 @@ export default {
         message.success('成功提交了');
       }
       // message.success('真的提交成功');
+    },
+    *uploadImages({ payload }, { put }) {
+      yield put({
+        type: 'saveImagesToFormData',
+        payload,
+      });
     },
     *submitStepForm({ payload }, { call, put }) {
       yield call(submitNoticeForm, payload);
@@ -43,6 +50,14 @@ export default {
         ...state,
         step: {
           ...state.step,
+          ...payload,
+        },
+      };
+    },
+    saveImagesToFormData(state, { payload }) {
+      return {
+        ...state,
+        images: {
           ...payload,
         },
       };

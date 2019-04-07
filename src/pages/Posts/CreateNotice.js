@@ -2,25 +2,36 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio } from 'antd';
+import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
 
-@connect(({ loading }) => ({
+@connect(({ notice, loading }) => ({
   submitting: loading.effects['notice/submitRegularForm'],
+  images: notice.images,
 }))
 @Form.create()
 class CreateNotice extends PureComponent {
   handleSubmit = e => {
-    const { dispatch, form } = this.props;
+    const { dispatch, form, images } = this.props;
+    let submitValues;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
+      submitValues = !_.isEmpty(images)
+        ? (submitValues = {
+            ...values,
+            images,
+          })
+        : (submitValues = values);
+
       if (!err) {
         dispatch({
           type: 'notice/submitRegularForm',
-          payload: values,
+          payload: submitValues,
         });
         form.resetFields();
       }
@@ -90,6 +101,13 @@ class CreateNotice extends PureComponent {
                 />
               )}
             </FormItem>
+
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.label" />}>
+              {getFieldDecorator('images', {
+                rules: [],
+              })(<UploadImage />)}
+            </FormItem>
+
             <FormItem
               {...formItemLayout}
               label={<FormattedMessage id="form.public.label" />}
