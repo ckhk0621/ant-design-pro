@@ -3,14 +3,14 @@ import { message } from 'antd';
 import { fakeSubmitForm } from '@/services/api';
 
 export default {
-  namespace: 'form',
+  namespace: 'notice',
 
   state: {
     step: {
-      payAccount: 'ant-design@alipay.com',
-      receiverAccount: 'test@example.com',
-      receiverName: 'Alex',
-      amount: '500',
+      payAccount: '',
+      receiverAccount: '',
+      receiverName: '',
+      amount: '',
     },
   },
 
