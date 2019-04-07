@@ -19,9 +19,6 @@ export default {
         type: 'changeLoginStatus',
         payload: response,
       });
-
-      console.log(`login response=====`, response);
-
       // Login successfully
       if (response.status === 'ok') {
         reloadAuthorized();

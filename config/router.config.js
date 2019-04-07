@@ -46,16 +46,21 @@ export default [
           },
         ],
       },
-      // posts
+      // notices
       {
-        path: '/posts',
+        path: '/notices',
         icon: 'form',
-        name: 'posts',
+        name: 'notices',
         routes: [
           {
-            path: '/posts/notice',
-            name: 'Notice',
-            component: './Posts/BasicForm',
+            path: '/notices/all',
+            name: 'all',
+            component: './Posts/CreateNotice',
+          },
+          {
+            path: '/notices/notice',
+            name: 'createNotice',
+            component: './Posts/CreateNotice',
           },
         ],
       },

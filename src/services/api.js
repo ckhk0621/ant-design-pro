@@ -1,4 +1,5 @@
 import { stringify } from 'qs';
+import SITE_URL from './setting';
 import request from '@/utils/request';
 
 export async function queryProjectNotice() {
@@ -39,6 +40,16 @@ export async function updateRule(params = {}) {
     body: {
       ...params.body,
       method: 'update',
+    },
+  });
+}
+
+export async function submitNoticeForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/notices`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
     },
   });
 }
