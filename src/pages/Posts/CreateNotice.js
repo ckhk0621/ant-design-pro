@@ -6,6 +6,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,18 +30,23 @@ class CreateNotice extends PureComponent {
   handleSubmit = e => {
     const { dispatch, form, images } = this.props;
     let submitValues;
+    let submitImages;
     e.preventDefault();
     form.validateFields((err, values) => {
-      submitValues = !_.isEmpty(images)
-        ? (submitValues = {
-            ...values,
-            content: values.content.toHTML(),
-            images,
-          })
-        : (submitValues = {
-            ...values,
-            content: values.content.toHTML(),
-          });
+      if (!_.isEmpty(images)) {
+        submitImages = (_.toArray(images) || []).map(d => ({
+          name: d.name,
+          thumbUrl: d.thumbUrl,
+          type: d.type,
+          uid: d.uid,
+        }));
+      }
+
+      submitValues = {
+        ...values,
+        content: values.content.toHTML(),
+        images: submitImages,
+      };
 
       if (!err) {
         dispatch({
@@ -150,11 +156,11 @@ class CreateNotice extends PureComponent {
               )}
             </FormItem>
 
-            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {
                 rules: [],
               })(<UploadImage />)}
-            </FormItem> */}
+            </FormItem>
 
             <FormItem
               {...formItemLayout}

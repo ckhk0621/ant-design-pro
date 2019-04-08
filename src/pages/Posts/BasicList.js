@@ -6,6 +6,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import { NavLink, withRouter } from 'dva/router';
 import router from 'umi/router';
 import moment from 'moment';
+import _ from 'lodash';
 import { connect } from 'dva';
 import {
   List,
@@ -163,20 +164,10 @@ class BasicList extends PureComponent {
       </div>
     );
 
-    const paginationProps = {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      pageSize: 5,
-      total: 50,
-    };
-
-    const ListContent = ({ data: { author, date } }) => (
+    const ListContent = ({ data: { author } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
           <p>{author}</p>
-        </div>
-        <div className={styles.listContentItem}>
-          <p>{moment(date).format('YYYY-MM-DD HH:mm')}</p>
         </div>
       </div>
     );
@@ -357,16 +348,25 @@ class BasicList extends PureComponent {
               size="large"
               rowKey="id"
               loading={loading}
-              pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
                 <List.Item actions={[<MoreBtn current={item} />]}>
                   <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                    avatar={
+                      <Avatar
+                        src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
+                        shape="square"
+                        size="large"
+                      />
+                    }
                     /* eslint-disable */
-                    title={<NavLink to={`/notices/single/${item._id}`}>{item.title}</NavLink>}
+                    title={
+                      <NavLink style={{ fontSize: 16 }} to={`/notices/single/${item._id}`}>
+                        {item.title}
+                      </NavLink>
+                    }
                     /* eslint-enable */
-                    description={<div dangerouslySetInnerHTML={{ __html: `${item.content}` }} />}
+                    description={moment(item.date).format('YYYY-MM-DD HH:mm')}
                   />
                   <ListContent data={item} />
                 </List.Item>

@@ -66,7 +66,7 @@ export default {
       const token = yield select(state => state.login.token);
       const response = yield call(submitNoticeForm, payload, token);
       if (response.status === 'ok') {
-        message.success('成功提交了');
+        message.success('Notice created');
       }
     },
     *uploadImages({ payload }, { put }) {
