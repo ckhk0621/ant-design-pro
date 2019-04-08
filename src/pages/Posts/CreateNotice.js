@@ -94,8 +94,8 @@ class CreateNotice extends PureComponent {
 
     return (
       <PageHeaderWrapper
-        title={<FormattedMessage id="app.forms.basic.title" />}
-        content={<FormattedMessage id="app.forms.basic.description" />}
+        title={<FormattedMessage id="app.notice.create.form.title" />}
+        content={<FormattedMessage id="app.notice.create.form.description" />}
       >
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
@@ -133,10 +133,8 @@ class CreateNotice extends PureComponent {
                   {
                     required: true,
                     validator: (value, callback) => {
-                      if (value.isEmpty()) {
+                      if (_.isEmpty(value)) {
                         callback(formatMessage({ id: 'form.content.placeholder' }));
-                      } else {
-                        callback();
                       }
                     },
                   },
@@ -146,7 +144,16 @@ class CreateNotice extends PureComponent {
                   className="my-editor"
                   controls={controls}
                   placeholder={formatMessage({ id: 'form.content.placeholder' })}
-                  contentStyle={{ height: 210 }}
+                  contentStyle={{
+                    height: 210,
+                    borderWidth: 1,
+                    borderColor: '#d9d9d9',
+                    borderStyle: 'solid',
+                    borderRadius: 4,
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                    borderTop: 'none',
+                  }}
                 />
               )}
             </FormItem>
