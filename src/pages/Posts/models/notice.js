@@ -13,7 +13,12 @@ export default {
   namespace: 'notice',
 
   state: {
-    single: null,
+    single: {
+      post: {
+        title: '',
+        content: '',
+      },
+    },
     list: [],
     images: null,
   },

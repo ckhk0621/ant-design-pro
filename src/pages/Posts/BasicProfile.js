@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Card, Button } from 'antd';
+import router from 'umi/router';
 import { withRouter } from 'dva/router';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -21,13 +22,13 @@ class BasicProfile extends Component {
   }
 
   render() {
-    const { loading, post, history } = this.props;
+    const { loading, post } = this.props;
     return (
       <PageHeaderWrapper title={post.title} loading={loading}>
         <Card bordered={false}>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
           <div style={{ paddingTop: 30 }}>
-            <Button type="primary" onClick={() => history.back()}>
+            <Button type="primary" onClick={() => router.go(-1)}>
               Back
             </Button>
           </div>
