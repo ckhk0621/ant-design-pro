@@ -62,6 +62,12 @@ export default [
             name: 'add-new',
             component: './Posts/CreateNotice',
           },
+          {
+            path: '/notices/single/:id',
+            name: 'single',
+            hideInMenu: true,
+            component: './Posts/BasicProfile',
+          },
         ],
       },
       // forms
