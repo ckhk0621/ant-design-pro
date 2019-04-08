@@ -1,14 +1,14 @@
+import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
+import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const { TextArea } = Input;
 
 @connect(({ notice, loading }) => ({
   submitting: loading.effects['notice/submitRegularForm'],
@@ -16,6 +16,16 @@ const { TextArea } = Input;
 }))
 @Form.create()
 class CreateNotice extends PureComponent {
+  componentDidMount() {
+    // 异步设置编辑器内容
+    setTimeout(() => {
+      const { form } = this.props;
+      form.setFieldsValue({
+        content: BraftEditor.createEditorState(''),
+      });
+    }, 1000);
+  }
+
   handleSubmit = e => {
     const { dispatch, form, images } = this.props;
     let submitValues;
@@ -24,9 +34,13 @@ class CreateNotice extends PureComponent {
       submitValues = !_.isEmpty(images)
         ? (submitValues = {
             ...values,
+            content: values.content.toHTML(),
             images,
           })
-        : (submitValues = values);
+        : (submitValues = {
+            ...values,
+            content: values.content.toHTML(),
+          });
 
       if (!err) {
         dispatch({
@@ -48,6 +62,16 @@ class CreateNotice extends PureComponent {
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
+    const controls = [
+      'bold',
+      'italic',
+      'underline',
+      'text-color',
+      'separator',
+      'link',
+      'separator',
+      'media',
+    ];
 
     const formItemLayout = {
       labelCol: {
@@ -85,7 +109,7 @@ class CreateNotice extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
+            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
               {getFieldDecorator('content', {
                 rules: [
                   {
@@ -100,13 +124,38 @@ class CreateNotice extends PureComponent {
                   rows={4}
                 />
               )}
+            </FormItem> */}
+
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
+              {getFieldDecorator('content', {
+                validateTrigger: 'onBlur',
+                rules: [
+                  {
+                    required: true,
+                    validator: (value, callback) => {
+                      if (value.isEmpty()) {
+                        callback(formatMessage({ id: 'form.content.placeholder' }));
+                      } else {
+                        callback();
+                      }
+                    },
+                  },
+                ],
+              })(
+                <BraftEditor
+                  className="my-editor"
+                  controls={controls}
+                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
+                  contentStyle={{ height: 210 }}
+                />
+              )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
+            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {
                 rules: [],
               })(<UploadImage />)}
-            </FormItem>
+            </FormItem> */}
 
             <FormItem
               {...formItemLayout}
