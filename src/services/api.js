@@ -2,6 +2,22 @@ import { stringify } from 'qs';
 import SITE_URL from './setting';
 import request from '@/utils/request';
 
+export async function submitNoticeForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/notices`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function queryNotices() {
+  return request(`${SITE_URL.SERVER_API}/api/notices`, {
+    method: 'GET',
+  });
+}
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -40,16 +56,6 @@ export async function updateRule(params = {}) {
     body: {
       ...params.body,
       method: 'update',
-    },
-  });
-}
-
-export async function submitNoticeForm(params, token) {
-  return request(`${SITE_URL.SERVER_API}/api/notices`, {
-    method: 'POST',
-    body: params,
-    headers: {
-      Authorization: token,
     },
   });
 }
@@ -133,10 +139,6 @@ export async function fakeRegister(params) {
     method: 'POST',
     body: params,
   });
-}
-
-export async function queryNotices(params = {}) {
-  return request(`/api/notices?${stringify(params)}`);
 }
 
 export async function getFakeCaptcha(mobile) {

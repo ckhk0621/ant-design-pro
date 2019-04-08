@@ -55,11 +55,11 @@ export default [
           {
             path: '/notices/all',
             name: 'all',
-            component: './Posts/CreateNotice',
+            component: './Posts/BasicList',
           },
           {
             path: '/notices/notice',
-            name: 'create-notice',
+            name: 'add-new',
             component: './Posts/CreateNotice',
           },
         ],
