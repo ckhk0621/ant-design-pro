@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { findDOMNode } from 'react-dom';
 import { formatMessage, FormattedMessage } from 'umi/locale';
+import { NavLink, withRouter } from 'dva/router';
 import router from 'umi/router';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -200,11 +201,11 @@ class BasicList extends PureComponent {
         return (
           <Result
             type="success"
-            title="操作成功"
-            description="一系列的信息描述，很短同样也可以带标点。"
+            title="Notice updated"
+            description=""
             actions={
               <Button type="primary" onClick={this.handleDone}>
-                知道了
+                OK
               </Button>
             }
             className={styles.formResult}
@@ -362,7 +363,9 @@ class BasicList extends PureComponent {
                 <List.Item actions={[<MoreBtn current={item} />]}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={<a href={item.href}>{item.title}</a>}
+                    /* eslint-disable */
+                    title={<NavLink to={`/notices/single/${item._id}`}>{item.title}</NavLink>}
+                    /* eslint-enable */
                     description={<div dangerouslySetInnerHTML={{ __html: `${item.content}` }} />}
                   />
                   <ListContent data={item} />
@@ -387,4 +390,4 @@ class BasicList extends PureComponent {
   }
 }
 
-export default BasicList;
+export default withRouter(BasicList);

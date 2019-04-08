@@ -18,6 +18,12 @@ export async function queryNotices() {
   });
 }
 
+export async function querySingleNotice(id) {
+  return request(`${SITE_URL.SERVER_API}/api/notices/${id}`, {
+    method: 'GET',
+  });
+}
+
 export async function deleteNotice(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/notices/${params.id}`, {
     method: 'DELETE',

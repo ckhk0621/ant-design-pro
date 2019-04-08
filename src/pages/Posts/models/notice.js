@@ -6,12 +6,14 @@ import {
   queryNotices,
   deleteNotice,
   updateNotice,
+  querySingleNotice,
 } from '@/services/api';
 
 export default {
   namespace: 'notice',
 
   state: {
+    single: null,
     list: [],
     images: null,
   },
@@ -23,6 +25,16 @@ export default {
       if (response) {
         yield put({
           type: 'saveNotices',
+          payload,
+        });
+      }
+    },
+    *single({ id }, { call, put }) {
+      const response = yield call(querySingleNotice, id);
+      const payload = response.post;
+      if (response.result === 'ok') {
+        yield put({
+          type: 'saveSingleNotice',
           payload,
         });
       }
@@ -77,6 +89,13 @@ export default {
       return {
         ...state,
         list: payload,
+      };
+    },
+    saveSingleNotice(state, { payload }) {
+      console.log(`saveSingleNotice===`, payload);
+      return {
+        ...state,
+        single: payload,
       };
     },
     saveStepFormData(state, { payload }) {
