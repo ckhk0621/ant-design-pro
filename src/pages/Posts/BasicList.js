@@ -1,5 +1,8 @@
+import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
+import BraftEditor from 'braft-editor';
 import { findDOMNode } from 'react-dom';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -16,6 +19,7 @@ import {
   Form,
   DatePicker,
   Select,
+  Radio,
 } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -24,8 +28,8 @@ import Result from '@/components/Result';
 import styles from './BasicList.less';
 
 const FormItem = Form.Item;
-const SelectOption = Select.Option;
-const { Search, TextArea } = Input;
+const { Option } = Select;
+const { Search } = Input;
 
 @connect(({ notice, loading }) => ({
   list: notice.list,
@@ -69,6 +73,12 @@ class BasicList extends PureComponent {
       visible: true,
       current: item,
     });
+    setTimeout(() => {
+      const { form } = this.props;
+      form.setFieldsValue({
+        content: BraftEditor.createEditorState(item.content),
+      });
+    }, 300);
   };
 
   handleDone = () => {
@@ -90,7 +100,9 @@ class BasicList extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     const { current } = this.state;
-    const id = current ? current.id : '';
+    /* eslint-disable */
+    const id = current ? current._id : '';
+    /* eslint-enable */
 
     setTimeout(() => this.addBtn.blur(), 0);
     form.validateFields((err, fieldsValue) => {
@@ -98,9 +110,10 @@ class BasicList extends PureComponent {
       this.setState({
         done: true,
       });
+
       dispatch({
-        type: 'list/submit',
-        payload: { id, ...fieldsValue },
+        type: 'notice/update',
+        payload: { id, ...fieldsValue, content: fieldsValue.content.toHTML() },
       });
     });
   };
@@ -116,7 +129,7 @@ class BasicList extends PureComponent {
   render() {
     const { list, loading } = this.props;
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator, getFieldValue },
     } = this.props;
     const { visible, done, current = {} } = this.state;
 
@@ -137,7 +150,7 @@ class BasicList extends PureComponent {
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
-      : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
+      : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
     const extraContent = (
       <div className={styles.extraContent}>
@@ -198,43 +211,119 @@ class BasicList extends PureComponent {
           />
         );
       }
+      const controls = [
+        'bold',
+        'italic',
+        'underline',
+        'text-color',
+        'separator',
+        'link',
+        'separator',
+        'media',
+      ];
+
       return (
         <Form onSubmit={this.handleSubmit}>
-          <FormItem label="任务名称" {...this.formLayout}>
+          <FormItem label="Title" {...this.formLayout}>
             {getFieldDecorator('title', {
-              rules: [{ required: true, message: '请输入任务名称' }],
+              rules: [
+                { required: true, message: formatMessage({ id: 'validation.title.required' }) },
+              ],
               initialValue: current.title,
-            })(<Input placeholder="请输入" />)}
+            })(<Input placeholder={formatMessage({ id: 'form.title.label' })} />)}
           </FormItem>
-          <FormItem label="开始时间" {...this.formLayout}>
-            {getFieldDecorator('createdAt', {
-              rules: [{ required: true, message: '请选择开始时间' }],
-              initialValue: current.createdAt ? moment(current.createdAt) : null,
+          <FormItem label="Update time" {...this.formLayout}>
+            {getFieldDecorator('date', {
+              rules: [{ required: true, message: 'Please select time' }],
+              initialValue: current.date ? moment(current.date) : null,
             })(
               <DatePicker
                 showTime
-                placeholder="请选择"
+                placeholder="Select"
                 format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
               />
             )}
           </FormItem>
-          <FormItem label="任务负责人" {...this.formLayout}>
-            {getFieldDecorator('owner', {
-              rules: [{ required: true, message: '请选择任务负责人' }],
-              initialValue: current.owner,
+
+          <FormItem {...this.formLayout} label={<FormattedMessage id="form.goal.content" />}>
+            {getFieldDecorator('content', {
+              validateTrigger: 'onBlur',
+              rules: [
+                {
+                  required: true,
+                  /* eslint-disable */
+                  validator: (_, value, callback) => {
+                    /* eslint-enable */
+                    if (value.isEmpty()) {
+                      callback(formatMessage({ id: 'form.content.placeholder' }));
+                    } else {
+                      callback();
+                    }
+                  },
+                },
+              ],
+              initialValue: current.content,
             })(
-              <Select placeholder="请选择">
-                <SelectOption value="付晓晓">付晓晓</SelectOption>
-                <SelectOption value="周毛毛">周毛毛</SelectOption>
-              </Select>
+              <BraftEditor
+                className="my-editor"
+                controls={controls}
+                placeholder={formatMessage({ id: 'form.content.placeholder' })}
+                contentStyle={{
+                  height: 210,
+                  borderWidth: 1,
+                  borderColor: '#d9d9d9',
+                  borderStyle: 'solid',
+                  borderRadius: 4,
+                  borderTopLeftRadius: 0,
+                  borderTopRightRadius: 0,
+                  borderTop: 'none',
+                }}
+              />
             )}
           </FormItem>
-          <FormItem {...this.formLayout} label="产品描述">
-            {getFieldDecorator('subDescription', {
-              rules: [{ message: '请输入至少五个字符的产品描述！', min: 5 }],
-              initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
+
+          <FormItem
+            {...this.formLayout}
+            label={<FormattedMessage id="form.public.label" />}
+            help={<FormattedMessage id="form.public.label2.help" />}
+          >
+            <div>
+              {getFieldDecorator('public', {
+                initialValue: current.public,
+              })(
+                <Radio.Group>
+                  <Radio value="1">
+                    <FormattedMessage id="form.public.radio.public" />
+                  </Radio>
+                  <Radio value="2">
+                    <FormattedMessage id="form.public.radio.partially-public" />
+                  </Radio>
+                </Radio.Group>
+              )}
+              <FormItem style={{ marginBottom: 0 }}>
+                {getFieldDecorator('publicUsers')(
+                  <Select
+                    mode="multiple"
+                    placeholder={formatMessage({ id: 'form.publicUsers.placeholder' })}
+                    style={{
+                      margin: '8px 0',
+                      display: getFieldValue('public') === '2' ? 'block' : 'none',
+                    }}
+                  >
+                    <Option value="1">
+                      <FormattedMessage id="form.publicUsers.option.hk" />
+                    </Option>
+                    <Option value="2">
+                      <FormattedMessage id="form.publicUsers.option.cn" />
+                    </Option>
+                    <Option value="3">
+                      <FormattedMessage id="form.publicUsers.option.my" />
+                    </Option>
+                  </Select>
+                )}
+              </FormItem>
+            </div>
           </FormItem>
         </Form>
       );

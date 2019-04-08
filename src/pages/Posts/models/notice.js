@@ -1,6 +1,12 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { fakeSubmitForm, submitNoticeForm, queryNotices, deleteNotice } from '@/services/api';
+import {
+  fakeSubmitForm,
+  submitNoticeForm,
+  queryNotices,
+  deleteNotice,
+  updateNotice,
+} from '@/services/api';
 
 export default {
   namespace: 'notice',
@@ -24,6 +30,15 @@ export default {
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(deleteNotice, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetch',
+        });
+      }
+    },
+    *update({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(updateNotice, payload, token);
       if (response) {
         yield put({
           type: 'fetch',
