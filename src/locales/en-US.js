@@ -34,4 +34,6 @@ export default {
   ...pwa,
   ...component,
   ...editor,
+  'app.notice.create.form.title': 'Create Notice',
+  'app.notice.create.form.description': 'Create latest notice to company staffs',
 };
