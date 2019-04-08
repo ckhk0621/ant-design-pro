@@ -149,37 +149,6 @@ class CreateNotice extends PureComponent {
                 />
               )}
             </FormItem>
-            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
-              {getFieldDecorator('content', {
-                validateTrigger: 'onBlur',
-                rules: [
-                  {
-                    required: true,
-                    validator: (value, callback) => {
-                      if (_.isEmpty(value)) {
-                        callback(formatMessage({ id: 'form.content.placeholder' }));
-                      }
-                    },
-                  },
-                ],
-              })(
-                <BraftEditor
-                  className="my-editor"
-                  controls={controls}
-                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
-                  contentStyle={{
-                    height: 210,
-                    borderWidth: 1,
-                    borderColor: '#d9d9d9',
-                    borderStyle: 'solid',
-                    borderRadius: 4,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    borderTop: 'none',
-                  }}
-                />
-              )}
-            </FormItem> */}
 
             {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {

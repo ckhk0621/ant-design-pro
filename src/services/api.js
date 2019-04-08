@@ -27,6 +27,16 @@ export async function deleteNotice(params, token) {
   });
 }
 
+export async function updateNotice(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/notices/${params.id}`, {
+    method: 'PUT',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
