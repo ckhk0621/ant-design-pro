@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
+import router from 'umi/router';
 import moment from 'moment';
 import { connect } from 'dva';
 import {
@@ -26,8 +27,8 @@ const FormItem = Form.Item;
 const SelectOption = Select.Option;
 const { Search, TextArea } = Input;
 
-@connect(({ list, loading }) => ({
-  list,
+@connect(({ notice, loading }) => ({
+  list: notice.list,
   loading: loading.models.list,
 }))
 @Form.create()
@@ -107,16 +108,13 @@ class BasicList extends PureComponent {
   deleteItem = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'list/submit',
+      type: 'notice/delete',
       payload: { id },
     });
   };
 
   render() {
-    const {
-      list: { list },
-      loading,
-    } = this.props;
+    const { list, loading } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
@@ -126,11 +124,13 @@ class BasicList extends PureComponent {
       if (key === 'edit') this.showEditModal(currentItem);
       else if (key === 'delete') {
         Modal.confirm({
-          title: '删除任务',
-          content: '确定删除该任务吗？',
-          okText: '确认',
-          cancelText: '取消',
-          onOk: () => this.deleteItem(currentItem.id),
+          title: 'Delete Notice',
+          content: 'Confirm to delete this notice？',
+          okText: 'Confirm',
+          cancelText: 'Cancel',
+          /* eslint-disable */
+          onOk: () => this.deleteItem(currentItem._id),
+          /* eslint-enable */
         });
       }
     };
@@ -156,14 +156,13 @@ class BasicList extends PureComponent {
       total: 50,
     };
 
-    const ListContent = ({ data: { owner, createdAt } }) => (
+    const ListContent = ({ data: { author, date } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <p>{owner}</p>
+          <p>{author}</p>
         </div>
         <div className={styles.listContentItem}>
-          <span>Updated at</span>
-          <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+          <p>{moment(date).format('YYYY-MM-DD HH:mm')}</p>
         </div>
       </div>
     );
@@ -172,13 +171,13 @@ class BasicList extends PureComponent {
       <Dropdown
         overlay={
           <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
-            <Menu.Item key="edit">编辑</Menu.Item>
-            <Menu.Item key="delete">删除</Menu.Item>
+            <Menu.Item key="edit">Edit</Menu.Item>
+            <Menu.Item key="delete">Delete</Menu.Item>
           </Menu>
         }
       >
         <a>
-          更多 <Icon type="down" />
+          Action <Icon type="down" />
         </a>
       </Dropdown>
     );
@@ -255,7 +254,7 @@ class BasicList extends PureComponent {
               type="dashed"
               style={{ width: '100%', marginBottom: 8 }}
               icon="plus"
-              onClick={this.showModal}
+              onClick={() => router.push('/notices/add')}
               ref={component => {
                 /* eslint-disable */
                 this.addBtn = findDOMNode(component);
@@ -271,23 +270,11 @@ class BasicList extends PureComponent {
               pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
-                <List.Item
-                  actions={[
-                    <a
-                      onClick={e => {
-                        e.preventDefault();
-                        this.showEditModal(item);
-                      }}
-                    >
-                      编辑
-                    </a>,
-                    <MoreBtn current={item} />,
-                  ]}
-                >
+                <List.Item actions={[<MoreBtn current={item} />]}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.logo} shape="square" size="large" />}
                     title={<a href={item.href}>{item.title}</a>}
-                    description={item.subDescription}
+                    description={<div dangerouslySetInnerHTML={{ __html: `${item.content}` }} />}
                   />
                   <ListContent data={item} />
                 </List.Item>

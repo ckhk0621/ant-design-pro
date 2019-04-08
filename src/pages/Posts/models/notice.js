@@ -1,19 +1,33 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { fakeSubmitForm, submitNoticeForm, queryNotices } from '@/services/api';
+import { fakeSubmitForm, submitNoticeForm, queryNotices, deleteNotice } from '@/services/api';
 
 export default {
   namespace: 'notice',
 
   state: {
+    list: [],
     images: null,
   },
 
   effects: {
-    *fetch(_, { call }) {
+    *fetch(_, { call, put }) {
       const response = yield call(queryNotices);
+      const payload = response;
       if (response) {
-        console.log(`queryNotices====`, response);
+        yield put({
+          type: 'saveNotices',
+          payload,
+        });
+      }
+    },
+    *delete({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(deleteNotice, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetch',
+        });
       }
     },
     *submitRegularForm({ payload }, { call, select }) {
@@ -44,6 +58,12 @@ export default {
   },
 
   reducers: {
+    saveNotices(state, { payload }) {
+      return {
+        ...state,
+        list: payload,
+      };
+    },
     saveStepFormData(state, { payload }) {
       return {
         ...state,

@@ -23,14 +23,14 @@ class CreateNotice extends PureComponent {
       form.setFieldsValue({
         content: BraftEditor.createEditorState(''),
       });
-    }, 1000);
+    }, 1500);
   }
 
   handleSubmit = e => {
     const { dispatch, form, images } = this.props;
     let submitValues;
     e.preventDefault();
-    form.validateFieldsAndScroll((err, values) => {
+    form.validateFields((err, values) => {
       submitValues = !_.isEmpty(images)
         ? (submitValues = {
             ...values,
@@ -48,6 +48,11 @@ class CreateNotice extends PureComponent {
           payload: submitValues,
         });
         form.resetFields();
+        form.setFieldsValue({
+          content: BraftEditor.createEditorState(''),
+        });
+      } else {
+        console.log(err);
       }
     });
   };
@@ -109,24 +114,42 @@ class CreateNotice extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
-            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
               {getFieldDecorator('content', {
+                validateTrigger: 'onBlur',
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'validation.content.required' }),
+                    /* eslint-disable */
+                    validator: (_, value, callback) => {
+                      /* eslint-enable */
+                      if (value.isEmpty()) {
+                        callback(formatMessage({ id: 'form.content.placeholder' }));
+                      } else {
+                        callback();
+                      }
+                    },
                   },
                 ],
               })(
-                <TextArea
-                  style={{ minHeight: 32 }}
+                <BraftEditor
+                  className="my-editor"
+                  controls={controls}
                   placeholder={formatMessage({ id: 'form.content.placeholder' })}
-                  rows={4}
+                  contentStyle={{
+                    height: 210,
+                    borderWidth: 1,
+                    borderColor: '#d9d9d9',
+                    borderStyle: 'solid',
+                    borderRadius: 4,
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                    borderTop: 'none',
+                  }}
                 />
               )}
-            </FormItem> */}
-
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
+            </FormItem>
+            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
               {getFieldDecorator('content', {
                 validateTrigger: 'onBlur',
                 rules: [
@@ -156,7 +179,7 @@ class CreateNotice extends PureComponent {
                   }}
                 />
               )}
-            </FormItem>
+            </FormItem> */}
 
             {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {

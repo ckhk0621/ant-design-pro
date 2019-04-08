@@ -58,7 +58,7 @@ export default [
             component: './Posts/BasicList',
           },
           {
-            path: '/notices/notice',
+            path: '/notices/add',
             name: 'add-new',
             component: './Posts/CreateNotice',
           },
