@@ -22,7 +22,6 @@ export default {
       if (response.status === 'ok') {
         message.success('成功提交了');
       }
-      // message.success('真的提交成功');
     },
     *uploadImages({ payload }, { put }) {
       yield put({

@@ -36,4 +36,5 @@ export default {
   'validation.date.required': 'Please select the start and end date',
   'validation.goal.required': 'Please enter a description of the goal',
   'validation.standard.required': 'Please enter a metric',
+  'validation.content.required': 'Please enter your content',
 };

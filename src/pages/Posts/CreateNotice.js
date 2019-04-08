@@ -85,24 +85,24 @@ class CreateNotice extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.label" />}>
-              {getFieldDecorator('description', {
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
+              {getFieldDecorator('content', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'validation.goal.required' }),
+                    message: formatMessage({ id: 'validation.content.required' }),
                   },
                 ],
               })(
                 <TextArea
                   style={{ minHeight: 32 }}
-                  placeholder={formatMessage({ id: 'form.goal.placeholder' })}
+                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
                   rows={4}
                 />
               )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.label" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {
                 rules: [],
               })(<UploadImage />)}
@@ -111,7 +111,7 @@ class CreateNotice extends PureComponent {
             <FormItem
               {...formItemLayout}
               label={<FormattedMessage id="form.public.label" />}
-              help={<FormattedMessage id="form.public.label.help" />}
+              help={<FormattedMessage id="form.public.label2.help" />}
             >
               <div>
                 {getFieldDecorator('public', {
@@ -123,9 +123,6 @@ class CreateNotice extends PureComponent {
                     </Radio>
                     <Radio value="2">
                       <FormattedMessage id="form.public.radio.partially-public" />
-                    </Radio>
-                    <Radio value="3">
-                      <FormattedMessage id="form.public.radio.private" />
                     </Radio>
                   </Radio.Group>
                 )}
@@ -140,13 +137,13 @@ class CreateNotice extends PureComponent {
                       }}
                     >
                       <Option value="1">
-                        <FormattedMessage id="form.publicUsers.option.A" />
+                        <FormattedMessage id="form.publicUsers.option.hk" />
                       </Option>
                       <Option value="2">
-                        <FormattedMessage id="form.publicUsers.option.B" />
+                        <FormattedMessage id="form.publicUsers.option.cn" />
                       </Option>
                       <Option value="3">
-                        <FormattedMessage id="form.publicUsers.option.C" />
+                        <FormattedMessage id="form.publicUsers.option.my" />
                       </Option>
                     </Select>
                   )}
