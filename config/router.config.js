@@ -59,7 +59,7 @@ export default [
           },
           {
             path: '/notices/notice',
-            name: 'createNotice',
+            name: 'create-notice',
             component: './Posts/CreateNotice',
           },
         ],

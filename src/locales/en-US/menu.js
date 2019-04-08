@@ -44,4 +44,7 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.notices': 'Notices',
+  'menu.notices.all': 'All Notices',
+  'menu.notices.create-notice': 'Create Notice',
 };
