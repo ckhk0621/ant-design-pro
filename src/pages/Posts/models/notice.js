@@ -1,21 +1,21 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { fakeSubmitForm, submitNoticeForm } from '@/services/api';
+import { fakeSubmitForm, submitNoticeForm, queryNotices } from '@/services/api';
 
 export default {
   namespace: 'notice',
 
   state: {
-    step: {
-      payAccount: '',
-      receiverAccount: '',
-      receiverName: '',
-      amount: '',
-    },
     images: null,
   },
 
   effects: {
+    *fetch(_, { call }) {
+      const response = yield call(queryNotices);
+      if (response) {
+        console.log(`queryNotices====`, response);
+      }
+    },
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitNoticeForm, payload, token);

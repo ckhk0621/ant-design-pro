@@ -47,4 +47,5 @@ export default {
   'menu.notices': 'Notices',
   'menu.notices.all': 'All Notices',
   'menu.notices.create-notice': 'Create Notice',
+  'menu.notices.add-new': 'Add New',
 };
