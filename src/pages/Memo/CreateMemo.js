@@ -11,12 +11,12 @@ import UploadImage from '@/components/UploadImage';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ notice, loading }) => ({
-  submitting: loading.effects['notice/submitRegularForm'],
-  images: notice.images,
+@connect(({ memo, loading }) => ({
+  submitting: loading.effects['memo/submitRegularForm'],
+  images: memo.images,
 }))
 @Form.create()
-class CreateNotice extends PureComponent {
+class CreateMemo extends PureComponent {
   componentDidMount() {
     // 异步设置编辑器内容
     setTimeout(() => {
@@ -50,7 +50,7 @@ class CreateNotice extends PureComponent {
 
       if (!err) {
         dispatch({
-          type: 'notice/submitRegularForm',
+          type: 'memo/submitRegularForm',
           payload: submitValues,
         });
         form.resetFields();
@@ -83,7 +83,6 @@ class CreateNotice extends PureComponent {
       'separator',
       'link',
       'separator',
-      'media',
     ];
 
     const formItemLayout = {
@@ -107,13 +106,14 @@ class CreateNotice extends PureComponent {
 
     return (
       <PageHeaderWrapper
-        title={<FormattedMessage id="app.notice.create.form.title" />}
-        content={<FormattedMessage id="app.notice.create.form.description" />}
+        title={<FormattedMessage id="app.notice.create.memo.form.title" />}
+        content={<FormattedMessage id="app.notice.create.memo.form.description" />}
       >
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
               {getFieldDecorator('title', {
+                initialValue: '',
                 rules: [
                   {
                     required: true,
@@ -122,6 +122,7 @@ class CreateNotice extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
+
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
               {getFieldDecorator('content', {
                 validateTrigger: 'onBlur',
@@ -161,7 +162,21 @@ class CreateNotice extends PureComponent {
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {
                 rules: [],
-              })(<UploadImage />)}
+              })(<UploadImage direction="memo" />)}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.priority.label" />}>
+              <div>
+                {getFieldDecorator('priority', {
+                  initialValue: '3',
+                })(
+                  <Radio.Group>
+                    <Radio value="1">High</Radio>
+                    <Radio value="2">Medium</Radio>
+                    <Radio value="3">Low</Radio>
+                  </Radio.Group>
+                )}
+              </div>
             </FormItem>
 
             <FormItem
@@ -226,4 +241,4 @@ class CreateNotice extends PureComponent {
   }
 }
 
-export default CreateNotice;
+export default CreateMemo;

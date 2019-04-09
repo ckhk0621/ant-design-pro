@@ -49,4 +49,9 @@ export default {
   'menu.notices.create-notice': 'Create Notice',
   'menu.notices.add-new': 'Add New',
   'menu.notices.single': 'Single',
+  'menu.memo': 'Memo',
+  'menu.memo.all': 'All Memo',
+  'menu.memo.create-notice': 'Create Memo',
+  'menu.memo.add-new': 'Add New',
+  'menu.memo.single': 'Single',
 };

@@ -2,6 +2,49 @@ import { stringify } from 'qs';
 import SITE_URL from './setting';
 import request from '@/utils/request';
 
+/**
+ * MEMO
+ */
+
+export async function queryMemo() {
+  return request(`${SITE_URL.SERVER_API}/api/memo`, {
+    method: 'GET',
+  });
+}
+
+export async function submitMemoForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/memo`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function deleteMemo(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/memo/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function updateMemo(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/memo/${params.id}`, {
+    method: 'PUT',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
+ * NOTICES
+ */
+
 export async function submitNoticeForm(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/notices`, {
     method: 'POST',

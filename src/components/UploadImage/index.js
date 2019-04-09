@@ -3,7 +3,8 @@ import { Upload, Icon, Modal } from 'antd';
 import { connect } from 'dva';
 
 @connect(({ loading }) => ({
-  submitting: loading.effects['notice/submitRegularForm'],
+  submitting:
+    loading.effects['notice/submitRegularForm'] || loading.effects['memo/submitRegularForm'],
 }))
 class UploadImage extends PureComponent {
   state = {
@@ -13,16 +14,23 @@ class UploadImage extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    const { submitting } = this.props;
+    const { submitting, direction } = this.props;
     if (prevProps.submitting !== submitting && submitting) {
       /* eslint-disable */
       this.setState({ fileList: [] });
       /* eslint-enable */
       const { dispatch } = this.props;
-      dispatch({
-        type: 'notice/uploadImages',
-        payload: [],
-      });
+      if (direction === 'memo') {
+        dispatch({
+          type: 'memo/uploadImages',
+          payload: [],
+        });
+      } else {
+        dispatch({
+          type: 'notice/uploadImages',
+          payload: [],
+        });
+      }
     }
   }
 
@@ -37,11 +45,18 @@ class UploadImage extends PureComponent {
 
   handleChange = ({ fileList }) => {
     this.setState({ fileList });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'notice/uploadImages',
-      payload: fileList,
-    });
+    const { dispatch, direction } = this.props;
+    if (direction === 'memo') {
+      dispatch({
+        type: 'memo/uploadImages',
+        payload: fileList,
+      });
+    } else {
+      dispatch({
+        type: 'notice/uploadImages',
+        payload: fileList,
+      });
+    }
   };
 
   render() {

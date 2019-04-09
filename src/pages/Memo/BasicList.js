@@ -3,10 +3,9 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { findDOMNode } from 'react-dom';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { NavLink, withRouter } from 'dva/router';
+import { withRouter } from 'dva/router';
 import router from 'umi/router';
 import moment from 'moment';
-import _ from 'lodash';
 import { connect } from 'dva';
 import {
   List,
@@ -16,7 +15,6 @@ import {
   Icon,
   Dropdown,
   Menu,
-  Avatar,
   Modal,
   Form,
   DatePicker,
@@ -33,9 +31,9 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { Search } = Input;
 
-@connect(({ notice, loading }) => ({
-  list: notice.list,
-  loading: loading.models.list,
+@connect(({ memo, loading }) => ({
+  list: memo.list,
+  loading: loading.models.memo,
 }))
 @Form.create()
 class BasicList extends PureComponent {
@@ -49,10 +47,7 @@ class BasicList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/fetch',
-      payload: {
-        count: 5,
-      },
+      type: 'memo/fetch',
     });
   }
 
@@ -107,7 +102,7 @@ class BasicList extends PureComponent {
       });
 
       dispatch({
-        type: 'notice/update',
+        type: 'memo/update',
         payload: { id, ...fieldsValue, content: fieldsValue.content.toHTML() },
       });
     });
@@ -116,7 +111,7 @@ class BasicList extends PureComponent {
   deleteItem = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/delete',
+      type: 'memo/delete',
       payload: { id },
     });
   };
@@ -132,8 +127,8 @@ class BasicList extends PureComponent {
       if (key === 'edit') this.showEditModal(currentItem);
       else if (key === 'delete') {
         Modal.confirm({
-          title: 'Delete Notice',
-          content: 'Confirm to delete this notice？',
+          title: 'Delete Memo',
+          content: 'Confirm to delete this memo',
           okText: 'Confirm',
           cancelText: 'Cancel',
           /* eslint-disable */
@@ -319,7 +314,7 @@ class BasicList extends PureComponent {
           <Card
             className={styles.listCard}
             bordered={false}
-            title="Notices List"
+            title="Memo List"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
@@ -328,7 +323,7 @@ class BasicList extends PureComponent {
               type="dashed"
               style={{ width: '100%', marginBottom: 8 }}
               icon="plus"
-              onClick={() => router.push('/notices/add')}
+              onClick={() => router.push('/memo/add')}
               ref={component => {
                 /* eslint-disable */
                 this.addBtn = findDOMNode(component);
@@ -345,19 +340,8 @@ class BasicList extends PureComponent {
               renderItem={item => (
                 <List.Item actions={[<MoreBtn current={item} />]}>
                   <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
-                        shape="square"
-                        size="large"
-                      />
-                    }
                     /* eslint-disable */
-                    title={
-                      <NavLink style={{ fontSize: 16 }} to={`/notices/single/${item._id}`}>
-                        {item.title}
-                      </NavLink>
-                    }
+                    title={item.title}
                     /* eslint-enable */
                     description={moment(item.date).format('YYYY-MM-DD HH:mm')}
                   />
@@ -368,7 +352,7 @@ class BasicList extends PureComponent {
           </Card>
         </div>
         <Modal
-          title={done ? null : `${current.id ? 'Edit' : 'Add'}`}
+          title={done ? null : `任务${current.id ? '编辑' : '添加'}`}
           className={styles.standardListForm}
           width={640}
           bodyStyle={done ? { padding: '72px 0' } : { padding: '28px 0 0' }}

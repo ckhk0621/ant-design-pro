@@ -36,4 +36,7 @@ export default {
   ...editor,
   'app.notice.create.form.title': 'Create Notice',
   'app.notice.create.form.description': 'Create latest notice to company staffs',
+  'app.notice.create.memo.form.title': 'Create Memo',
+  'app.notice.create.memo.form.description': 'Create latest memo to company staffs',
+  'app.notice.memo.list.description': 'Latest memo to company staffs',
 };
