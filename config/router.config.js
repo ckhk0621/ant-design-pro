@@ -88,6 +88,24 @@ export default [
           },
         ],
       },
+      // inout
+      {
+        path: '/inout',
+        icon: 'profile',
+        name: 'inout',
+        routes: [
+          {
+            path: '/inout/all',
+            name: 'all',
+            component: './Inout/CardList',
+          },
+          {
+            path: '/inout/add',
+            name: 'add-new',
+            component: './Inout/CreateInout',
+          },
+        ],
+      },
       // forms
       // {
       //   path: '/form',
