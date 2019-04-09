@@ -43,4 +43,5 @@ export default {
   'form.goal.content': 'Content',
   'form.content.placeholder': 'Please enter your content',
   'form.images.label': 'Images',
+  'form.priority.label': 'Priority',
 };

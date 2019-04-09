@@ -70,6 +70,24 @@ export default [
           },
         ],
       },
+      // memo
+      {
+        path: '/memo',
+        icon: 'form',
+        name: 'memo',
+        routes: [
+          {
+            path: '/memo/all',
+            name: 'all',
+            component: './Memo/CardList',
+          },
+          {
+            path: '/memo/add',
+            name: 'add-new',
+            component: './Memo/CreateMemo',
+          },
+        ],
+      },
       // forms
       // {
       //   path: '/form',

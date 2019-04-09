@@ -1,44 +1,27 @@
-import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
+import { connect } from 'dva';
 import BraftEditor from 'braft-editor';
 import { findDOMNode } from 'react-dom';
+import { Card, Button, Icon, List, Modal, Form, Radio, Select, Input, DatePicker } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { NavLink, withRouter } from 'dva/router';
 import router from 'umi/router';
-import moment from 'moment';
 import _ from 'lodash';
-import { connect } from 'dva';
-import {
-  List,
-  Card,
-  Input,
-  Button,
-  Icon,
-  Dropdown,
-  Menu,
-  Avatar,
-  Modal,
-  Form,
-  DatePicker,
-  Select,
-  Radio,
-} from 'antd';
-
+import moment from 'moment';
+import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
 
-import styles from './BasicList.less';
+import styles from './CardList.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const { Search } = Input;
 
-@connect(({ notice, loading }) => ({
-  list: notice.list,
-  loading: loading.models.list,
+@connect(({ memo, loading }) => ({
+  list: memo.list,
+  loading: loading.models.memo,
 }))
 @Form.create()
-class BasicList extends PureComponent {
+class CardList extends PureComponent {
   state = { visible: false, done: false };
 
   formLayout = {
@@ -49,10 +32,7 @@ class BasicList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/fetch',
-      payload: {
-        count: 5,
-      },
+      type: 'memo/fetch',
     });
   }
 
@@ -107,7 +87,7 @@ class BasicList extends PureComponent {
       });
 
       dispatch({
-        type: 'notice/update',
+        type: 'memo/update',
         payload: { id, ...fieldsValue, content: fieldsValue.content.toHTML() },
       });
     });
@@ -116,7 +96,7 @@ class BasicList extends PureComponent {
   deleteItem = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/delete',
+      type: 'memo/delete',
       payload: { id },
     });
   };
@@ -126,58 +106,23 @@ class BasicList extends PureComponent {
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
-    const { visible, done, current = {} } = this.state;
 
-    const editAndDelete = (key, currentItem) => {
-      if (key === 'edit') this.showEditModal(currentItem);
-      else if (key === 'delete') {
-        Modal.confirm({
-          title: 'Delete Notice',
-          content: 'Confirm to delete this notice？',
-          okText: 'Confirm',
-          cancelText: 'Cancel',
-          /* eslint-disable */
-          onOk: () => this.deleteItem(currentItem._id),
-          /* eslint-enable */
-        });
-      }
-    };
+    const { visible, done, current = {} } = this.state;
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
       : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
+    const content = (
+      <div className={styles.pageHeaderContent}>
+        <FormattedMessage id="app.notice.memo.list.description" />
+      </div>
+    );
+
     const extraContent = (
-      <div className={styles.extraContent}>
-        <Search
-          className={styles.extraContentSearch}
-          placeholder="keywords"
-          onSearch={() => ({})}
-        />
+      <div className={styles.extraImg}>
+        <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/RzwpdLnhmvDJToTdfDPe.png" />
       </div>
-    );
-
-    const ListContent = ({ data: { author } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.listContentItem}>
-          <p>{author}</p>
-        </div>
-      </div>
-    );
-
-    const MoreBtn = props => (
-      <Dropdown
-        overlay={
-          <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
-            <Menu.Item key="edit">Edit</Menu.Item>
-            <Menu.Item key="delete">Delete</Menu.Item>
-          </Menu>
-        }
-      >
-        <a>
-          Action <Icon type="down" />
-        </a>
-      </Dropdown>
     );
 
     const getModalContent = () => {
@@ -185,7 +130,7 @@ class BasicList extends PureComponent {
         return (
           <Result
             type="success"
-            title="Notice updated"
+            title="Memo updated"
             description=""
             actions={
               <Button type="primary" onClick={this.handleDone}>
@@ -268,6 +213,12 @@ class BasicList extends PureComponent {
             )}
           </FormItem>
 
+          {/* <FormItem {...this.formLayout} label={<FormattedMessage id="form.images.label" />}>
+            {getFieldDecorator('images', {
+              rules: [],
+            })(<UploadImage direction="memo" />)}
+          </FormItem> */}
+
           <FormItem
             {...this.formLayout}
             label={<FormattedMessage id="form.public.label" />}
@@ -310,62 +261,94 @@ class BasicList extends PureComponent {
               </FormItem>
             </div>
           </FormItem>
+
+          <FormItem {...this.formLayout} label={<FormattedMessage id="form.priority.label" />}>
+            <div>
+              {getFieldDecorator('priority', {
+                initialValue: current.priority,
+              })(
+                <Radio.Group>
+                  <Radio value="1">High</Radio>
+                  <Radio value="2">Medium</Radio>
+                  <Radio value="3">Low</Radio>
+                </Radio.Group>
+              )}
+            </div>
+          </FormItem>
+
+          <br />
         </Form>
       );
     };
+
     return (
-      <PageHeaderWrapper>
-        <div className={styles.standardList}>
-          <Card
-            className={styles.listCard}
-            bordered={false}
-            title="Notices List"
-            style={{ marginTop: 24 }}
-            bodyStyle={{ padding: '0 32px 40px 32px' }}
-            extra={extraContent}
-          >
-            <Button
-              type="dashed"
-              style={{ width: '100%', marginBottom: 8 }}
-              icon="plus"
-              onClick={() => router.push('/notices/add')}
-              ref={component => {
-                /* eslint-disable */
-                this.addBtn = findDOMNode(component);
-                /* eslint-enable */
-              }}
-            >
-              Add New
-            </Button>
-            <List
-              size="large"
-              rowKey="id"
-              loading={loading}
-              dataSource={list}
-              renderItem={item => (
-                <List.Item actions={[<MoreBtn current={item} />]}>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
-                        shape="square"
-                        size="large"
-                      />
-                    }
-                    /* eslint-disable */
-                    title={
-                      <NavLink style={{ fontSize: 16 }} to={`/notices/single/${item._id}`}>
-                        {item.title}
-                      </NavLink>
-                    }
-                    /* eslint-enable */
-                    description={moment(item.date).format('YYYY-MM-DD HH:mm')}
-                  />
-                  <ListContent data={item} />
+      <PageHeaderWrapper title="Memo List" content={content} extraContent={extraContent}>
+        <div className={styles.cardList}>
+          <List
+            rowKey="id"
+            loading={loading}
+            grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
+            dataSource={['', ...list]}
+            renderItem={item =>
+              item ? (
+                <List.Item key={item.id}>
+                  <Card
+                    hoverable
+                    className={styles.card}
+                    actions={[
+                      <a onClick={() => this.showEditModal(item)}>Edit</a>,
+                      <a
+                        onClick={() =>
+                          Modal.confirm({
+                            title: 'Delete Memo',
+                            content: 'Confirm to delete this memo',
+                            okText: 'Confirm',
+                            cancelText: 'Cancel',
+                            /* eslint-disable */
+                            onOk: () => this.deleteItem(item._id),
+                            /* eslint-enable */
+                          })
+                        }
+                      >
+                        Delete
+                      </a>,
+                    ]}
+                  >
+                    <Card.Meta
+                      avatar={
+                        <img
+                          alt=""
+                          className={styles.cardAvatar}
+                          src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
+                        />
+                      }
+                      title={<a>{item.title}</a>}
+                      description={
+                        <Ellipsis className={styles.item} lines={3}>
+                          <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                        </Ellipsis>
+                      }
+                    />
+                  </Card>
                 </List.Item>
-              )}
-            />
-          </Card>
+              ) : (
+                <List.Item>
+                  <Button
+                    type="dashed"
+                    className={styles.newButton}
+                    onClick={() => router.push('/memo/add')}
+                    ref={component => {
+                      /* eslint-disable */
+                      this.addBtn = findDOMNode(component);
+                      /* eslint-enable */
+                    }}
+                  >
+                    <Icon type="plus" /> New Memo
+                  </Button>
+                </List.Item>
+              )
+            }
+          />
         </div>
         <Modal
           title={done ? null : `${current.id ? 'Edit' : 'Add'}`}
@@ -383,4 +366,4 @@ class BasicList extends PureComponent {
   }
 }
 
-export default withRouter(BasicList);
+export default CardList;
