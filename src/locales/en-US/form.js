@@ -42,6 +42,7 @@ export default {
   'form.publicUsers.option.my': 'Malaysia',
   'form.goal.content': 'Content',
   'form.content.placeholder': 'Please enter your content',
+  'form.remark.placeholder': 'Please enter your remark',
   'form.images.label': 'Images',
   'form.priority.label': 'Priority',
 };

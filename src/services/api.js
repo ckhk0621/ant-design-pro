@@ -3,6 +3,35 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * INOUT
+ */
+
+export async function submitInoutForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/inout`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function queryInout() {
+  return request(`${SITE_URL.SERVER_API}/api/inout`, {
+    method: 'GET',
+  });
+}
+
+export async function deleteInout(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/inout/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * MEMO
  */
 

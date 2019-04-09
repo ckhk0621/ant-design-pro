@@ -97,7 +97,7 @@ export default [
           {
             path: '/inout/all',
             name: 'all',
-            component: './Inout/CardList',
+            component: './Inout/TableList',
           },
           {
             path: '/inout/add',
@@ -106,7 +106,7 @@ export default [
           },
         ],
       },
-      // forms
+      //forms
       // {
       //   path: '/form',
       //   icon: 'form',
