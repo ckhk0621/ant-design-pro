@@ -54,4 +54,7 @@ export default {
   'menu.memo.create-notice': 'Create Memo',
   'menu.memo.add-new': 'Add New',
   'menu.memo.single': 'Single',
+  'menu.inout.all': 'All',
+  'menu.inout': 'In out records',
+  'menu.inout.add-new': 'Add New',
 };
