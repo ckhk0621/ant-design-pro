@@ -40,4 +40,7 @@ export default {
   'app.notice.create.memo.form.description': 'Create latest memo to company staffs',
   'app.notice.memo.list.description': 'Latest memo to company staffs',
   'app.notice.create.inout.form.title': 'Create In out record',
+  'app.notice.create.ride.booking.title': 'Create Booking',
+  'app.notice.create.ride.booking.description':
+    'Only admin can edit the booking detail once created',
 };

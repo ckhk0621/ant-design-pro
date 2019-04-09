@@ -47,6 +47,10 @@ class TableList extends PureComponent {
       ),
     },
     {
+      title: 'Added by',
+      dataIndex: 'author',
+    },
+    {
       title: 'Action',
       render: (text, record) => (
         <Fragment>
@@ -86,7 +90,7 @@ class TableList extends PureComponent {
   };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    // const { dispatch } = this.props;
     const { formValues } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
@@ -105,10 +109,10 @@ class TableList extends PureComponent {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
-    dispatch({
-      type: 'rule/fetch',
-      payload: params,
-    });
+    // dispatch({
+    //   type: 'rule/fetch',
+    //   payload: params,
+    // });
   };
 
   previewItem = id => {
@@ -196,7 +200,7 @@ class TableList extends PureComponent {
     const { selectedRows } = this.state;
 
     return (
-      <PageHeaderWrapper title="In out records">
+      <PageHeaderWrapper title="In Out Records">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>

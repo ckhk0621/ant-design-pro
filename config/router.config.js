@@ -23,22 +23,22 @@ export default [
     component: '../layouts/BasicLayout',
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      { path: '/', redirect: '/dashboard/Workplace' },
       {
         path: '/dashboard',
         name: 'dashboard',
         icon: 'dashboard',
         routes: [
-          {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: './Dashboard/Analysis',
-          },
-          {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
-          },
+          // {
+          //   path: '/dashboard/analysis',
+          //   name: 'analysis',
+          //   component: './Dashboard/Analysis',
+          // },
+          // {
+          //   path: '/dashboard/monitor',
+          //   name: 'monitor',
+          //   component: './Dashboard/Monitor',
+          // },
           {
             path: '/dashboard/workplace',
             name: 'workplace',
@@ -73,7 +73,7 @@ export default [
       // memo
       {
         path: '/memo',
-        icon: 'form',
+        icon: 'pushpin',
         name: 'memo',
         routes: [
           {
@@ -91,7 +91,7 @@ export default [
       // inout
       {
         path: '/inout',
-        icon: 'profile',
+        icon: 'solution',
         name: 'inout',
         routes: [
           {
@@ -151,6 +151,19 @@ export default [
       //     },
       //   ],
       // },
+      // Ride booking
+      {
+        path: '/ride-booking',
+        icon: 'car',
+        name: 'ride-booking',
+        routes: [
+          {
+            path: '/ride-booking/add',
+            name: 'add-new',
+            component: './RideBooking/CreateRideBooking',
+          },
+        ],
+      },
       // list
       {
         path: '/list',
