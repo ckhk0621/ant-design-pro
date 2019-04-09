@@ -1,67 +1,51 @@
 // import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { submitMemoForm, queryMemo, deleteMemo } from '@/services/api';
+import { submitInoutForm, queryInout, deleteInout } from '@/services/api';
 
 export default {
   namespace: 'inout',
 
   state: {
-    list: [],
+    data: {
+      list: [],
+    },
   },
 
   effects: {
     *fetch(_, { call, put }) {
-      const response = yield call(queryMemo);
+      const response = yield call(queryInout);
       const payload = response;
       if (response) {
         yield put({
-          type: 'saveMemo',
+          type: 'saveInout',
           payload,
         });
       }
     },
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
-      const response = yield call(deleteMemo, payload, token);
+      const response = yield call(deleteInout, payload, token);
       if (response) {
         yield put({
           type: 'fetch',
         });
       }
     },
-    *uploadImages({ payload }, { put }) {
-      yield put({
-        type: 'saveImagesToFormData',
-        payload,
-      });
-    },
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
-      const response = yield call(submitMemoForm, payload, token);
+      const response = yield call(submitInoutForm, payload, token);
       if (response.status === 'ok') {
-        message.success('Memo created');
+        message.success('In out record created');
       }
     },
   },
 
   reducers: {
-    saveMemo(state, { payload }) {
+    saveInout(state, { payload }) {
       return {
         ...state,
-        list: payload,
-      };
-    },
-    saveSingleNotice(state, { payload }) {
-      return {
-        ...state,
-        single: payload,
-      };
-    },
-    saveImagesToFormData(state, { payload }) {
-      return {
-        ...state,
-        images: {
-          ...payload,
+        data: {
+          list: payload,
         },
       };
     },

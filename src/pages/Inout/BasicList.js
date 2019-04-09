@@ -31,8 +31,8 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { Search } = Input;
 
-@connect(({ memo, loading }) => ({
-  list: memo.list,
+@connect(({ inout, loading }) => ({
+  list: inout.list,
   loading: loading.models.memo,
 }))
 @Form.create()
@@ -47,7 +47,7 @@ class BasicList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'memo/fetch',
+      type: 'inout/fetch',
     });
   }
 

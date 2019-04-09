@@ -3,60 +3,34 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio } from 'antd';
-import _ from 'lodash';
+import { Form, Input, Select, Button, Card, Radio, DatePicker } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
-@connect(({ memo, loading }) => ({
-  submitting: loading.effects['memo/submitRegularForm'],
-  images: memo.images,
+@connect(({ loading }) => ({
+  submitting: loading.effects['inout/submitRegularForm'],
 }))
 @Form.create()
 class CreateInout extends PureComponent {
-  componentDidMount() {
-    // 异步设置编辑器内容
-    setTimeout(() => {
-      const { form } = this.props;
-      form.setFieldsValue({
-        content: BraftEditor.createEditorState(''),
-      });
-    }, 1500);
-  }
-
   handleSubmit = e => {
-    const { dispatch, form, images } = this.props;
-    let submitValues;
-    let submitImages;
+    const { dispatch, form } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
-      if (!_.isEmpty(images)) {
-        submitImages = (_.toArray(images) || []).map(d => ({
-          name: d.name,
-          thumbUrl: d.thumbUrl,
-          type: d.type,
-          uid: d.uid,
-        }));
-      }
-
-      submitValues = {
-        ...values,
-        content: values.content.toHTML(),
-        images: submitImages,
-      };
-
       if (!err) {
         dispatch({
-          type: 'memo/submitRegularForm',
-          payload: submitValues,
+          type: 'inout/submitRegularForm',
+          payload: {
+            ...values,
+            remark: values.remark.toHTML(),
+          },
         });
         form.resetFields();
         setTimeout(() => {
           form.setFieldsValue({
-            content: BraftEditor.createEditorState(''),
+            remark: BraftEditor.createEditorState(''),
           });
         }, 500);
       } else {
@@ -105,14 +79,11 @@ class CreateInout extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper
-        title={<FormattedMessage id="app.notice.create.memo.form.title" />}
-        content={<FormattedMessage id="app.notice.create.memo.form.description" />}
-      >
+      <PageHeaderWrapper title={<FormattedMessage id="app.notice.create.inout.form.title" />}>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
-              {getFieldDecorator('title', {
+            <FormItem {...formItemLayout} label="Staff">
+              {getFieldDecorator('staff', {
                 initialValue: '',
                 rules: [
                   {
@@ -123,8 +94,26 @@ class CreateInout extends PureComponent {
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
 
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.date.label" />}>
+              {getFieldDecorator('inout', {
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'validation.date.required' }),
+                  },
+                ],
+              })(
+                <RangePicker
+                  style={{ width: '100%' }}
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder={['Start Time', 'End Time']}
+                />
+              )}
+            </FormItem>
+
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
-              {getFieldDecorator('content', {
+              {getFieldDecorator('remark', {
                 validateTrigger: 'onBlur',
                 rules: [
                   {
@@ -133,7 +122,7 @@ class CreateInout extends PureComponent {
                     validator: (_, value, callback) => {
                       /* eslint-enable */
                       if (value.isEmpty()) {
-                        callback(formatMessage({ id: 'form.content.placeholder' }));
+                        callback(formatMessage({ id: 'form.remark.placeholder' }));
                       } else {
                         callback();
                       }
@@ -157,26 +146,6 @@ class CreateInout extends PureComponent {
                   }}
                 />
               )}
-            </FormItem>
-
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
-              {getFieldDecorator('images', {
-                rules: [],
-              })(<UploadImage direction="memo" />)}
-            </FormItem>
-
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.priority.label" />}>
-              <div>
-                {getFieldDecorator('priority', {
-                  initialValue: '3',
-                })(
-                  <Radio.Group>
-                    <Radio value="1">High</Radio>
-                    <Radio value="2">Medium</Radio>
-                    <Radio value="3">Low</Radio>
-                  </Radio.Group>
-                )}
-              </div>
             </FormItem>
 
             <FormItem

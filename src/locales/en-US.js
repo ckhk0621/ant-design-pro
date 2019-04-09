@@ -39,4 +39,5 @@ export default {
   'app.notice.create.memo.form.title': 'Create Memo',
   'app.notice.create.memo.form.description': 'Create latest memo to company staffs',
   'app.notice.memo.list.description': 'Latest memo to company staffs',
+  'app.notice.create.inout.form.title': 'Create In out record',
 };
