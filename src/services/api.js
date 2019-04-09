@@ -3,6 +3,20 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * RIDE BOOKING
+ */
+
+export async function submitRideBookingForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * INOUT
  */
 
