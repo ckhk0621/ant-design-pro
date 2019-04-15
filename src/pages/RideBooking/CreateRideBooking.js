@@ -11,7 +11,7 @@ const { Option } = Select;
 
 @connect(({ user, loading }) => ({
   submitting: loading.effects['ridebooking/submitRegularForm'],
-  currentUser: user.currentUser,
+  currentUser: user.currentUser || '',
 }))
 @Form.create()
 class CreateRideBooking extends PureComponent {
@@ -86,16 +86,16 @@ class CreateRideBooking extends PureComponent {
       },
     };
 
-    const passengerOptions = [];
-    passengerOptions.push(<Option key={currentUser.name}>{currentUser.name}</Option>);
-    for (let i = 10; i < 36; i + 1) {
-      passengerOptions.push(<Option key={i.toString(36) + i}>Staff {i}</Option>);
-    }
+    // const passengerOptions = [];
+    // passengerOptions.push(<Option key={currentUser.name}>{currentUser.name}</Option>);
+    // for (let i = 10; i < 36; i + 1) {
+    //   passengerOptions.push(<Option key={i.toString(36) + i}>Staff {i}</Option>);
+    // }
 
-    const guestOptions = [];
-    for (let i = 1; i < 12; i + 1) {
-      guestOptions.push(<Option key={i.toString(36) + i}>{i}</Option>);
-    }
+    // const guestOptions = [];
+    // for (let i = 1; i < 12; i + 1) {
+    //   guestOptions.push(<Option key={i.toString(36) + i}>{i}</Option>);
+    // }
 
     const locationOptions = ['MK', 'NT'];
 
@@ -117,7 +117,13 @@ class CreateRideBooking extends PureComponent {
                 ],
               })(
                 <Select mode="multiple" placeholder="Please select">
-                  {passengerOptions}
+                  {/* {passengerOptions} */}
+                  <Option key={1} value="Staff01">
+                    Staff01
+                  </Option>
+                  <Option key={2} value="Staff02">
+                    Staff02
+                  </Option>
                 </Select>
               )}
             </FormItem>
@@ -181,7 +187,17 @@ class CreateRideBooking extends PureComponent {
             <FormItem {...formItemLayout} label="Number of guest">
               {getFieldDecorator('numberOfGuest', {
                 rules: [],
-              })(<Select placeholder="Please select">{guestOptions}</Select>)}
+              })(
+                <Select placeholder="Please select">
+                  <Option key={1}>1</Option>
+                  <Option key={2}>2</Option>
+                  <Option key={3}>3</Option>
+                  <Option key={4}>4</Option>
+                  <Option key={5}>5</Option>
+                  <Option key={6}>6</Option>
+                  <Option key={7}>7</Option>
+                </Select>
+              )}
             </FormItem>
 
             <FormItem {...formItemLayout} label="Guest">
@@ -191,20 +207,6 @@ class CreateRideBooking extends PureComponent {
             <FormItem {...formItemLayout} label="Remark">
               {getFieldDecorator('remark', {
                 validateTrigger: 'onBlur',
-                rules: [
-                  {
-                    required: true,
-                    /* eslint-disable */
-                    validator: (_, value, callback) => {
-                      /* eslint-enable */
-                      if (value.isEmpty()) {
-                        callback(formatMessage({ id: 'form.content.placeholder' }));
-                      } else {
-                        callback();
-                      }
-                    },
-                  },
-                ],
               })(
                 <BraftEditor
                   className="my-editor"

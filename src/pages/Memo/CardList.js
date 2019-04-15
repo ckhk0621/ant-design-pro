@@ -149,7 +149,6 @@ class CardList extends PureComponent {
         'separator',
         'link',
         'separator',
-        'media',
       ];
 
       return (

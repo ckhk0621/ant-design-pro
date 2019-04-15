@@ -3,7 +3,7 @@ import moment from 'moment';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import { Row, Col, Card, List, Avatar } from 'antd';
-import { Radar } from '@/components/Charts';
+import _ from 'lodash';
 import EditableLinkGroup from '@/components/EditableLinkGroup';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -11,39 +11,31 @@ import styles from './Workplace.less';
 
 const links = [
   {
-    title: '操作一',
+    title: 'Room 1',
     href: '',
   },
   {
-    title: '操作二',
+    title: <span style={{ color: 'red' }}>Room 2</span>,
     href: '',
   },
   {
-    title: '操作三',
-    href: '',
-  },
-  {
-    title: '操作四',
-    href: '',
-  },
-  {
-    title: '操作五',
-    href: '',
-  },
-  {
-    title: '操作六',
+    title: 'Room 3',
     href: '',
   },
 ];
 
-@connect(({ user, project, activities, chart, loading }) => ({
+@connect(({ user, memo, notice, project, activities, chart, loading }) => ({
   currentUser: user.currentUser,
   project,
   activities,
   chart,
+  noticeList: notice.list,
+  memoList: memo.list,
   currentUserLoading: loading.effects['user/fetchCurrent'],
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
+  memoLoading: loading.effects['memo/fetch'],
+  noticeLoading: loading.effects['notice/fetch'],
 }))
 class Workplace extends PureComponent {
   componentDidMount() {
@@ -60,6 +52,12 @@ class Workplace extends PureComponent {
     dispatch({
       type: 'chart/fetch',
     });
+    dispatch({
+      type: 'memo/fetch',
+    });
+    dispatch({
+      type: 'notice/fetch',
+    });
   }
 
   componentWillUnmount() {
@@ -69,52 +67,58 @@ class Workplace extends PureComponent {
     });
   }
 
+  disableClick = e => {
+    e.preventDefault();
+  };
+
   renderActivities() {
-    const {
-      activities: { list },
-    } = this.props;
-    return list.map(item => {
-      const events = item.template.split(/@\{([^{}]*)\}/gi).map(key => {
-        if (item[key]) {
-          return (
-            <a href={item[key].link} key={item[key].name}>
-              {item[key].name}
-            </a>
-          );
-        }
-        return key;
-      });
+    const { noticeList } = this.props;
+    return noticeList.map(item => {
+      // const events = item.template.split(/@\{([^{}]*)\}/gi).map(key => {
+      //   if (item[key]) {
+      //     return (
+      //       <a href={item[key].link} key={item[key].name}>
+      //         {item[key].name}
+      //       </a>
+      //     );
+      //   }
+      //   return key;
+      // });
       return (
-        <List.Item key={item.id}>
-          <List.Item.Meta
-            avatar={<Avatar src={item.user.avatar} />}
-            title={
-              <span>
-                <a className={styles.username}>{item.user.name}</a>
-                &nbsp;
-                <span className={styles.event}>{events}</span>
-              </span>
-            }
-            description={
-              <span className={styles.datetime} title={item.updatedAt}>
-                {moment(item.updatedAt).fromNow()}
-              </span>
-            }
-          />
-        </List.Item>
+        <>
+          {/* eslint-disable */}
+          <List.Item key={item._id}>
+            {/* eslint-enable */}
+            <List.Item.Meta
+              avatar={<Avatar src={!_.isEmpty(item.images[0]) ? item.images[0].thumbUrl : ''} />}
+              title={
+                <span>
+                  <a className={styles.username}>{item.author}</a>
+                  &nbsp;
+                  {/* eslint-disable */}
+                  <Link to={`/notices/single/${item._id}`}>
+                    {/* eslint-enable */}
+                    <span
+                      className={styles.event}
+                      dangerouslySetInnerHTML={{ __html: item.content }}
+                    />
+                  </Link>
+                </span>
+              }
+              description={
+                <span className={styles.datetime} title={item.date}>
+                  {moment(item.date).fromNow()}
+                </span>
+              }
+            />
+          </List.Item>
+        </>
       );
     });
   }
 
   render() {
-    const {
-      currentUser,
-      currentUserLoading,
-      project: { notice },
-      projectLoading,
-      activitiesLoading,
-      chart: { radarData },
-    } = this.props;
+    const { currentUser, currentUserLoading, memoList, projectLoading, noticeLoading } = this.props;
 
     const pageHeaderContent =
       currentUser && Object.keys(currentUser).length ? (
@@ -123,14 +127,8 @@ class Workplace extends PureComponent {
             <Avatar size="large" src={currentUser.avatar} />
           </div>
           <div className={styles.content}>
-            <div className={styles.contentTitle}>
-              早安，
-              {currentUser.name}
-              ，祝你开心每一天！
-            </div>
-            <div>
-              {currentUser.title} |{currentUser.group}
-            </div>
+            <div className={styles.contentTitle}>Hello {currentUser.name}, welcome back.</div>
+            <div>{currentUser.title}</div>
           </div>
         </div>
       ) : null;
@@ -138,18 +136,12 @@ class Workplace extends PureComponent {
     const extraContent = (
       <div className={styles.extraContent}>
         <div className={styles.statItem}>
-          <p>项目数</p>
-          <p>56</p>
+          <p>Room Booking</p>
+          <p>0</p>
         </div>
         <div className={styles.statItem}>
-          <p>团队内排名</p>
-          <p>
-            8<span> / 24</span>
-          </p>
-        </div>
-        <div className={styles.statItem}>
-          <p>项目访问</p>
-          <p>2,223</p>
+          <p>Ride Booking</p>
+          <p>0</p>
         </div>
       </div>
     );
@@ -165,29 +157,36 @@ class Workplace extends PureComponent {
             <Card
               className={styles.projectList}
               style={{ marginBottom: 24 }}
-              title="进行中的项目"
+              title="Latest Memo"
               bordered={false}
-              extra={<Link to="/">全部项目</Link>}
+              extra={<Link to="/memo/all">All</Link>}
               loading={projectLoading}
               bodyStyle={{ padding: 0 }}
             >
-              {notice.map(item => (
-                <Card.Grid className={styles.projectGrid} key={item.id}>
+              {memoList.map(item => (
+                <Card.Grid className={styles.projectGrid} key={item.title}>
                   <Card bodyStyle={{ padding: 0 }} bordered={false}>
                     <Card.Meta
                       title={
                         <div className={styles.cardTitle}>
-                          <Avatar size="small" src={item.logo} />
-                          <Link to={item.href}>{item.title}</Link>
+                          <Avatar
+                            size="small"
+                            src={!_.isEmpty(item.images[0]) ? item.images[0].thumbUrl : ''}
+                          />
+                          <Link to="#" onClick={this.disableClick}>
+                            {item.title}
+                          </Link>
                         </div>
                       }
-                      description={item.description}
+                      description={<span dangerouslySetInnerHTML={{ __html: `${item.content}` }} />}
                     />
                     <div className={styles.projectItemContent}>
-                      <Link to={item.memberLink}>{item.member || ''}</Link>
-                      {item.updatedAt && (
-                        <span className={styles.datetime} title={item.updatedAt}>
-                          {moment(item.updatedAt).fromNow()}
+                      <Link to="#" onClick={this.disableClick}>
+                        {item.member || ''}
+                      </Link>
+                      {item.date && (
+                        <span className={styles.datetime} title={item.date}>
+                          {moment(item.date).fromNow()}
                         </span>
                       )}
                     </div>
@@ -198,11 +197,12 @@ class Workplace extends PureComponent {
             <Card
               bodyStyle={{ padding: 0 }}
               bordered={false}
+              extra={<Link to="/notices/all">All</Link>}
               className={styles.activeCard}
-              title="动态"
-              loading={activitiesLoading}
+              title="Latest Notice"
+              loading={noticeLoading}
             >
-              <List loading={activitiesLoading} size="large">
+              <List loading={noticeLoading} size="large">
                 <div className={styles.activitiesList}>{this.renderActivities()}</div>
               </List>
             </Card>
@@ -210,13 +210,13 @@ class Workplace extends PureComponent {
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
             <Card
               style={{ marginBottom: 24 }}
-              title="快速开始 / 便捷导航"
+              title={`Booking Status: ${moment().format('MM ddd, YYYY')}`}
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
               <EditableLinkGroup onAdd={() => {}} links={links} linkElement={Link} />
             </Card>
-            <Card
+            {/* <Card
               style={{ marginBottom: 24 }}
               bordered={false}
               title="XX 指数"
@@ -225,23 +225,16 @@ class Workplace extends PureComponent {
               <div className={styles.chart}>
                 <Radar hasLegend height={343} data={radarData} />
               </div>
-            </Card>
+            </Card> */}
             <Card
               bodyStyle={{ paddingTop: 12, paddingBottom: 12 }}
               bordered={false}
-              title="团队"
+              title="Other info"
               loading={projectLoading}
             >
               <div className={styles.members}>
                 <Row gutter={48}>
-                  {notice.map(item => (
-                    <Col span={12} key={`members-item-${item.id}`}>
-                      <Link to={item.href}>
-                        <Avatar src={item.logo} size="small" />
-                        <span className={styles.member}>{item.member}</span>
-                      </Link>
-                    </Col>
-                  ))}
+                  <Col span={12} />
                 </Row>
               </div>
             </Card>

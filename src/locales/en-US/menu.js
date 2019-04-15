@@ -59,4 +59,5 @@ export default {
   'menu.inout.add-new': 'Add New',
   'menu.ride-booking': 'Ride Booking',
   'menu.ride-booking.add-new': 'Create Booking',
+  'menu.ride-booking.all': 'Booking Records',
 };

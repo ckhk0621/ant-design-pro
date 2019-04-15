@@ -31,7 +31,6 @@ import styles from './BasicList.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const { Search } = Input;
 
 @connect(({ notice, loading }) => ({
   list: notice.list,
@@ -147,20 +146,23 @@ class BasicList extends PureComponent {
       ? { footer: null, onCancel: this.handleDone }
       : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
-    const extraContent = (
-      <div className={styles.extraContent}>
-        <Search
-          className={styles.extraContentSearch}
-          placeholder="keywords"
-          onSearch={() => ({})}
-        />
-      </div>
-    );
+    // const extraContent = (
+    //   <div className={styles.extraContent}>
+    //     <Search
+    //       className={styles.extraContentSearch}
+    //       placeholder="keywords"
+    //       onSearch={() => ({})}
+    //     />
+    //   </div>
+    // );
 
     const ListContent = ({ data: { author } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <p>{author}</p>
+          <p>
+            Created by <br />
+            {author}
+          </p>
         </div>
       </div>
     );
@@ -322,7 +324,6 @@ class BasicList extends PureComponent {
             title="Notices List"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
-            extra={extraContent}
           >
             <Button
               type="dashed"
