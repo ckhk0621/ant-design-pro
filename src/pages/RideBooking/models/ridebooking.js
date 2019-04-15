@@ -1,65 +1,43 @@
 import { message } from 'antd';
-import {
-  submitRideBookingForm,
-  queryNotices,
-  deleteNotice,
-  updateNotice,
-  querySingleNotice,
-} from '@/services/api';
+import { submitRideBookingForm, queryRideBooking, deleteRideBooking } from '@/services/api';
 
 export default {
   namespace: 'ridebooking',
-
   state: {
-    single: {
-      post: {
-        title: '',
-        content: '',
-      },
+    data: {
+      list: [],
     },
-    list: [],
-    images: null,
   },
 
   effects: {
     *fetch(_, { call, put }) {
-      const response = yield call(queryNotices);
+      const response = yield call(queryRideBooking);
       const payload = response;
       if (response) {
         yield put({
-          type: 'saveNotices',
-          payload,
-        });
-      }
-    },
-    *single({ id }, { call, put }) {
-      const response = yield call(querySingleNotice, id);
-      const payload = response.post;
-      if (response.result === 'ok') {
-        yield put({
-          type: 'saveSingleNotice',
+          type: 'saveRideBooking',
           payload,
         });
       }
     },
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
-      const response = yield call(deleteNotice, payload, token);
+      const response = yield call(deleteRideBooking, payload, token);
       if (response) {
         yield put({
           type: 'fetch',
         });
       }
     },
-    *update({ payload }, { call, put, select }) {
-      const token = yield select(state => state.login.token);
-      const response = yield call(updateNotice, payload, token);
-      if (response) {
-        yield put({
-          type: 'fetch',
-        });
-      }
-    },
+    // *update({ payload }, { call, put, select }) {
+    //   const token = yield select(state => state.login.token);
+    //   const response = yield call(updateNotice, payload, token);
+    //   if (response) {
+    //     yield put({
+    //       type: 'fetch',
+    //     });
+    //   }
+    // },
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitRideBookingForm, payload, token);
@@ -70,14 +48,15 @@ export default {
   },
 
   reducers: {
-    saveNotices(state, { payload }) {
+    saveRideBooking(state, { payload }) {
       return {
         ...state,
-        list: payload,
+        data: {
+          list: payload,
+        },
       };
     },
     saveSingleNotice(state, { payload }) {
-      console.log(`saveSingleNotice===`, payload);
       return {
         ...state,
         single: payload,

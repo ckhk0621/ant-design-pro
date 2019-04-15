@@ -16,6 +16,21 @@ export async function submitRideBookingForm(params, token) {
   });
 }
 
+export async function queryRideBooking() {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking`, {
+    method: 'GET',
+  });
+}
+
+export async function deleteRideBooking(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
 /**
  * INOUT
  */
