@@ -60,4 +60,7 @@ export default {
   'menu.ride-booking': 'Ride Booking',
   'menu.ride-booking.add-new': 'Create Booking',
   'menu.ride-booking.all': 'Booking Records',
+  'menu.ride-booking.destination': 'Destination',
+  'menu.ride-booking.destination.list': 'Destination List',
+  'menu.ride-booking.destination.add': 'Add',
 };

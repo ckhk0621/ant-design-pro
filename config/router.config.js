@@ -167,6 +167,23 @@ export default [
             name: 'add-new',
             component: './RideBooking/CreateRideBooking',
           },
+          {
+            path: '/ride-booking/destination',
+            name: 'destination',
+            hideChildrenInMenu: false,
+            routes: [
+              {
+                path: '/ride-booking/destination/list',
+                name: 'list',
+                component: './RideBooking/DestinationTableList',
+              },
+              {
+                path: '/ride-booking/destination/create',
+                name: 'add',
+                component: './RideBooking/Destination',
+              },
+            ],
+          },
         ],
       },
       // list

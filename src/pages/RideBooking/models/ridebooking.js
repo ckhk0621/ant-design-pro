@@ -1,11 +1,22 @@
 import { message } from 'antd';
-import { submitRideBookingForm, queryRideBooking, deleteRideBooking } from '@/services/api';
+import {
+  submitRideBookingForm,
+  queryRideBooking,
+  deleteRideBooking,
+  submitDestinationForm,
+  queryDestination,
+  deleteDestination,
+  updateDestination,
+} from '@/services/api';
 
 export default {
   namespace: 'ridebooking',
   state: {
     data: {
       list: [],
+    },
+    destination: {
+      data: {},
     },
   },
 
@@ -20,12 +31,40 @@ export default {
         });
       }
     },
+    *fetchDestination(_, { call, put }) {
+      const response = yield call(queryDestination);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'saveDestination',
+          payload,
+        });
+      }
+    },
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(deleteRideBooking, payload, token);
       if (response) {
         yield put({
           type: 'fetch',
+        });
+      }
+    },
+    *deleteDestination({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(deleteDestination, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchDestination',
+        });
+      }
+    },
+    *updateDestination({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(updateDestination, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchDestination',
         });
       }
     },
@@ -45,6 +84,13 @@ export default {
         message.success('Booking created');
       }
     },
+    *submitDestinationForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitDestinationForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('Destination created');
+      }
+    },
   },
 
   reducers: {
@@ -53,6 +99,16 @@ export default {
         ...state,
         data: {
           list: payload,
+        },
+      };
+    },
+    saveDestination(state, { payload }) {
+      return {
+        ...state,
+        destination: {
+          data: {
+            list: payload,
+          },
         },
       };
     },
