@@ -26,6 +26,22 @@ export async function submitDestinationForm(params, token) {
   });
 }
 
+export async function submitLocationForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/location`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function queryLocation() {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/location`, {
+    method: 'GET',
+  });
+}
+
 export async function queryDestination() {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking/destination`, {
     method: 'GET',
@@ -49,6 +65,25 @@ export async function deleteDestination(params, token) {
 
 export async function updateDestination(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking/destination/${params.id}`, {
+    method: 'PUT',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function deleteLocation(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/location/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function updateLocation(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/location/${params.id}`, {
     method: 'PUT',
     body: params,
     headers: {

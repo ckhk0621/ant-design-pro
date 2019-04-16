@@ -13,11 +13,11 @@ const FormItem = Form.Item;
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ ridebooking, loading }) => ({
-  destination: ridebooking.destination,
+  location: ridebooking.location,
   loading: loading.models.ridebooking,
 }))
 @Form.create()
-class DestinationTableList extends PureComponent {
+class LocationTableList extends PureComponent {
   state = {
     selectedRows: [],
     visible: false,
@@ -65,7 +65,7 @@ class DestinationTableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'ridebooking/fetchDestination',
+      type: 'ridebooking/fetchLocation',
     });
   }
 
@@ -117,7 +117,7 @@ class DestinationTableList extends PureComponent {
       });
 
       dispatch({
-        type: 'ridebooking/updateDestination',
+        type: 'ridebooking/updateLocation',
         payload: { id, ...fieldsValue, remark: fieldsValue.remark.toHTML() },
       });
     });
@@ -126,14 +126,14 @@ class DestinationTableList extends PureComponent {
   deleteItem = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'ridebooking/deleteDestination',
+      type: 'ridebooking/deleteLocation',
       payload: { id },
     });
   };
 
   render() {
     const {
-      destination: { data },
+      location: { data },
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -160,7 +160,7 @@ class DestinationTableList extends PureComponent {
         return (
           <Result
             type="success"
-            title="Notice updated"
+            title="Location updated"
             description=""
             actions={
               <Button type="primary" onClick={this.handleDone}>
@@ -214,7 +214,7 @@ class DestinationTableList extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title="Destinations">
+      <PageHeaderWrapper title="Location">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
@@ -223,7 +223,7 @@ class DestinationTableList extends PureComponent {
                 type="primary"
                 onClick={() => router.push('/ride-booking/destination/create')}
               >
-                Add Destination
+                Add Location
               </Button>
             </div>
             <SimplyTable
@@ -249,4 +249,4 @@ class DestinationTableList extends PureComponent {
   }
 }
 
-export default DestinationTableList;
+export default LocationTableList;

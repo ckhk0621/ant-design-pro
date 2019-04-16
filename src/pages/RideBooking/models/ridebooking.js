@@ -7,6 +7,10 @@ import {
   queryDestination,
   deleteDestination,
   updateDestination,
+  submitLocationForm,
+  queryLocation,
+  deleteLocation,
+  updateLocation,
 } from '@/services/api';
 
 export default {
@@ -16,6 +20,9 @@ export default {
       list: [],
     },
     destination: {
+      data: {},
+    },
+    location: {
       data: {},
     },
   },
@@ -41,6 +48,16 @@ export default {
         });
       }
     },
+    *fetchLocation(_, { call, put }) {
+      const response = yield call(queryLocation);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'saveLocation',
+          payload,
+        });
+      }
+    },
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(deleteRideBooking, payload, token);
@@ -59,12 +76,30 @@ export default {
         });
       }
     },
+    *deleteLocation({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(deleteLocation, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchLocation',
+        });
+      }
+    },
     *updateDestination({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(updateDestination, payload, token);
       if (response) {
         yield put({
           type: 'fetchDestination',
+        });
+      }
+    },
+    *updateLocation({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(updateLocation, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchLocation',
         });
       }
     },
@@ -91,6 +126,13 @@ export default {
         message.success('Destination created');
       }
     },
+    *submitLocationForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitLocationForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('Location created');
+      }
+    },
   },
 
   reducers: {
@@ -112,26 +154,13 @@ export default {
         },
       };
     },
-    saveSingleNotice(state, { payload }) {
+    saveLocation(state, { payload }) {
       return {
         ...state,
-        single: payload,
-      };
-    },
-    saveStepFormData(state, { payload }) {
-      return {
-        ...state,
-        step: {
-          ...state.step,
-          ...payload,
-        },
-      };
-    },
-    saveImagesToFormData(state, { payload }) {
-      return {
-        ...state,
-        images: {
-          ...payload,
+        location: {
+          data: {
+            list: payload,
+          },
         },
       };
     },

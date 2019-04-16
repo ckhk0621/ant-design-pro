@@ -184,6 +184,23 @@ export default [
               },
             ],
           },
+          {
+            path: '/ride-booking/location',
+            name: 'location',
+            hideChildrenInMenu: false,
+            routes: [
+              {
+                path: '/ride-booking/location/list',
+                name: 'list',
+                component: './RideBooking/LocationTableList',
+              },
+              {
+                path: '/ride-booking/location/create',
+                name: 'add',
+                component: './RideBooking/Location',
+              },
+            ],
+          },
         ],
       },
       // list
