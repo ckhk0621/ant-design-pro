@@ -203,6 +203,19 @@ export default [
           },
         ],
       },
+      // room
+      {
+        path: '/rooms',
+        icon: 'solution',
+        name: 'rooms',
+        routes: [
+          {
+            path: '/rooms',
+            name: 'all',
+            component: './Rooms/CardList',
+          },
+        ],
+      },
       // list
       // {
       //   path: '/list',
