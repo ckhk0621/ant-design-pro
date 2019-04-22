@@ -216,6 +216,25 @@ export default [
           },
         ],
       },
+      // gallery
+      {
+        path: '/gallery',
+        icon: 'picture',
+        name: 'gallery',
+        routes: [
+          {
+            path: '/gallery/:id',
+            name: 'all',
+            component: './Gallery/CardList',
+            hideInMenu: true,
+          },
+          {
+            path: '/gallery',
+            name: 'all',
+            component: './Gallery/BasicList',
+          },
+        ],
+      },
       // list
       // {
       //   path: '/list',

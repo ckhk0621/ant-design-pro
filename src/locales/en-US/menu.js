@@ -68,4 +68,6 @@ export default {
   'menu.ride-booking.location.add': 'Add',
   'menu.rooms': 'Room',
   'menu.rooms.all': 'Status',
+  'menu.gallery': 'Gallery',
+  'menu.gallery.all': 'List',
 };

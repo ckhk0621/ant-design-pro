@@ -97,7 +97,6 @@ export default {
       };
     },
     saveSingleNotice(state, { payload }) {
-      console.log(`saveSingleNotice===`, payload);
       return {
         ...state,
         single: payload,

@@ -1,10 +1,9 @@
 import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
-import { findDOMNode } from 'react-dom';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { NavLink, withRouter } from 'dva/router';
-import router from 'umi/router';
+// import router from 'umi/router';
 import moment from 'moment';
 import _ from 'lodash';
 import { connect } from 'dva';
@@ -145,16 +144,6 @@ class BasicList extends PureComponent {
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
       : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
-
-    // const extraContent = (
-    //   <div className={styles.extraContent}>
-    //     <Search
-    //       className={styles.extraContentSearch}
-    //       placeholder="keywords"
-    //       onSearch={() => ({})}
-    //     />
-    //   </div>
-    // );
 
     const ListContent = ({ data: { author } }) => (
       <div className={styles.listContent}>
@@ -318,23 +307,9 @@ class BasicList extends PureComponent {
           <Card
             className={styles.listCard}
             bordered={false}
-            title="Notices List"
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 24, paddingTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
           >
-            <Button
-              type="dashed"
-              style={{ width: '100%', marginBottom: 8 }}
-              icon="plus"
-              onClick={() => router.push('/notices/add')}
-              ref={component => {
-                /* eslint-disable */
-                this.addBtn = findDOMNode(component);
-                /* eslint-enable */
-              }}
-            >
-              Add New
-            </Button>
             <List
               size="large"
               rowKey="id"
