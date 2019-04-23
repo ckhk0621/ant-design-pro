@@ -203,7 +203,7 @@ class BasicList extends PureComponent {
         'separator',
         'link',
         'separator',
-        'media',
+        // 'media',
       ];
 
       return (

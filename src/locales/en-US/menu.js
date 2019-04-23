@@ -57,7 +57,7 @@ export default {
   'menu.inout.all': 'All Records',
   'menu.inout': 'In Out Records',
   'menu.inout.add-new': 'Add New',
-  'menu.ride-booking': 'Ride Booking',
+  'menu.ride-booking': 'Car Booking',
   'menu.ride-booking.add-new': 'Create Booking',
   'menu.ride-booking.all': 'Booking Records',
   'menu.ride-booking.destination': 'Destination',

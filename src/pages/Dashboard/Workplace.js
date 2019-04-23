@@ -94,15 +94,13 @@ class Workplace extends PureComponent {
               avatar={<Avatar src={!_.isEmpty(item.images[0]) ? item.images[0].thumbUrl : ''} />}
               title={
                 <span>
-                  <a className={styles.username}>{item.author}</a>
-                  &nbsp;
                   {/* eslint-disable */}
                   <Link to={`/notices/single/${item._id}`}>
                     {/* eslint-enable */}
                     <span
                       className={styles.event}
                       // eslint-disable-next-line react/no-danger
-                      dangerouslySetInnerHTML={{ __html: item.content }}
+                      dangerouslySetInnerHTML={{ __html: item.title }}
                     />
                   </Link>
                 </span>

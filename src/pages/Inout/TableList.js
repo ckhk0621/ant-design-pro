@@ -31,11 +31,6 @@ class TableList extends PureComponent {
       dataIndex: 'staff',
     },
     {
-      title: 'Remark',
-      dataIndex: 'remark',
-      render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
-    },
-    {
       title: 'Time',
       dataIndex: 'inout',
       sorter: true,
@@ -45,6 +40,15 @@ class TableList extends PureComponent {
           {moment(val[1]).format('YYYY-MM-DD HH:mm')}
         </div>
       ),
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+    },
+    {
+      title: 'Remark',
+      dataIndex: 'remark',
+      render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
     },
     {
       title: 'Added by',

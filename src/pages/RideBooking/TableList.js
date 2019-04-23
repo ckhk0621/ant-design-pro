@@ -482,7 +482,7 @@ class TableList extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title="Ride Booking records">
+      <PageHeaderWrapper title="Booking records">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>

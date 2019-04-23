@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio } from 'antd';
+import { Form, Input, Select, Button, Card, Radio, Upload, message, Icon } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UploadImage from '@/components/UploadImage';
@@ -17,6 +17,10 @@ const { Option } = Select;
 }))
 @Form.create()
 class CreateNotice extends PureComponent {
+  // state = {
+  //   files: []
+  // }
+
   componentDidMount() {
     // 异步设置编辑器内容
     setTimeout(() => {
@@ -47,6 +51,8 @@ class CreateNotice extends PureComponent {
         content: values.content.toHTML(),
         images: submitImages,
       };
+
+      console.log(`submitValues----`, submitValues);
 
       if (!err) {
         dispatch({
@@ -83,7 +89,6 @@ class CreateNotice extends PureComponent {
       'separator',
       'link',
       'separator',
-      'media',
     ];
 
     const formItemLayout = {
@@ -102,6 +107,20 @@ class CreateNotice extends PureComponent {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
         sm: { span: 10, offset: 7 },
+      },
+    };
+
+    const props = {
+      name: 'file',
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
       },
     };
 
@@ -167,6 +186,18 @@ class CreateNotice extends PureComponent {
               {getFieldDecorator('images', {
                 rules: [],
               })(<UploadImage />)}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label="files">
+              {getFieldDecorator('files', {
+                rules: [],
+              })(
+                <Upload {...props}>
+                  <Button>
+                    <Icon type="upload" /> Click to Upload
+                  </Button>
+                </Upload>
+              )}
             </FormItem>
 
             <FormItem

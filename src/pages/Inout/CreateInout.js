@@ -112,30 +112,42 @@ class CreateInout extends PureComponent {
               )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.content" />}>
-              {getFieldDecorator('remark', {
-                validateTrigger: 'onBlur',
-                rules: [
-                  {
-                    required: true,
-                    /* eslint-disable */
-                    validator: (_, value, callback) => {
-                      /* eslint-enable */
-                      if (value.isEmpty()) {
-                        callback(formatMessage({ id: 'form.remark.placeholder' }));
-                      } else {
-                        callback();
-                      }
-                    },
-                  },
-                ],
-              })(
+            <FormItem {...formItemLayout} label="Type">
+              <div>
+                {getFieldDecorator('type', {
+                  initialValue: 'Annual Leave',
+                })(
+                  <Radio.Group>
+                    <Radio value="Annual Leave">Annual Leave</Radio>
+                    <Radio value="Sick Leave">Sick Leave</Radio>
+                    <Radio value="Others">Others</Radio>
+                  </Radio.Group>
+                )}
+                {/* <FormItem style={{ marginBottom: 0 }}>
+                  {getFieldDecorator('typeOther')(
+                    <Input 
+                      style={{
+                        margin: '8px 0',
+                        display: getFieldValue('type') === 'Others' ? 'block' : 'none',
+                      }}
+                      placeholder="Other type"
+                    />
+                  )}
+                </FormItem> */}
+              </div>
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="Remark"
+              style={{ display: getFieldValue('type') === 'Others' ? 'block' : 'none' }}
+            >
+              {getFieldDecorator('remark')(
                 <BraftEditor
                   className="my-editor"
                   controls={controls}
-                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
                   contentStyle={{
-                    height: 210,
+                    height: 100,
                     borderWidth: 1,
                     borderColor: '#d9d9d9',
                     borderStyle: 'solid',
