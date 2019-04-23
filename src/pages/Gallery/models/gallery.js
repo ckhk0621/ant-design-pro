@@ -1,6 +1,12 @@
 // import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { submitMemoForm, queryMemo, deleteMemo, updateMemo } from '@/services/api';
+import {
+  submitGalleryForm,
+  queryGallery,
+  deleteGallery,
+  submitPhotoForm,
+  updateMemo,
+} from '@/services/api';
 
 export default {
   namespace: 'gallery',
@@ -11,18 +17,18 @@ export default {
 
   effects: {
     *fetch(_, { call, put }) {
-      const response = yield call(queryMemo);
+      const response = yield call(queryGallery);
       const payload = response;
       if (response) {
         yield put({
-          type: 'saveMemo',
+          type: 'save',
           payload,
         });
       }
     },
     *delete({ payload }, { call, put, select }) {
       const token = yield select(state => state.login.token);
-      const response = yield call(deleteMemo, payload, token);
+      const response = yield call(deleteGallery, payload, token);
       if (response) {
         yield put({
           type: 'fetch',
@@ -44,17 +50,25 @@ export default {
         payload,
       });
     },
-    *submitRegularForm({ payload }, { call, select }) {
+    *submitGalleryForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
-      const response = yield call(submitMemoForm, payload, token);
+      const response = yield call(submitGalleryForm, payload, token);
       if (response.status === 'ok') {
-        message.success('Memo created');
+        message.success('Gallery created');
+      }
+    },
+
+    *submitPhotoForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitPhotoForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('Photos added');
       }
     },
   },
 
   reducers: {
-    saveMemo(state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
         list: payload,
@@ -73,6 +87,17 @@ export default {
           ...payload,
         },
       };
+    },
+  },
+
+  subscriptions: {
+    setup({ history, dispatch }) {
+      // Subscribe history(url) change, trigger `load` action if pathname is `/`
+      return history.listen(({ pathname }) => {
+        if (pathname === '/gallery/photo/add') {
+          dispatch({ type: 'fetch' });
+        }
+      });
     },
   },
 };

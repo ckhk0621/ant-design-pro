@@ -223,16 +223,36 @@ export default [
         name: 'gallery',
         routes: [
           {
-            path: '/gallery/:id',
+            path: '/gallery/all',
+            name: 'all',
+            component: './Gallery/BasicList',
+          },
+          {
+            path: '/gallery/add',
+            name: 'add-new-gallery',
+            component: './Gallery/CreateForm',
+          },
+          {
+            path: '/gallery/single/:id',
             name: 'all',
             component: './Gallery/CardList',
             hideInMenu: true,
           },
           {
-            path: '/gallery',
-            name: 'all',
-            component: './Gallery/BasicList',
+            path: '/gallery/photo/add',
+            name: 'add-new-photo',
+            component: './Gallery/CreatePhotoForm',
           },
+          // {
+          //   path: '/gallery',
+          //   name: 'all',
+          //   component: './Gallery/BasicList',
+          // },
+          // {
+          //   path: '/gallery/category/create',
+          //   name: 'create-gallery',
+          //   component: './Gallery/Location',
+          // },
         ],
       },
       // list

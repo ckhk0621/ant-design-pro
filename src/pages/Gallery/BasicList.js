@@ -5,7 +5,6 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import { NavLink, withRouter } from 'dva/router';
 // import router from 'umi/router';
 import moment from 'moment';
-import _ from 'lodash';
 import { connect } from 'dva';
 import {
   List,
@@ -15,7 +14,6 @@ import {
   Icon,
   Dropdown,
   Menu,
-  Avatar,
   Modal,
   Form,
   DatePicker,
@@ -31,8 +29,8 @@ import styles from './BasicList.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ notice, loading }) => ({
-  list: notice.list,
+@connect(({ gallery, loading }) => ({
+  list: gallery.list,
   loading: loading.models.list,
 }))
 @Form.create()
@@ -47,7 +45,7 @@ class BasicList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/fetch',
+      type: 'gallery/fetch',
       payload: {
         count: 5,
       },
@@ -105,7 +103,7 @@ class BasicList extends PureComponent {
       });
 
       dispatch({
-        type: 'notice/update',
+        type: 'gallery/update',
         payload: { id, ...fieldsValue, content: fieldsValue.content.toHTML() },
       });
     });
@@ -114,7 +112,7 @@ class BasicList extends PureComponent {
   deleteItem = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'notice/delete',
+      type: 'gallery/delete',
       payload: { id },
     });
   };
@@ -130,8 +128,8 @@ class BasicList extends PureComponent {
       if (key === 'edit') this.showEditModal(currentItem);
       else if (key === 'delete') {
         Modal.confirm({
-          title: 'Delete Notice',
-          content: 'Confirm to delete this notice？',
+          title: 'Delete Gallery',
+          content: 'Confirm to delete this gallery？',
           okText: 'Confirm',
           cancelText: 'Cancel',
           /* eslint-disable */
@@ -145,19 +143,21 @@ class BasicList extends PureComponent {
       ? { footer: null, onCancel: this.handleDone }
       : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
-    const ListContent = ({ data: { author } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.listContentItem}>
-          <p>{author}</p>
-        </div>
-      </div>
-    );
+    // const extraContent = (
+    //   <div className={styles.extraContent}>
+    //     <Search
+    //       className={styles.extraContentSearch}
+    //       placeholder="keywords"
+    //       onSearch={() => ({})}
+    //     />
+    //   </div>
+    // );
 
     const MoreBtn = props => (
       <Dropdown
         overlay={
           <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
-            <Menu.Item key="edit">Edit</Menu.Item>
+            {/* <Menu.Item key="edit">Edit</Menu.Item> */}
             <Menu.Item key="delete">Delete</Menu.Item>
           </Menu>
         }
@@ -318,23 +318,15 @@ class BasicList extends PureComponent {
               renderItem={item => (
                 <List.Item actions={[<MoreBtn current={item} />]}>
                   <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
-                        shape="square"
-                        size="large"
-                      />
-                    }
                     /* eslint-disable */
                     title={
-                      <NavLink style={{ fontSize: 16 }} to={`/notices/single/${item._id}`}>
+                      <NavLink style={{ fontSize: 16 }} to={`/gallery/single/${item._id}`}>
                         {item.title}
                       </NavLink>
                     }
                     /* eslint-enable */
                     description={moment(item.date).format('YYYY-MM-DD HH:mm')}
                   />
-                  <ListContent data={item} />
                 </List.Item>
               )}
             />

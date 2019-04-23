@@ -85,9 +85,10 @@ class Workplace extends PureComponent {
       //   return key;
       // });
       return (
-        <>
+        // eslint-disable-next-line no-underscore-dangle
+        <div key={item._id}>
           {/* eslint-disable */}
-          <List.Item key={item._id}>
+          <List.Item>
             {/* eslint-enable */}
             <List.Item.Meta
               avatar={<Avatar src={!_.isEmpty(item.images[0]) ? item.images[0].thumbUrl : ''} />}
@@ -100,6 +101,7 @@ class Workplace extends PureComponent {
                     {/* eslint-enable */}
                     <span
                       className={styles.event}
+                      // eslint-disable-next-line react/no-danger
                       dangerouslySetInnerHTML={{ __html: item.content }}
                     />
                   </Link>
@@ -112,7 +114,7 @@ class Workplace extends PureComponent {
               }
             />
           </List.Item>
-        </>
+        </div>
       );
     });
   }

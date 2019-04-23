@@ -77,7 +77,7 @@ class UploadImage extends PureComponent {
           onPreview={this.handlePreview}
           onChange={this.handleChange}
         >
-          {fileList.length >= 1 ? null : uploadButton}
+          {uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />

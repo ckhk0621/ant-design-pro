@@ -3,6 +3,45 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * Gallery
+ */
+
+export async function queryGallery() {
+  return request(`${SITE_URL.SERVER_API}/api/gallery`, {
+    method: 'GET',
+  });
+}
+
+export async function submitPhotoForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/gallery/addPhoto`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function submitGalleryForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/gallery`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function deleteGallery(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/gallery/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * RIDE BOOKING
  */
 
