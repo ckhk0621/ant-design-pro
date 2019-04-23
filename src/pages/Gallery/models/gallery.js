@@ -6,6 +6,7 @@ import {
   deleteGallery,
   submitPhotoForm,
   updateMemo,
+  querySingleGallery,
 } from '@/services/api';
 
 export default {
@@ -22,6 +23,16 @@ export default {
       if (response) {
         yield put({
           type: 'save',
+          payload,
+        });
+      }
+    },
+    *fetchSingle({ getGalleryID }, { call, put }) {
+      const response = yield call(querySingleGallery, getGalleryID);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'saveSingle',
           payload,
         });
       }
@@ -74,6 +85,14 @@ export default {
         list: payload,
       };
     },
+    saveSingle(state, { payload }) {
+      return {
+        ...state,
+        single: {
+          ...payload.images,
+        },
+      };
+    },
     saveSingleNotice(state, { payload }) {
       return {
         ...state,
@@ -96,6 +115,10 @@ export default {
       return history.listen(({ pathname }) => {
         if (pathname === '/gallery/photo/add') {
           dispatch({ type: 'fetch' });
+        }
+        if (window.location.pathname.includes('/gallery/single/')) {
+          const getGalleryID = window.location.pathname.split('/').pop();
+          dispatch({ type: 'fetchSingle', getGalleryID });
         }
       });
     },

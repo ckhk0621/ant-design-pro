@@ -12,6 +12,12 @@ export async function queryGallery() {
   });
 }
 
+export async function querySingleGallery(params) {
+  return request(`${SITE_URL.SERVER_API}/api/gallery/${params}`, {
+    method: 'GET',
+  });
+}
+
 export async function submitPhotoForm(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/gallery/addPhoto`, {
     method: 'POST',

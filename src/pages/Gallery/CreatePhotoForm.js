@@ -1,29 +1,47 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi/locale';
-import { Form, Select, Button, Card, Input } from 'antd';
+import { Form, Select, Button, Card } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import UploadImage from '@/components/UploadImage';
+import _ from 'lodash';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
 @connect(({ user, gallery, loading }) => ({
   list: gallery.list,
+  images: gallery.images,
   submitting: loading.effects['gallery/submitPhotoForm'],
   currentUser: user.currentUser || '',
 }))
 @Form.create()
 class CreatePhotoForm extends PureComponent {
   handleSubmit = e => {
-    const { dispatch, form } = this.props;
+    const { dispatch, form, images } = this.props;
+    let submitValues;
+    let submitImages;
+    e.preventDefault();
     e.preventDefault();
     form.validateFields((err, values) => {
+      if (!_.isEmpty(images)) {
+        submitImages = (_.toArray(images) || []).map(d => ({
+          name: d.name,
+          thumbUrl: d.thumbUrl,
+          type: d.type,
+          uid: d.uid,
+        }));
+      }
+
+      submitValues = {
+        ...values,
+        images: submitImages,
+      };
+
       if (!err) {
         dispatch({
           type: 'gallery/submitPhotoForm',
-          payload: {
-            ...values,
-          },
+          payload: submitValues,
         });
         form.resetFields();
       }
@@ -93,10 +111,10 @@ class CreatePhotoForm extends PureComponent {
               )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="Title">
-              {getFieldDecorator('title', {
-                rules: [{ required: true, message: 'Please input title' }],
-              })(<Input placeholder="" />)}
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
+              {getFieldDecorator('images', {
+                rules: [],
+              })(<UploadImage direction="gallery" />)}
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

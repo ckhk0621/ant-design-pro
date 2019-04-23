@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, message } from 'antd';
 import { connect } from 'dva';
 
 @connect(({ loading }) => ({
@@ -20,7 +20,12 @@ class UploadImage extends PureComponent {
       this.setState({ fileList: [] });
       /* eslint-enable */
       const { dispatch } = this.props;
-      if (direction === 'memo') {
+      if (direction === 'gallery') {
+        dispatch({
+          type: 'gallery/uploadImages',
+          payload: [],
+        });
+      } else if (direction === 'memo') {
         dispatch({
           type: 'memo/uploadImages',
           payload: [],
@@ -44,9 +49,14 @@ class UploadImage extends PureComponent {
   };
 
   handleChange = ({ fileList }) => {
-    this.setState({ fileList });
     const { dispatch, direction } = this.props;
-    if (direction === 'memo') {
+    this.setState({ fileList });
+    if (direction === 'gallery') {
+      dispatch({
+        type: 'gallery/uploadImages',
+        payload: fileList,
+      });
+    } else if (direction === 'memo') {
       dispatch({
         type: 'memo/uploadImages',
         payload: fileList,
@@ -57,6 +67,18 @@ class UploadImage extends PureComponent {
         payload: fileList,
       });
     }
+  };
+
+  beforeUpload = file => {
+    const isJPG = file.type === 'image/jpeg';
+    if (!isJPG) {
+      message.error('You can only upload JPG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJPG && isLt2M;
   };
 
   render() {
@@ -76,8 +98,9 @@ class UploadImage extends PureComponent {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          beforeUpload={this.beforeUpload}
         >
-          {uploadButton}
+          {fileList.length >= 3 ? null : uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />

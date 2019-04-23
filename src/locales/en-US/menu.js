@@ -70,4 +70,6 @@ export default {
   'menu.rooms.all': 'Status',
   'menu.gallery': 'Gallery',
   'menu.gallery.all': 'List',
+  'menu.gallery.add-new-gallery': 'Add Gallery',
+  'menu.gallery.add-new-photo': 'Add Photo',
 };
