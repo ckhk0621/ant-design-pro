@@ -20,10 +20,14 @@ export default {
       list: [],
     },
     destination: {
-      data: {},
+      data: {
+        list: [],
+      },
     },
     location: {
-      data: {},
+      data: {
+        list: [],
+      },
     },
   },
 
@@ -163,6 +167,17 @@ export default {
           },
         },
       };
+    },
+  },
+
+  subscriptions: {
+    setup({ history, dispatch }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/ride-booking/add') {
+          dispatch({ type: 'fetchDestination' });
+          dispatch({ type: 'fetchLocation' });
+        }
+      });
     },
   },
 };

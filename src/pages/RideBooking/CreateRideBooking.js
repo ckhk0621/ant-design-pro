@@ -9,9 +9,11 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ user, loading }) => ({
+@connect(({ user, ridebooking, loading }) => ({
   submitting: loading.effects['ridebooking/submitRegularForm'],
   currentUser: user.currentUser || '',
+  destination: ridebooking.destination.data,
+  location: ridebooking.location.data,
 }))
 @Form.create()
 class CreateRideBooking extends PureComponent {
@@ -30,6 +32,7 @@ class CreateRideBooking extends PureComponent {
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
+        console.log(`values===`, values);
         dispatch({
           type: 'ridebooking/submitRegularForm',
           payload: {
@@ -53,7 +56,7 @@ class CreateRideBooking extends PureComponent {
   };
 
   render() {
-    const { submitting, currentUser } = this.props;
+    const { submitting, currentUser, destination, location } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
@@ -97,8 +100,6 @@ class CreateRideBooking extends PureComponent {
     //   guestOptions.push(<Option key={i.toString(36) + i}>{i}</Option>);
     // }
 
-    const locationOptions = ['MK', 'NT'];
-
     return (
       <PageHeaderWrapper
         title={<FormattedMessage id="app.notice.create.ride.booking.title" />}
@@ -106,15 +107,15 @@ class CreateRideBooking extends PureComponent {
       >
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+            <FormItem {...formItemLayout} label="orderBy" style={{ display: 'none' }}>
+              {getFieldDecorator('orderBy', {
+                initialValue: currentUser.name,
+              })(<Input />)}
+            </FormItem>
+
             <FormItem {...formItemLayout} label="Passengers">
               {getFieldDecorator('passenger', {
                 initialValue: [currentUser.name],
-                rules: [
-                  {
-                    required: true,
-                    message: 'Plese select passenger',
-                  },
-                ],
               })(
                 <Select mode="multiple" placeholder="Please select">
                   {/* {passengerOptions} */}
@@ -138,9 +139,10 @@ class CreateRideBooking extends PureComponent {
                 ],
               })(
                 <Select placeholder="Please select">
-                  {locationOptions.map(d => (
-                    <Option key={d} value={d}>
-                      {d}
+                  {location.list.map(d => (
+                    // eslint-disable-next-line no-underscore-dangle
+                    <Option key={d._id} value={d.name}>
+                      {d.name}
                     </Option>
                   ))}
                 </Select>
@@ -157,9 +159,10 @@ class CreateRideBooking extends PureComponent {
                 ],
               })(
                 <Select placeholder="Please select">
-                  {locationOptions.map(d => (
-                    <Option key={d} value={d}>
-                      {d}
+                  {destination.list.map(d => (
+                    // eslint-disable-next-line no-underscore-dangle
+                    <Option key={d._id} value={d.name}>
+                      {d.name}
                     </Option>
                   ))}
                 </Select>
@@ -187,15 +190,33 @@ class CreateRideBooking extends PureComponent {
             <FormItem {...formItemLayout} label="Number of guest">
               {getFieldDecorator('numberOfGuest', {
                 rules: [],
+                initialValue: 0,
               })(
                 <Select placeholder="Please select">
-                  <Option key={1}>1</Option>
-                  <Option key={2}>2</Option>
-                  <Option key={3}>3</Option>
-                  <Option key={4}>4</Option>
-                  <Option key={5}>5</Option>
-                  <Option key={6}>6</Option>
-                  <Option key={7}>7</Option>
+                  <Option key={0} value={0}>
+                    0
+                  </Option>
+                  <Option key={1} value={1}>
+                    1
+                  </Option>
+                  <Option key={2} value={2}>
+                    2
+                  </Option>
+                  <Option key={3} value={3}>
+                    3
+                  </Option>
+                  <Option key={4} value={4}>
+                    4
+                  </Option>
+                  <Option key={5} value={5}>
+                    5
+                  </Option>
+                  <Option key={6} value={6}>
+                    6
+                  </Option>
+                  <Option key={7} value={7}>
+                    7
+                  </Option>
                 </Select>
               )}
             </FormItem>

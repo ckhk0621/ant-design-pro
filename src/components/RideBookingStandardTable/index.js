@@ -1,6 +1,8 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable no-underscore-dangle */
 import React, { PureComponent, Fragment } from 'react';
 import { Table, Alert } from 'antd';
+import _ from 'lodash';
 import styles from './index.less';
 
 function initTotalList(columns) {
@@ -57,8 +59,29 @@ class StandardTable extends PureComponent {
     }
   };
 
+  renderExtraInfo = record => {
+    const { passenger, guest, remark } = record;
+    return (
+      <div>
+        Passenger: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}</b>) : 'No staffs'}
+        <br />
+        Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}</b>) : 'No Guest'}
+        <br />
+        Remark: <span dangerouslySetInnerHTML={{ __html: remark }} />
+      </div>
+    );
+  };
+
   cleanSelectedKeys = () => {
     this.handleRowSelectChange([], []);
+  };
+
+  renderPlusIcon = record => {
+    const { passenger, guest, numberOfGuest } = record;
+    if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0) {
+      return true;
+    }
+    return false;
   };
 
   render() {
@@ -72,13 +95,26 @@ class StandardTable extends PureComponent {
       ...pagination,
     };
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.handleRowSelectChange,
-      getCheckboxProps: record => ({
-        disabled: record.disabled,
-      }),
-    };
+    // const rowSelection = {
+    //   selectedRowKeys,
+    //   onChange: this.handleRowSelectChange,
+    //   getCheckboxProps: record => ({
+    //     disabled: record.disabled,
+    //   }),
+    // };
+
+    // rowSelection objects indicates the need for row selection
+    // const rowSelection = {
+    //   onChange: (selectedRowKeys, selectedRows) => {
+    //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    //   },
+    //   onSelect: (record, selected, selectedRows) => {
+    //     console.log(record, selected, selectedRows);
+    //   },
+    //   onSelectAll: (selected, selectedRows, changeRows) => {
+    //     console.log(selected, selectedRows, changeRows);
+    //   },
+    // };
 
     return (
       <div className={styles.standardTable}>
@@ -106,9 +142,11 @@ class StandardTable extends PureComponent {
           />
         </div>
         <Table
-          rowKey={rowKey || 'KEY'}
-          rowSelection={rowSelection}
+          rowKey="_id"
+          // rowSelection={rowSelection}
+          expandedRowRender={record => this.renderExtraInfo(record)}
           dataSource={list}
+          rowClassName={record => (this.renderPlusIcon(record) ? '' : 'hide')}
           pagination={paginationProps}
           onChange={this.handleTableChange}
           {...rest}

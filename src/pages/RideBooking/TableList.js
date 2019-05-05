@@ -34,16 +34,20 @@ class TableList extends PureComponent {
   };
 
   columns = [
+    // {
+    //   title: 'Passenger',
+    //   dataIndex: 'passenger',
+    // },
     {
-      title: 'Passenger',
-      dataIndex: 'passenger',
+      title: 'Order By',
+      dataIndex: 'orderBy',
     },
     {
       title: 'Pickup',
       dataIndex: 'pickupLocation',
     },
     {
-      title: 'Target',
+      title: 'Destination',
       dataIndex: 'targetLocation',
     },
     {
@@ -59,11 +63,11 @@ class TableList extends PureComponent {
       title: 'Guest No.',
       dataIndex: 'numberOfGuest',
     },
-    {
-      title: 'Remark',
-      dataIndex: 'remark',
-      render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
-    },
+    // {
+    //   title: 'Remark',
+    //   dataIndex: 'remark',
+    //   render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',

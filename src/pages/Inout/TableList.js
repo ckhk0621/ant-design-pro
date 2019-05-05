@@ -48,6 +48,7 @@ class TableList extends PureComponent {
     {
       title: 'Remark',
       dataIndex: 'remark',
+      // eslint-disable-next-line react/no-danger
       render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
     },
     {
@@ -213,6 +214,7 @@ class TableList extends PureComponent {
               </Button>
             </div>
             <StandardTable
+              rowKey={0}
               selectedRows={selectedRows}
               loading={loading}
               data={data}
