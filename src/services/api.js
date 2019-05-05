@@ -61,6 +61,26 @@ export async function submitRideBookingForm(params, token) {
   });
 }
 
+// export async function updateDestination(params, token) {
+//   return request(`${SITE_URL.SERVER_API}/api/ridebooking/destination/${params.id}`, {
+//     method: 'PUT',
+//     body: params,
+//     headers: {
+//       Authorization: token,
+//     },
+//   });
+// }
+
+export async function updateRideBooking(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/${params.id}`, {
+    method: 'PUT',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
 export async function submitDestinationForm(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking/destination`, {
     method: 'POST',

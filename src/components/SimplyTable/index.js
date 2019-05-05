@@ -74,7 +74,7 @@ class SimplyTable extends PureComponent {
     return (
       <div className={styles.standardTable}>
         <Table
-          rowKey={rowKey || 'KEY'}
+          rowKey={rowKey || '_id'}
           dataSource={list}
           pagination={paginationProps}
           onChange={this.handleTableChange}

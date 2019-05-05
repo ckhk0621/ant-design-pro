@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import {
   submitRideBookingForm,
+  updateRideBooking,
   queryRideBooking,
   deleteRideBooking,
   submitDestinationForm,
@@ -123,6 +124,15 @@ export default {
         message.success('Booking created');
       }
     },
+    *update({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(updateRideBooking, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetch',
+        });
+      }
+    },
     *submitDestinationForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitDestinationForm, payload, token);
@@ -173,7 +183,7 @@ export default {
   subscriptions: {
     setup({ history, dispatch }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/ride-booking/add') {
+        if (pathname.indexOf('/ride-booking') !== -1) {
           dispatch({ type: 'fetchDestination' });
           dispatch({ type: 'fetchLocation' });
         }

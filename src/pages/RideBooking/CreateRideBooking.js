@@ -2,7 +2,7 @@ import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
-import { formatMessage, FormattedMessage } from 'umi/locale';
+import { FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio, DatePicker } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -32,7 +32,6 @@ class CreateRideBooking extends PureComponent {
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
-        console.log(`values===`, values);
         dispatch({
           type: 'ridebooking/submitRegularForm',
           payload: {
@@ -232,9 +231,8 @@ class CreateRideBooking extends PureComponent {
                 <BraftEditor
                   className="my-editor"
                   controls={controls}
-                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
                   contentStyle={{
-                    height: 210,
+                    height: 100,
                     borderWidth: 1,
                     borderColor: '#d9d9d9',
                     borderStyle: 'solid',

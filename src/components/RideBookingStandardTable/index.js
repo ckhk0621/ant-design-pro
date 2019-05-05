@@ -63,9 +63,9 @@ class StandardTable extends PureComponent {
     const { passenger, guest, remark } = record;
     return (
       <div>
-        Passenger: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}</b>) : 'No staffs'}
+        Passengers: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
-        Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}</b>) : 'No Guest'}
+        Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
         Remark: <span dangerouslySetInnerHTML={{ __html: remark }} />
       </div>
@@ -77,8 +77,9 @@ class StandardTable extends PureComponent {
   };
 
   renderPlusIcon = record => {
-    const { passenger, guest, numberOfGuest } = record;
-    if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0) {
+    const { passenger, guest, numberOfGuest, remark } = record;
+    if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0 || remark !== '<p></p>') {
+      // <p></p> === empty
       return true;
     }
     return false;
@@ -120,6 +121,7 @@ class StandardTable extends PureComponent {
       <div className={styles.standardTable}>
         <div className={styles.tableAlert}>
           <Alert
+            style={{ display: 'none' }}
             message={
               <Fragment>
                 Selected <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>
