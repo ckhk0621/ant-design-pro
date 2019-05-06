@@ -3,7 +3,7 @@ import { message } from 'antd';
 import { submitMemoForm, queryMemo, deleteMemo, updateMemo } from '@/services/api';
 
 export default {
-  namespace: 'room',
+  namespace: 'roombooking',
 
   state: {
     list: [],
@@ -15,7 +15,7 @@ export default {
       const payload = response;
       if (response) {
         yield put({
-          type: 'saveMemo',
+          type: 'save',
           payload,
         });
       }
@@ -38,12 +38,6 @@ export default {
         });
       }
     },
-    *uploadImages({ payload }, { put }) {
-      yield put({
-        type: 'saveImagesToFormData',
-        payload,
-      });
-    },
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitMemoForm, payload, token);
@@ -54,7 +48,7 @@ export default {
   },
 
   reducers: {
-    saveMemo(state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
         list: payload,
@@ -64,14 +58,6 @@ export default {
       return {
         ...state,
         single: payload,
-      };
-    },
-    saveImagesToFormData(state, { payload }) {
-      return {
-        ...state,
-        images: {
-          ...payload,
-        },
       };
     },
   },

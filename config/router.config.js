@@ -205,12 +205,12 @@ export default [
       },
       // room
       {
-        path: '/rooms',
+        path: '/roombooking',
         icon: 'solution',
         name: 'rooms',
         routes: [
           {
-            path: '/rooms',
+            path: '/roombooking',
             name: 'all',
             component: './Rooms/CardList',
           },
