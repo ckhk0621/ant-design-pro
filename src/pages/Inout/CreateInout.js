@@ -162,6 +162,7 @@ class CreateInout extends PureComponent {
 
             <FormItem
               {...formItemLayout}
+              style={{ display: 'none' }}
               label={<FormattedMessage id="form.public.label" />}
               help={<FormattedMessage id="form.public.label2.help" />}
             >

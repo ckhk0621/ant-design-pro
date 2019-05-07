@@ -214,7 +214,7 @@ class TableList extends PureComponent {
               </Button>
             </div>
             <StandardTable
-              rowKey={0}
+              rowKey="_id"
               selectedRows={selectedRows}
               loading={loading}
               data={data}

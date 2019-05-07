@@ -61,6 +61,7 @@ export default [
             path: '/notices/add',
             name: 'add-new',
             component: './Posts/CreateNotice',
+            authority: ['admin'],
           },
           {
             path: '/notices/single/:id',
@@ -85,6 +86,7 @@ export default [
             path: '/memo/add',
             name: 'add-new',
             component: './Memo/CreateMemo',
+            authority: ['admin'],
           },
         ],
       },
@@ -210,9 +212,14 @@ export default [
         name: 'rooms',
         routes: [
           {
-            path: '/roombooking',
+            path: '/roombooking/roomone',
             name: 'all',
             component: './Rooms/CardList',
+          },
+          {
+            path: '/roombooking/roomtwo',
+            name: 'other',
+            component: './Rooms/Card2List',
           },
         ],
       },

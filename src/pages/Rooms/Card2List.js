@@ -22,14 +22,14 @@ import TextArea from 'antd/lib/input/TextArea';
 
 const FormItem = Form.Item;
 
-@connect(({ user, roombooking, loading }) => ({
-  submitting: loading.effects['roombooking/submitRegularForm'],
+@connect(({ user, room2booking, loading }) => ({
+  submitting: loading.effects['room2booking/submitRegularForm'],
   currentUser: user.currentUser || '',
-  roombooking: roombooking.list,
-  loading: loading.models.roombooking,
+  roombooking: room2booking.list,
+  loading: loading.models.room2booking,
 }))
 @Form.create()
-class CardList extends PureComponent {
+class Card2List extends PureComponent {
   state = {
     value: null,
     selectedValue: null,
@@ -106,7 +106,6 @@ class CardList extends PureComponent {
       this.setState({
         disabledStartHours: [],
         value,
-        dateValue: null,
         selectedValue: value,
       });
       return;
@@ -155,7 +154,7 @@ class CardList extends PureComponent {
 
       if (!err) {
         dispatch({
-          type: 'roombooking/submitRegularForm',
+          type: 'room2booking/submitRegularForm',
           payload: submitValues,
         });
         form.resetFields();
@@ -166,7 +165,7 @@ class CardList extends PureComponent {
   handleDelete = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'roombooking/delete',
+      type: 'room2booking/delete',
       payload: { id },
     });
 
@@ -209,7 +208,7 @@ class CardList extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title="Room One">
+      <PageHeaderWrapper title="Room Two">
         {selectedValue && (
           <Row gutter={12}>
             <Col className="gutter-row" span={24}>
@@ -353,4 +352,4 @@ class CardList extends PureComponent {
   }
 }
 
-export default CardList;
+export default Card2List;

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Col, Row, Icon, Modal } from 'antd';
+import { Card, Col, Row, Icon, Modal, Button } from 'antd';
 // import { FormattedMessage } from 'umi/locale';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import SITE_URL from '../../services/setting';
@@ -8,9 +8,9 @@ import SITE_URL from '../../services/setting';
 // import styles from './CardList.less';
 
 @connect(({ gallery, loading }) => ({
-  title: gallery.single.title,
-  list: gallery.single.images,
-  loading: loading.models.memo,
+  title: gallery.single.title || null,
+  list: gallery.single.images || [],
+  loading: loading.models.gallery,
 }))
 class CardList extends PureComponent {
   state = {
@@ -19,6 +19,13 @@ class CardList extends PureComponent {
   };
 
   handleOk = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
     this.setState({
       visible: false,
     });
@@ -56,7 +63,16 @@ class CardList extends PureComponent {
             ))}
           </Row>
 
-          <Modal visible={visible} onOk={this.handleOk}>
+          <Modal
+            visible={visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[
+              <Button key="submit" type="primary" onClick={this.handleOk}>
+                OK
+              </Button>,
+            ]}
+          >
             <img
               alt="pop"
               src={image}

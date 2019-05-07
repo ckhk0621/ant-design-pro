@@ -3,6 +3,64 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * ROOMBOOKING 2
+ */
+
+export async function submitRoom2BookingForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/room2booking`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function queryRoom2Booking() {
+  return request(`${SITE_URL.SERVER_API}/api/room2booking`, {
+    method: 'GET',
+  });
+}
+
+export async function deleteRoom2Booking(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/room2booking/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
+ * ROOMBOOKING
+ */
+
+export async function submitRoomBookingForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/roombooking`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function queryRoomBooking() {
+  return request(`${SITE_URL.SERVER_API}/api/roombooking`, {
+    method: 'GET',
+  });
+}
+
+export async function deleteRoomBooking(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/roombooking/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * Gallery
  */
 
