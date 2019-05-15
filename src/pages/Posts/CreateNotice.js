@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio, Upload, message, Icon } from 'antd';
+import { Form, Input, Select, Button, Card, Radio } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UploadImage from '@/components/UploadImage';
@@ -110,19 +110,19 @@ class CreateNotice extends PureComponent {
       },
     };
 
-    const props = {
-      name: 'file',
-      onChange(info) {
-        if (info.file.status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
-        }
-      },
-    };
+    // const props = {
+    //   name: 'file',
+    //   onChange(info) {
+    //     if (info.file.status !== 'uploading') {
+    //       console.log(info.file, info.fileList);
+    //     }
+    //     if (info.file.status === 'done') {
+    //       message.success(`${info.file.name} file uploaded successfully`);
+    //     } else if (info.file.status === 'error') {
+    //       message.error(`${info.file.name} file upload failed.`);
+    //     }
+    //   },
+    // };
 
     return (
       <PageHeaderWrapper
@@ -188,7 +188,7 @@ class CreateNotice extends PureComponent {
               })(<UploadImage />)}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="files">
+            {/* <FormItem {...formItemLayout} label="files">
               {getFieldDecorator('files', {
                 rules: [],
               })(
@@ -198,7 +198,7 @@ class CreateNotice extends PureComponent {
                   </Button>
                 </Upload>
               )}
-            </FormItem>
+            </FormItem> */}
 
             <FormItem
               {...formItemLayout}
@@ -234,9 +234,9 @@ class CreateNotice extends PureComponent {
                       <Option value="2">
                         <FormattedMessage id="form.publicUsers.option.cn" />
                       </Option>
-                      <Option value="3">
+                      {/* <Option value="3">
                         <FormattedMessage id="form.publicUsers.option.my" />
-                      </Option>
+                      </Option> */}
                     </Select>
                   )}
                 </FormItem>

@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-indent */
+/* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import BraftEditor from 'braft-editor';
@@ -16,9 +18,10 @@ import styles from './CardList.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ memo, loading }) => ({
+@connect(({ memo, loading, user }) => ({
   list: memo.list,
   loading: loading.models.memo,
+  role: user.currentUser.role,
 }))
 @Form.create()
 class CardList extends PureComponent {
@@ -102,7 +105,7 @@ class CardList extends PureComponent {
   };
 
   render() {
-    const { list, loading } = this.props;
+    const { list, loading, role } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
@@ -287,66 +290,55 @@ class CardList extends PureComponent {
             rowKey="id"
             loading={loading}
             grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
-            dataSource={['', ...list]}
-            renderItem={item =>
-              item ? (
-                <List.Item key={item.id}>
-                  <Card
-                    hoverable
-                    className={styles.card}
-                    actions={[
-                      <a onClick={() => this.showEditModal(item)}>Edit</a>,
-                      <a
-                        onClick={() =>
-                          Modal.confirm({
-                            title: 'Delete Memo',
-                            content: 'Confirm to delete this memo',
-                            okText: 'Confirm',
-                            cancelText: 'Cancel',
-                            /* eslint-disable */
-                            onOk: () => this.deleteItem(item._id),
-                            /* eslint-enable */
-                          })
-                        }
-                      >
-                        Delete
-                      </a>,
-                    ]}
-                  >
-                    <Card.Meta
-                      avatar={
-                        <img
-                          alt=""
-                          className={styles.cardAvatar}
-                          src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
-                        />
-                      }
-                      title={<a>{item.title}</a>}
-                      description={
-                        <Ellipsis className={styles.item} lines={3}>
-                          <div dangerouslySetInnerHTML={{ __html: item.content }} />
-                        </Ellipsis>
-                      }
-                    />
-                  </Card>
-                </List.Item>
-              ) : (
-                <List.Item>
-                  <Button
-                    type="dashed"
-                    className={styles.newButton}
-                    onClick={() => router.push('/memo/add')}
-                    ref={component => {
-                      /* eslint-disable */
-                      this.addBtn = findDOMNode(component);
-                      /* eslint-enable */
-                    }}
-                  >
-                    <Icon type="plus" /> New Memo
-                  </Button>
-                </List.Item>
-              )
-            }
+            dataSource={[...list]}
+            renderItem={item => (
+              <List.Item key={item.id}>
+                <Card
+                  hoverable
+                  className={styles.card}
+                  actions={
+                    role === 'Admin'
+                      ? [
+                          // eslint-disable-next-line react/jsx-indent
+                          <a onClick={() => this.showEditModal(item)}>Edit</a>,
+                          // eslint-disable-next-line react/jsx-indent
+                          <a
+                            onClick={() =>
+                              Modal.confirm({
+                                title: 'Delete Memo',
+                                content: 'Confirm to delete this memo',
+                                okText: 'Confirm',
+                                cancelText: 'Cancel',
+                                /* eslint-disable */
+                                onOk: () => this.deleteItem(item._id),
+                                /* eslint-enable */
+                              })
+                            }
+                          >
+                            Delete
+                          </a>,
+                        ]
+                      : null
+                  }
+                >
+                  <Card.Meta
+                    avatar={
+                      <img
+                        alt=""
+                        className={styles.cardAvatar}
+                        src={!_.isEmpty(item.images) ? item.images[0].thumbUrl : ''}
+                      />
+                    }
+                    title={<a>{item.title}</a>}
+                    description={
+                      <Ellipsis className={styles.item} lines={3}>
+                        <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                      </Ellipsis>
+                    }
+                  />
+                </Card>
+              </List.Item>
+            )}
           />
         </div>
         <Modal

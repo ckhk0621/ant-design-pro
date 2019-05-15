@@ -10,7 +10,8 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-@connect(({ loading }) => ({
+@connect(({ user, loading }) => ({
+  currentUser: user.currentUser || '',
   submitting: loading.effects['inout/submitRegularForm'],
 }))
 @Form.create()
@@ -45,7 +46,7 @@ class CreateInout extends PureComponent {
   };
 
   render() {
-    const { submitting } = this.props;
+    const { submitting, currentUser } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
@@ -84,7 +85,7 @@ class CreateInout extends PureComponent {
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label="Staff">
               {getFieldDecorator('staff', {
-                initialValue: '',
+                initialValue: currentUser.name,
                 rules: [
                   {
                     required: true,

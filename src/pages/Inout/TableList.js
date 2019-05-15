@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -13,9 +14,10 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ inout, loading }) => ({
+@connect(({ inout, loading, user }) => ({
   inout,
   loading: loading.models.inout,
+  currentUser: user.currentUser,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -59,21 +61,24 @@ class TableList extends PureComponent {
       title: 'Action',
       render: (text, record) => (
         <Fragment>
-          <a
-            onClick={() =>
-              Modal.confirm({
-                title: 'Delete Record',
-                content: 'Confirm to delete this record',
-                okText: 'Confirm',
-                cancelText: 'Cancel',
-                /* eslint-disable */
-                onOk: () => this.deleteItem(record._id),
-                /* eslint-enable */
-              })
-            }
-          >
-            Delete
-          </a>
+          {(this.props.currentUser.name === record.author ||
+            this.props.currentUser.role === 'Admin') && (
+            <a
+              onClick={() =>
+                Modal.confirm({
+                  title: 'Delete Record',
+                  content: 'Confirm to delete this record',
+                  okText: 'Confirm',
+                  cancelText: 'Cancel',
+                  /* eslint-disable */
+                  onOk: () => this.deleteItem(record._id),
+                  /* eslint-enable */
+                })
+              }
+            >
+              Delete
+            </a>
+          )}
         </Fragment>
       ),
     },

@@ -31,9 +31,10 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { Search } = Input;
 
-@connect(({ inout, loading }) => ({
+@connect(({ inout, user, loading }) => ({
   list: inout.list,
   loading: loading.models.memo,
+  role: user.currentUser.role,
 }))
 @Form.create()
 class BasicList extends PureComponent {

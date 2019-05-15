@@ -148,7 +148,7 @@ class CreateRideBooking extends PureComponent {
               )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="Target Location">
+            <FormItem {...formItemLayout} label="Destination">
               {getFieldDecorator('targetLocation', {
                 rules: [
                   {

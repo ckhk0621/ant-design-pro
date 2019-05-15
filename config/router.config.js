@@ -29,16 +29,6 @@ export default [
         name: 'dashboard',
         icon: 'dashboard',
         routes: [
-          // {
-          //   path: '/dashboard/analysis',
-          //   name: 'analysis',
-          //   component: './Dashboard/Analysis',
-          // },
-          // {
-          //   path: '/dashboard/monitor',
-          //   name: 'monitor',
-          //   component: './Dashboard/Monitor',
-          // },
           {
             path: '/dashboard/workplace',
             name: 'workplace',
@@ -46,7 +36,6 @@ export default [
           },
         ],
       },
-      // notices
       {
         path: '/notices',
         icon: 'form',
@@ -61,7 +50,7 @@ export default [
             path: '/notices/add',
             name: 'add-new',
             component: './Posts/CreateNotice',
-            authority: ['admin'],
+            authority: ['Admin'],
           },
           {
             path: '/notices/single/:id',
@@ -86,7 +75,7 @@ export default [
             path: '/memo/add',
             name: 'add-new',
             component: './Memo/CreateMemo',
-            authority: ['admin'],
+            authority: ['Admin'],
           },
         ],
       },
@@ -238,6 +227,7 @@ export default [
             path: '/gallery/add',
             name: 'add-new-gallery',
             component: './Gallery/CreateForm',
+            authority: ['Admin'],
           },
           {
             path: '/gallery/single/:id',
@@ -250,214 +240,8 @@ export default [
             name: 'add-new-photo',
             component: './Gallery/CreatePhotoForm',
           },
-          // {
-          //   path: '/gallery',
-          //   name: 'all',
-          //   component: './Gallery/BasicList',
-          // },
-          // {
-          //   path: '/gallery/category/create',
-          //   name: 'create-gallery',
-          //   component: './Gallery/Location',
-          // },
         ],
       },
-      // list
-      // {
-      //   path: '/list',
-      //   icon: 'table',
-      //   name: 'list',
-      //   routes: [
-      //     {
-      //       path: '/list/table-list',
-      //       name: 'searchtable',
-      //       component: './List/TableList',
-      //     },
-      //     {
-      //       path: '/list/basic-list',
-      //       name: 'basiclist',
-      //       component: './List/BasicList',
-      //     },
-      //     {
-      //       path: '/list/card-list',
-      //       name: 'cardlist',
-      //       component: './List/CardList',
-      //     },
-      //     {
-      //       path: '/list/search',
-      //       name: 'searchlist',
-      //       component: './List/List',
-      //       routes: [
-      //         {
-      //           path: '/list/search',
-      //           redirect: '/list/search/articles',
-      //         },
-      //         {
-      //           path: '/list/search/articles',
-      //           name: 'articles',
-      //           component: './List/Articles',
-      //         },
-      //         {
-      //           path: '/list/search/projects',
-      //           name: 'projects',
-      //           component: './List/Projects',
-      //         },
-      //         {
-      //           path: '/list/search/applications',
-      //           name: 'applications',
-      //           component: './List/Applications',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      // {
-      //   path: '/profile',
-      //   name: 'profile',
-      //   icon: 'profile',
-      //   routes: [
-      //     // profile
-      //     {
-      //       path: '/profile/basic',
-      //       name: 'basic',
-      //       component: './Profile/BasicProfile',
-      //     },
-      //     {
-      //       path: '/profile/basic/:id',
-      //       name: 'basic',
-      //       hideInMenu: true,
-      //       component: './Profile/BasicProfile',
-      //     },
-      //     {
-      //       path: '/profile/advanced',
-      //       name: 'advanced',
-      //       component: './Profile/AdvancedProfile',
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: 'result',
-      //   icon: 'check-circle-o',
-      //   path: '/result',
-      //   routes: [
-      //     // result
-      //     {
-      //       path: '/result/success',
-      //       name: 'success',
-      //       component: './Result/Success',
-      //     },
-      //     { path: '/result/fail', name: 'fail', component: './Result/Error' },
-      //   ],
-      // },
-      // {
-      //   name: 'exception',
-      //   icon: 'warning',
-      //   path: '/exception',
-      //   routes: [
-      //     // exception
-      //     {
-      //       path: '/exception/403',
-      //       name: 'not-permission',
-      //       component: './Exception/403',
-      //     },
-      //     {
-      //       path: '/exception/404',
-      //       name: 'not-find',
-      //       component: './Exception/404',
-      //     },
-      //     {
-      //       path: '/exception/500',
-      //       name: 'server-error',
-      //       component: './Exception/500',
-      //     },
-      //     {
-      //       path: '/exception/trigger',
-      //       name: 'trigger',
-      //       hideInMenu: true,
-      //       component: './Exception/TriggerException',
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: 'account',
-      //   icon: 'user',
-      //   path: '/account',
-      //   routes: [
-      //     {
-      //       path: '/account/center',
-      //       name: 'center',
-      //       component: './Account/Center/Center',
-      //       routes: [
-      //         {
-      //           path: '/account/center',
-      //           redirect: '/account/center/articles',
-      //         },
-      //         {
-      //           path: '/account/center/articles',
-      //           component: './Account/Center/Articles',
-      //         },
-      //         {
-      //           path: '/account/center/applications',
-      //           component: './Account/Center/Applications',
-      //         },
-      //         {
-      //           path: '/account/center/projects',
-      //           component: './Account/Center/Projects',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       path: '/account/settings',
-      //       name: 'settings',
-      //       component: './Account/Settings/Info',
-      //       routes: [
-      //         {
-      //           path: '/account/settings',
-      //           redirect: '/account/settings/base',
-      //         },
-      //         {
-      //           path: '/account/settings/base',
-      //           component: './Account/Settings/BaseView',
-      //         },
-      //         {
-      //           path: '/account/settings/security',
-      //           component: './Account/Settings/SecurityView',
-      //         },
-      //         {
-      //           path: '/account/settings/binding',
-      //           component: './Account/Settings/BindingView',
-      //         },
-      //         {
-      //           path: '/account/settings/notification',
-      //           component: './Account/Settings/NotificationView',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      //  editor
-      // {
-      //   name: 'editor',
-      //   icon: 'highlight',
-      //   path: '/editor',
-      //   routes: [
-      //     {
-      //       path: '/editor/flow',
-      //       name: 'flow',
-      //       component: './Editor/GGEditor/Flow',
-      //     },
-      //     {
-      //       path: '/editor/mind',
-      //       name: 'mind',
-      //       component: './Editor/GGEditor/Mind',
-      //     },
-      //     {
-      //       path: '/editor/koni',
-      //       name: 'koni',
-      //       component: './Editor/GGEditor/Koni',
-      //     },
-      //   ],
-      // },
       {
         component: '404',
       },

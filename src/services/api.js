@@ -3,6 +3,19 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * Current User
+ */
+
+export async function queryCurrentUser(token) {
+  return request(`${SITE_URL.SERVER_API}/api/users/current`, {
+    method: 'GET',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * ROOMBOOKING 2
  */
 

@@ -1,4 +1,5 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers } from '@/services/user';
+import { queryCurrentUser } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -16,11 +17,17 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+
+    *fetchCurrent(_, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(queryCurrentUser, token);
+      console.log(`fetchCurrent=======`, response);
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: {
+          ...response,
+          avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        },
       });
     },
   },

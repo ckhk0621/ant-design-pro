@@ -26,15 +26,15 @@ import {
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
-
 import styles from './BasicList.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ notice, loading }) => ({
+@connect(({ notice, user, loading }) => ({
   list: notice.list,
   loading: loading.models.list,
+  role: user.currentUser.role,
 }))
 @Form.create()
 class BasicList extends PureComponent {
@@ -121,7 +121,7 @@ class BasicList extends PureComponent {
   };
 
   render() {
-    const { list, loading } = this.props;
+    const { list, loading, role } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
@@ -174,7 +174,8 @@ class BasicList extends PureComponent {
         }
       >
         <a>
-          Action <Icon type="down" />
+          Action
+          <Icon type="down" />
         </a>
       </Dropdown>
     );
@@ -341,7 +342,7 @@ class BasicList extends PureComponent {
               loading={loading}
               dataSource={list}
               renderItem={item => (
-                <List.Item actions={[<MoreBtn current={item} />]}>
+                <List.Item actions={role === 'Admin' ? [<MoreBtn current={item} />] : null}>
                   <List.Item.Meta
                     avatar={
                       <Avatar
