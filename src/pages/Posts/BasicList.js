@@ -1,10 +1,8 @@
 import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
-import { findDOMNode } from 'react-dom';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { NavLink, withRouter } from 'dva/router';
-import router from 'umi/router';
 import moment from 'moment';
 import _ from 'lodash';
 import { connect } from 'dva';
@@ -323,19 +321,6 @@ class BasicList extends PureComponent {
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
           >
-            <Button
-              type="dashed"
-              style={{ width: '100%', marginBottom: 8 }}
-              icon="plus"
-              onClick={() => router.push('/notices/add')}
-              ref={component => {
-                /* eslint-disable */
-                this.addBtn = findDOMNode(component);
-                /* eslint-enable */
-              }}
-            >
-              Add New
-            </Button>
             <List
               size="large"
               rowKey="id"
