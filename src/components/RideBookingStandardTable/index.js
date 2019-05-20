@@ -20,7 +20,6 @@ class StandardTable extends PureComponent {
     super(props);
     const { columns } = props;
     const needTotalList = initTotalList(columns);
-
     this.state = {
       needTotalList,
     };
@@ -60,12 +59,16 @@ class StandardTable extends PureComponent {
   };
 
   renderExtraInfo = record => {
-    const { passenger, guest, remark } = record;
+    const { passenger, guest, remark, driver, plate } = record;
     return (
       <div>
         Passengers: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
         Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}, </b>) : '-'}
+        <br />
+        Driver: {!_.isEmpty(driver) ? <b>{driver}</b> : '-'}
+        <br />
+        Plate: {!_.isEmpty(plate) ? <b>{plate}</b> : '-'}
         <br />
         Remark: <span dangerouslySetInnerHTML={{ __html: remark }} />
       </div>
