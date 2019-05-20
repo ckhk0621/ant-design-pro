@@ -18,13 +18,14 @@ const FormItem = Form.Item;
 //     .map(key => obj[key])
 //     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ ridebooking, loading }) => ({
+@connect(({ ridebooking, loading, user }) => ({
   ridebooking,
   loading: loading.models.inout,
   destination: ridebooking.destination.data,
   location: ridebooking.location.data,
   plate: ridebooking.plate.data,
   driver: ridebooking.driver.data,
+  userRole: user.currentUser.role,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -190,6 +191,7 @@ class TableList extends PureComponent {
     const {
       ridebooking: { data },
       loading,
+      userRole,
       form: { getFieldDecorator },
     } = this.props;
     const { selectedRows, visible, done } = this.state;
@@ -275,28 +277,29 @@ class TableList extends PureComponent {
       },
       {
         title: 'Action',
-        render: (text, record) => (
-          <Fragment>
-            <a onClick={() => this.showEditModal(record)}>Edit </a>
-            &nbsp;|&nbsp;
-            <a
-              style={{ color: 'red' }}
-              onClick={() =>
-                Modal.confirm({
-                  title: 'Delete Record',
-                  content: 'Confirm to delete this record',
-                  okText: 'Confirm',
-                  cancelText: 'Cancel',
-                  /* eslint-disable */
-                  onOk: () => this.deleteItem(record._id),
-                  /* eslint-enable */
-                })
-              }
-            >
-              Delete
-            </a>
-          </Fragment>
-        ),
+        render: (text, record) =>
+          userRole === 'Admin' && (
+            <Fragment>
+              <a onClick={() => this.showEditModal(record)}>Edit </a>
+              &nbsp;|&nbsp;
+              <a
+                style={{ color: 'red' }}
+                onClick={() =>
+                  Modal.confirm({
+                    title: 'Delete Record',
+                    content: 'Confirm to delete this record',
+                    okText: 'Confirm',
+                    cancelText: 'Cancel',
+                    /* eslint-disable */
+                    onOk: () => this.deleteItem(record._id),
+                    /* eslint-enable */
+                  })
+                }
+              >
+                Delete
+              </a>
+            </Fragment>
+          ),
       },
     ];
 
