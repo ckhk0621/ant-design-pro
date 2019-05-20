@@ -18,9 +18,9 @@ const plugins = [
         dynamicImport: undefined, // this depend on your business logic.
       },
       locale: {
-        enable: false, // default false
+        enable: true, // default false
         default: 'en-US', // default en-US
-        baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+        baseNavigator: false, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
