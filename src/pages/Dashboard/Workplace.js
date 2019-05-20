@@ -73,7 +73,7 @@ class Workplace extends PureComponent {
 
   renderActivities() {
     const { noticeList } = this.props;
-    return noticeList.map(item => {
+    return noticeList.slice(0, 5).map(item => {
       // const events = item.template.split(/@\{([^{}]*)\}/gi).map(key => {
       //   if (item[key]) {
       //     return (
@@ -166,7 +166,7 @@ class Workplace extends PureComponent {
               loading={projectLoading}
               bodyStyle={{ padding: 0 }}
             >
-              {memoList.map(item => (
+              {memoList.slice(0, 5).map(item => (
                 <Card.Grid className={styles.projectGrid} key={item.title}>
                   <Card bodyStyle={{ padding: 0 }} bordered={false}>
                     <Card.Meta
@@ -214,7 +214,7 @@ class Workplace extends PureComponent {
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
             <Card
               style={{ marginBottom: 24 }}
-              title={`Booking Status: ${moment().format('MM ddd, YYYY')}`}
+              title={`Booking Status: ${moment().format('YYYY-MM-DD')}`}
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
