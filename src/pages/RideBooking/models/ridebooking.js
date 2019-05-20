@@ -12,6 +12,9 @@ import {
   queryLocation,
   deleteLocation,
   updateLocation,
+  submitPlateForm,
+  queryPlate,
+  deletePlate,
 } from '@/services/api';
 
 export default {
@@ -26,6 +29,11 @@ export default {
       },
     },
     location: {
+      data: {
+        list: [],
+      },
+    },
+    plate: {
       data: {
         list: [],
       },
@@ -108,15 +116,33 @@ export default {
         });
       }
     },
-    // *update({ payload }, { call, put, select }) {
-    //   const token = yield select(state => state.login.token);
-    //   const response = yield call(updateNotice, payload, token);
-    //   if (response) {
-    //     yield put({
-    //       type: 'fetch',
-    //     });
-    //   }
-    // },
+    *submitPlateForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitPlateForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('Plate created');
+      }
+    },
+    *fetchPlate(_, { call, put }) {
+      const response = yield call(queryPlate);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'savePlate',
+          payload,
+        });
+      }
+    },
+    *deletePlate({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(deletePlate, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchPlate',
+        });
+      }
+    },
+
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitRideBookingForm, payload, token);
@@ -172,6 +198,16 @@ export default {
       return {
         ...state,
         location: {
+          data: {
+            list: payload,
+          },
+        },
+      };
+    },
+    savePlate(state, { payload }) {
+      return {
+        ...state,
+        plate: {
           data: {
             list: payload,
           },
