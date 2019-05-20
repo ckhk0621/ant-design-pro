@@ -97,51 +97,6 @@ export default [
           },
         ],
       },
-      //forms
-      // {
-      //   path: '/form',
-      //   icon: 'form',
-      //   name: 'form',
-      //   routes: [
-      //     {
-      //       path: '/form/basic-form',
-      //       name: 'basicform',
-      //       component: './Forms/BasicForm',
-      //     },
-      //     {
-      //       path: '/form/step-form',
-      //       name: 'stepform',
-      //       component: './Forms/StepForm',
-      //       hideChildrenInMenu: true,
-      //       routes: [
-      //         {
-      //           path: '/form/step-form',
-      //           redirect: '/form/step-form/info',
-      //         },
-      //         {
-      //           path: '/form/step-form/info',
-      //           name: 'info',
-      //           component: './Forms/StepForm/Step1',
-      //         },
-      //         {
-      //           path: '/form/step-form/confirm',
-      //           name: 'confirm',
-      //           component: './Forms/StepForm/Step2',
-      //         },
-      //         {
-      //           path: '/form/step-form/result',
-      //           name: 'result',
-      //           component: './Forms/StepForm/Step3',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       path: '/form/advanced-form',
-      //       name: 'advancedform',
-      //       component: './Forms/AdvancedForm',
-      //     },
-      //   ],
-      // },
       // Ride booking
       {
         path: '/ride-booking',
@@ -189,6 +144,23 @@ export default [
                 path: '/ride-booking/location/create',
                 name: 'add',
                 component: './RideBooking/Location',
+              },
+            ],
+          },
+          {
+            path: '/ride-booking/plate',
+            name: 'plate',
+            hideChildrenInMenu: false,
+            routes: [
+              {
+                path: '/ride-booking/plate/list',
+                name: 'list',
+                component: './RideBooking/PlateTableList',
+              },
+              {
+                path: '/ride-booking/plate/create',
+                name: 'add',
+                component: './RideBooking/Plate',
               },
             ],
           },

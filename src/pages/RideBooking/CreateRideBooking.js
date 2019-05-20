@@ -177,11 +177,11 @@ class CreateRideBooking extends PureComponent {
             <FormItem {...formItemLayout} label="Return">
               {getFieldDecorator('return', {
                 rules: [],
-                initialValue: 'one way',
+                initialValue: 'return',
               })(
                 <Radio.Group>
-                  <Radio value="one way">One way</Radio>
                   <Radio value="return">Return</Radio>
+                  <Radio value="one way">One way</Radio>
                 </Radio.Group>
               )}
             </FormItem>

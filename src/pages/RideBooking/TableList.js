@@ -23,6 +23,7 @@ const FormItem = Form.Item;
   loading: loading.models.inout,
   destination: ridebooking.destination.data,
   location: ridebooking.location.data,
+  plate: ridebooking.plate.data,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -349,7 +350,7 @@ class TableList extends PureComponent {
         );
       }
       const controls = ['bold', 'italic', 'underline', 'text-color'];
-      const { destination, location } = this.props;
+      const { destination, location, plate } = this.props;
       const { current } = this.state;
       // let time = moment(current.date, 'YYYY-MM-DD')
       return (
@@ -477,7 +478,16 @@ class TableList extends PureComponent {
           <FormItem {...formItemLayout} label="Car Plate">
             {getFieldDecorator('plate', {
               initialValue: current.plate,
-            })(<Input placeholder="" />)}
+            })(
+              <Select placeholder="Please select">
+                {plate.list.map(d => (
+                  // eslint-disable-next-line no-underscore-dangle
+                  <Option key={d._id} value={d.name}>
+                    {d.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
           </FormItem>
           <FormItem {...formItemLayout} label="Remark">
             {getFieldDecorator('remark', {
