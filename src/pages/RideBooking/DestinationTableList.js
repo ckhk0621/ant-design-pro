@@ -59,6 +59,7 @@ class DestinationTableList extends PureComponent {
           </a>
         </Fragment>
       ),
+      align: 'right',
     },
   ];
 

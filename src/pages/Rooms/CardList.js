@@ -224,14 +224,16 @@ class CardList extends PureComponent {
                   <div key={d._id} style={{ marginBottom: 10 }}>
                     <b>{`${d.startTime}-${d.endTime} ${d.reservation}`} </b>
                     {d.bookingType !== 'Others' ? `| ${d.bookingType}` : `| ${d.remark}`}
-                    <Button
-                      type="dashed"
-                      style={{ padding: 5, marginLeft: 10, fontSize: 11 }}
-                      // eslint-disable-next-line no-underscore-dangle
-                      onClick={() => this.handleDelete(d._id)}
-                    >
-                      Delete
-                    </Button>
+                    {(currentUser.role === 'Admin' || currentUser.name === d.reservation) && (
+                      <Button
+                        type="dashed"
+                        style={{ padding: 5, marginLeft: 10, fontSize: 11 }}
+                        // eslint-disable-next-line no-underscore-dangle
+                        onClick={() => this.handleDelete(d._id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>

@@ -117,6 +117,7 @@ export default [
             path: '/ride-booking/destination',
             name: 'destination',
             hideChildrenInMenu: false,
+            authority: ['Admin'],
             routes: [
               {
                 path: '/ride-booking/destination/list',
@@ -134,6 +135,7 @@ export default [
             path: '/ride-booking/location',
             name: 'location',
             hideChildrenInMenu: false,
+            authority: ['Admin'],
             routes: [
               {
                 path: '/ride-booking/location/list',
@@ -151,6 +153,7 @@ export default [
             path: '/ride-booking/plate',
             name: 'plate',
             hideChildrenInMenu: false,
+            authority: ['Admin'],
             routes: [
               {
                 path: '/ride-booking/plate/list',
@@ -168,6 +171,7 @@ export default [
             path: '/ride-booking/driver',
             name: 'driver',
             hideChildrenInMenu: false,
+            authority: ['Admin'],
             routes: [
               {
                 path: '/ride-booking/driver/list',

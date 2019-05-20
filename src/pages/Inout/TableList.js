@@ -61,7 +61,8 @@ class TableList extends PureComponent {
       title: 'Action',
       render: (text, record) => (
         <Fragment>
-          {(this.props.currentUser.name === record.author ||
+          {((this.props.currentUser.name === record.author &&
+            moment(record.date).isBefore(moment(record.date).add(1, 'days'))) ||
             this.props.currentUser.role === 'Admin') && (
             <a
               onClick={() =>

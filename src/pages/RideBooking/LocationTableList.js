@@ -59,6 +59,7 @@ class LocationTableList extends PureComponent {
           </a>
         </Fragment>
       ),
+      align: 'right',
     },
   ];
 
