@@ -21,8 +21,6 @@ const TabPane = Tabs.TabPane;
     roombooking: roombooking.list,
     room2booking: room2booking.list,
     currentUserLoading: loading.effects['user/fetchCurrent'],
-    projectLoading: loading.effects['project/fetchNotice'],
-    activitiesLoading: loading.effects['activities/fetchList'],
     memoLoading: loading.effects['memo/fetch'],
     noticeLoading: loading.effects['notice/fetch'],
   })
@@ -32,15 +30,6 @@ class Workplace extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
-    });
-    dispatch({
-      type: 'project/fetchNotice',
-    });
-    dispatch({
-      type: 'activities/fetchList',
-    });
-    dispatch({
-      type: 'chart/fetch',
     });
     dispatch({
       type: 'memo/fetch',
