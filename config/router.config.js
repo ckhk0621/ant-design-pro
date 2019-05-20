@@ -164,6 +164,23 @@ export default [
               },
             ],
           },
+          {
+            path: '/ride-booking/driver',
+            name: 'driver',
+            hideChildrenInMenu: false,
+            routes: [
+              {
+                path: '/ride-booking/driver/list',
+                name: 'list',
+                component: './RideBooking/DriverTableList',
+              },
+              {
+                path: '/ride-booking/driver/create',
+                name: 'add',
+                component: './RideBooking/Driver',
+              },
+            ],
+          },
         ],
       },
       // room

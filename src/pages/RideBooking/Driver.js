@@ -8,18 +8,18 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 const FormItem = Form.Item;
 
 @connect(({ user, loading }) => ({
-  submitting: loading.effects['ridebooking/submitPlateForm'],
+  submitting: loading.effects['ridebooking/submitDriverForm'],
   currentUser: user.currentUser || '',
 }))
 @Form.create()
-class Plate extends PureComponent {
+class Driver extends PureComponent {
   handleSubmit = e => {
     const { dispatch, form } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         dispatch({
-          type: 'ridebooking/submitPlateForm',
+          type: 'ridebooking/submitDriverForm',
           payload: {
             ...values,
           },
@@ -60,7 +60,7 @@ class Plate extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title="Plate">
+      <PageHeaderWrapper title="Driver">
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label="Name">
@@ -87,4 +87,4 @@ class Plate extends PureComponent {
   }
 }
 
-export default Plate;
+export default Driver;

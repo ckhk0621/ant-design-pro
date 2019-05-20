@@ -184,6 +184,12 @@ export async function queryPlate() {
   });
 }
 
+export async function queryDriver() {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/driver`, {
+    method: 'GET',
+  });
+}
+
 export async function queryDestination() {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking/destination`, {
     method: 'GET',
@@ -217,6 +223,25 @@ export async function updateDestination(params, token) {
 
 export async function deleteLocation(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking/location/${params.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function submitDriverForm(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/driver`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+export async function deleteDriver(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/driver/${params.id}`, {
     method: 'DELETE',
     headers: {
       Authorization: token,

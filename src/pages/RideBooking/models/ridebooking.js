@@ -15,6 +15,9 @@ import {
   submitPlateForm,
   queryPlate,
   deletePlate,
+  submitDriverForm,
+  queryDriver,
+  deleteDriver,
 } from '@/services/api';
 
 export default {
@@ -34,6 +37,11 @@ export default {
       },
     },
     plate: {
+      data: {
+        list: [],
+      },
+    },
+    driver: {
       data: {
         list: [],
       },
@@ -142,6 +150,32 @@ export default {
         });
       }
     },
+    *submitDriverForm({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitDriverForm, payload, token);
+      if (response.status === 'ok') {
+        message.success('Driver created');
+      }
+    },
+    *fetchDriver(_, { call, put }) {
+      const response = yield call(queryDriver);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'saveDriver',
+          payload,
+        });
+      }
+    },
+    *deleteDriver({ payload }, { call, put, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(deleteDriver, payload, token);
+      if (response) {
+        yield put({
+          type: 'fetchDriver',
+        });
+      }
+    },
 
     *submitRegularForm({ payload }, { call, select }) {
       const token = yield select(state => state.login.token);
@@ -214,6 +248,16 @@ export default {
         },
       };
     },
+    saveDriver(state, { payload }) {
+      return {
+        ...state,
+        driver: {
+          data: {
+            list: payload,
+          },
+        },
+      };
+    },
   },
 
   subscriptions: {
@@ -222,6 +266,8 @@ export default {
         if (pathname.indexOf('/ride-booking') !== -1) {
           dispatch({ type: 'fetchDestination' });
           dispatch({ type: 'fetchLocation' });
+          dispatch({ type: 'fetchDriver' });
+          dispatch({ type: 'fetchPlate' });
         }
       });
     },

@@ -24,6 +24,7 @@ const FormItem = Form.Item;
   destination: ridebooking.destination.data,
   location: ridebooking.location.data,
   plate: ridebooking.plate.data,
+  driver: ridebooking.driver.data,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -350,7 +351,7 @@ class TableList extends PureComponent {
         );
       }
       const controls = ['bold', 'italic', 'underline', 'text-color'];
-      const { destination, location, plate } = this.props;
+      const { destination, location, plate, driver } = this.props;
       const { current } = this.state;
       // let time = moment(current.date, 'YYYY-MM-DD')
       return (
@@ -471,6 +472,21 @@ class TableList extends PureComponent {
                 <Option key={2} value="Confirm">
                   Confirm
                 </Option>
+              </Select>
+            )}
+          </FormItem>
+
+          <FormItem {...formItemLayout} label="Driver">
+            {getFieldDecorator('driver', {
+              initialValue: current.driver,
+            })(
+              <Select placeholder="Please select">
+                {driver.list.map(d => (
+                  // eslint-disable-next-line no-underscore-dangle
+                  <Option key={d._id} value={d.name}>
+                    {d.name}
+                  </Option>
+                ))}
               </Select>
             )}
           </FormItem>
