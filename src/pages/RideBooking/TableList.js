@@ -124,38 +124,11 @@ class TableList extends PureComponent {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    // console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
       sortedInfo: sorter,
     });
   };
-
-  // handleStandardTableChange = (pagination, filtersArg, sorter) => {
-  //   const { dispatch } = this.props;
-  //   const { formValues } = this.state;
-
-  //   const filters = Object.keys(filtersArg).reduce((obj, key) => {
-  //     const newObj = { ...obj };
-  //     newObj[key] = getValue(filtersArg[key]);
-  //     return newObj;
-  //   }, {});
-
-  //   const params = {
-  //     currentPage: pagination.current,
-  //     pageSize: pagination.pageSize,
-  //     ...formValues,
-  //     ...filters,
-  //   };
-  //   if (sorter.field) {
-  //     params.sorter = `${sorter.field}_${sorter.order}`;
-  //   }
-
-  //   dispatch({
-  //     type: 'rule/fetch',
-  //     payload: params,
-  //   });
-  // };
 
   previewItem = id => {
     router.push(`/profile/basic/${id}`);
@@ -164,9 +137,6 @@ class TableList extends PureComponent {
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
-    // this.setState({
-    //   formValues: {},
-    // });
     dispatch({
       type: 'rule/fetch',
       payload: {},
@@ -187,7 +157,6 @@ class TableList extends PureComponent {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
       sortedInfo: sorter,
@@ -227,7 +196,7 @@ class TableList extends PureComponent {
 
     const columns = [
       {
-        title: 'Order By',
+        title: 'Order',
         dataIndex: 'orderBy',
         filteredValue: filteredInfo.orderBy || null,
         sorter: (a, b) => (a.orderBy < b.orderBy ? -1 : 1),
@@ -254,23 +223,36 @@ class TableList extends PureComponent {
         dataIndex: 'return',
       },
       {
-        title: 'Guest No.',
+        title: 'Guest',
         dataIndex: 'numberOfGuest',
+      },
+      {
+        title: 'Passenger',
+        dataIndex: 'passenger',
+        render: val => val.length,
+      },
+      {
+        title: 'Driver',
+        dataIndex: 'driver',
       },
       {
         title: 'Plate',
         dataIndex: 'plate',
       },
-      // {
-      //   title: 'Remark',
-      //   dataIndex: 'remark',
-      //   render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
-      // },
+      {
+        title: 'Remark',
+        dataIndex: 'remark',
+        // eslint-disable-next-line react/no-danger
+        render: val => <span dangerouslySetInnerHTML={{ __html: val }} />,
+      },
       {
         title: 'Status',
         dataIndex: 'status',
         render: (val, row) => {
-          if (moment(row.date, 'YYYY-MM-DD').isBefore(moment(new Date(), 'YYYY-MM-DD'))) {
+          if (
+            val === 'Confirm' &&
+            moment(row.date, 'YYYY-MM-DD').isBefore(moment(new Date(), 'YYYY-MM-DD'))
+          ) {
             return (
               <span style={{ color: 'red' }}>
                 <b>Complete</b>
