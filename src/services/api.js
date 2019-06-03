@@ -3,6 +3,16 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * Get all user info
+ */
+
+export async function queryAllUser() {
+  return request(`${SITE_URL.SERVER_API}/api/profile/all`, {
+    method: 'GET',
+  });
+}
+
+/**
  * Current User
  */
 

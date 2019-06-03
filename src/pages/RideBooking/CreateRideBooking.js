@@ -12,12 +12,17 @@ const { Option } = Select;
 @connect(({ user, ridebooking, loading }) => ({
   submitting: loading.effects['ridebooking/submitRegularForm'],
   currentUser: user.currentUser || '',
+  allUser: user.allUser,
   destination: ridebooking.destination.data,
   location: ridebooking.location.data,
 }))
 @Form.create()
 class CreateRideBooking extends PureComponent {
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/queryAllUser',
+    });
     // 异步设置编辑器内容
     setTimeout(() => {
       const { form } = this.props;
@@ -55,7 +60,7 @@ class CreateRideBooking extends PureComponent {
   };
 
   render() {
-    const { submitting, currentUser, destination, location } = this.props;
+    const { submitting, currentUser, destination, location, allUser } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
@@ -117,13 +122,14 @@ class CreateRideBooking extends PureComponent {
                 initialValue: [currentUser.name],
               })(
                 <Select mode="multiple" placeholder="Please select">
-                  {/* {passengerOptions} */}
-                  <Option key={1} value="Staff01">
-                    Staff01
-                  </Option>
-                  <Option key={2} value="Staff02">
-                    Staff02
-                  </Option>
+                  {allUser.map(item => {
+                    return (
+                      // eslint-disable-next-line no-underscore-dangle
+                      <Option key={item._id} value={item.name}>
+                        {item.name}
+                      </Option>
+                    );
+                  })}
                 </Select>
               )}
             </FormItem>

@@ -3,6 +3,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Table, Alert } from 'antd';
 import _ from 'lodash';
+import { connect } from 'dva';
 import styles from './index.less';
 
 function initTotalList(columns) {
@@ -15,6 +16,9 @@ function initTotalList(columns) {
   return totalList;
 }
 
+@connect(({ user }) => ({
+  userRole: user.currentUser.role,
+}))
 class StandardTable extends PureComponent {
   constructor(props) {
     super(props);
@@ -59,16 +63,18 @@ class StandardTable extends PureComponent {
   };
 
   renderExtraInfo = record => {
-    const { passenger, guest, remark, driver, plate } = record;
+    const { passenger, guest, remark, driver, plate, orderBy } = record;
     return (
       <div>
+        orderBy: {!_.isEmpty(orderBy) ? <b>{orderBy}</b> : '-'}
+        <br />
         Passengers: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
         Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
         Driver: {!_.isEmpty(driver) ? <b>{driver}</b> : '-'}
         <br />
-        Plate: {!_.isEmpty(plate) ? <b>{plate}</b> : '-'}
+        Car Plate: {!_.isEmpty(plate) ? <b>{plate}</b> : '-'}
         <br />
         Remark: <span dangerouslySetInnerHTML={{ __html: remark }} />
       </div>
@@ -82,7 +88,6 @@ class StandardTable extends PureComponent {
   renderPlusIcon = record => {
     const { passenger, guest, numberOfGuest, remark } = record;
     if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0 || remark !== '<p></p>') {
-      // <p></p> === empty
       return true;
     }
     return false;
@@ -90,41 +95,27 @@ class StandardTable extends PureComponent {
 
   render() {
     const { selectedRowKeys, needTotalList } = this.state;
-    const { data = {}, rowKey, ...rest } = this.props;
-    const { list = [], pagination } = data;
-
-    const paginationProps = {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      ...pagination,
-    };
-
-    // const rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: this.handleRowSelectChange,
-    //   getCheckboxProps: record => ({
-    //     disabled: record.disabled,
-    //   }),
-    // };
+    const { data = {}, rowKey, userRole, ...rest } = this.props;
+    const { list = [] } = data;
 
     // rowSelection objects indicates the need for row selection
-    // const rowSelection = {
-    //   onChange: (selectedRowKeys, selectedRows) => {
-    //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    //   },
-    //   onSelect: (record, selected, selectedRows) => {
-    //     console.log(record, selected, selectedRows);
-    //   },
-    //   onSelectAll: (selected, selectedRows, changeRows) => {
-    //     console.log(selected, selectedRows, changeRows);
-    //   },
-    // };
+    const rowSelection = {
+      // eslint-disable-next-line no-shadow
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      },
+      onSelect: (record, selected, selectedRows) => {
+        console.log(record, selected, selectedRows);
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        console.log(selected, selectedRows, changeRows);
+      },
+    };
 
     return (
       <div className={styles.standardTable}>
-        <div className={styles.tableAlert}>
+        <div className={styles.tableAlert} style={{ display: 'none' }}>
           <Alert
-            style={{ display: 'none' }}
             message={
               <Fragment>
                 Selected <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>
@@ -148,11 +139,11 @@ class StandardTable extends PureComponent {
         </div>
         <Table
           rowKey="_id"
-          // rowSelection={rowSelection}
           expandedRowRender={record => this.renderExtraInfo(record)}
+          rowSelection={userRole === 'Admin' ? rowSelection : false}
           dataSource={list}
           rowClassName={record => (this.renderPlusIcon(record) ? '' : 'hide')}
-          pagination={paginationProps}
+          pagination={false}
           onChange={this.handleTableChange}
           {...rest}
         />

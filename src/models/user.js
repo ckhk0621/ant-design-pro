@@ -1,5 +1,5 @@
 import { query as queryUsers } from '@/services/user';
-import { queryCurrentUser } from '@/services/api';
+import { queryCurrentUser, queryAllUser } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -7,6 +7,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    allUser: [],
   },
 
   effects: {
@@ -14,6 +15,15 @@ export default {
       const response = yield call(queryUsers);
       yield put({
         type: 'save',
+        payload: response,
+      });
+    },
+
+    *queryAllUser(_, { call, put }) {
+      const response = yield call(queryAllUser);
+      console.log(`response====`, response);
+      yield put({
+        type: 'saveAll',
         payload: response,
       });
     },
@@ -37,6 +47,12 @@ export default {
       return {
         ...state,
         list: action.payload,
+      };
+    },
+    saveAll(state, action) {
+      return {
+        ...state,
+        allUser: action.payload,
       };
     },
     saveCurrentUser(state, action) {
