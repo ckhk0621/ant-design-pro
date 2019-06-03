@@ -3,27 +3,24 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor';
-import { Card, Input, Button, Modal, Form, DatePicker, Select, Radio } from 'antd';
+import { Card, Input, Button, Modal, Form, DatePicker, Select, Radio, Alert } from 'antd';
 import RideBookingStandardTable from '@/components/RideBookingStandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
+import _ from 'lodash';
 import styles from './TableList.less';
 
 const { Option } = Select;
 
 const FormItem = Form.Item;
 
-// const getValue = obj =>
-//   Object.keys(obj)
-//     .map(key => obj[key])
-//     .join(',');
-/* eslint react/no-multi-comp:0 */
 @connect(({ ridebooking, loading, user }) => ({
   ridebooking,
   loading: loading.models.inout,
   destination: ridebooking.destination.data,
   location: ridebooking.location.data,
   plate: ridebooking.plate.data,
+  allUser: user.allUser,
   driver: ridebooking.driver.data,
   userRole: user.currentUser.role,
 }))
@@ -32,10 +29,11 @@ class TableList extends PureComponent {
   state = {
     expandForm: false,
     selectedRows: [],
-    // formValues: {},
     visible: false,
     done: false,
-    filteredInfo: null,
+    filteredInfo: {
+      date: [moment().format('YYYY-MM-DD')],
+    },
     sortedInfo: null,
     current: {
       date: null,
@@ -55,6 +53,9 @@ class TableList extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'ridebooking/fetch',
+    });
+    dispatch({
+      type: 'user/queryAllUser',
     });
   }
 
@@ -193,16 +194,40 @@ class TableList extends PureComponent {
       loading,
       userRole,
       form: { getFieldDecorator },
+      allUser,
     } = this.props;
     const { selectedRows, visible, done } = this.state;
+    const filterOptions = data.list.map(d => {
+      const date = moment(d.date).format('YYYY-MM-DD');
+      return {
+        // eslint-disable-next-line no-underscore-dangle
+        id: d._id,
+        text: date,
+        value: date,
+        total: d.passenger.length + d.numberOfGuest,
+      };
+    });
+
+    const uniqFilterOptions = _.uniqBy(filterOptions, 'value');
+    // eslint-disable-next-line consistent-return,func-names
+    const selectedDateAllObject = _.map(filterOptions, function(obj) {
+      if (filteredInfo.date.indexOf(obj.value) !== -1) {
+        return obj;
+      }
+    });
 
     const columns = [
+      // {
+      //   title: 'Order',
+      //   dataIndex: 'orderBy',
+      //   filteredValue: filteredInfo.orderBy || null,
+      //   sorter: (a, b) => (a.orderBy < b.orderBy ? -1 : 1),
+      //   sortOrder: sortedInfo.columnKey === 'orderBy' && sortedInfo.order,
+      // },
       {
-        title: 'Order',
-        dataIndex: 'orderBy',
-        filteredValue: filteredInfo.orderBy || null,
-        sorter: (a, b) => (a.orderBy < b.orderBy ? -1 : 1),
-        sortOrder: sortedInfo.columnKey === 'orderBy' && sortedInfo.order,
+        title: 'Passengers',
+        dataIndex: 'passenger',
+        render: val => (_.isEmpty(val) ? '--' : val.map(v => <span>{v}</span>)),
       },
       {
         title: 'Pickup',
@@ -219,6 +244,8 @@ class TableList extends PureComponent {
         filteredValue: filteredInfo.date || null,
         sorter: (a, b) => (a.date < b.date ? -1 : 1),
         sortOrder: sortedInfo.columnKey === 'date' && sortedInfo.order,
+        filters: uniqFilterOptions,
+        onFilter: (value, record) => moment(record.date).format('YYYY-MM-DD') === value,
       },
       {
         title: 'Return',
@@ -228,17 +255,17 @@ class TableList extends PureComponent {
         title: 'Guest',
         dataIndex: 'numberOfGuest',
       },
-      {
-        title: 'Passenger',
-        dataIndex: 'passenger',
-        render: val => val.length,
-      },
+      // {
+      //   title: 'Passenger',
+      //   dataIndex: 'passenger',
+      //   render: val => val.length,
+      // },
       {
         title: 'Driver',
         dataIndex: 'driver',
       },
       {
-        title: 'Plate',
+        title: 'Car Plate',
         dataIndex: 'plate',
       },
       {
@@ -346,12 +373,14 @@ class TableList extends PureComponent {
               initialValue: current.passenger,
             })(
               <Select mode="multiple" placeholder="Please select">
-                <Option key={1} value="Staff01">
-                  Staff01
-                </Option>
-                <Option key={2} value="Staff02">
-                  Staff02
-                </Option>
+                {allUser.map(item => {
+                  return (
+                    // eslint-disable-next-line no-underscore-dangle
+                    <Option key={item._id} value={item.name}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
               </Select>
             )}
           </FormItem>
@@ -361,7 +390,7 @@ class TableList extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: 'Plese select location',
+                  message: 'Please select location',
                 },
               ],
               initialValue: current.pickupLocation,
@@ -382,7 +411,7 @@ class TableList extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: 'Plese select location',
+                  message: 'Please select location',
                 },
               ],
               initialValue: current.targetLocation,
@@ -513,22 +542,35 @@ class TableList extends PureComponent {
         </Form>
       );
     };
-
+    const selectedDate = filteredInfo.date;
+    const renderTotalObj = _.without(selectedDateAllObject, undefined);
+    const totalPassengers = renderTotalObj.reduce((result, { total }) => result + total, 0);
+    console.log(`totalPassengers---`, totalPassengers);
     return (
       <PageHeaderWrapper title="Booking records">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            {/* <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => router.push('/ride-booking/add')}>
-                Add Record
-              </Button>
-            </div> */}
-            <div className="table-operations">
-              {/* <Button onClick={this.setOrderNameSort}>Sort Order Name</Button> &nbsp; */}
-              {/* <Button onClick={this.clearFilters}>Clear filters</Button> */}
-              <Button onClick={this.clearAll}>Clear Sorters</Button>
+            <div className={styles.tableAlert}>
+              <Alert
+                message={
+                  <Fragment>
+                    Selected:{' '}
+                    <a style={{ fontWeight: 600 }}>
+                      {' '}
+                      {!_.isEmpty(selectedDate) && selectedDate.map(d => `${d}, `)}
+                    </a>
+                    {/* eslint-disable-next-line no-return-assign */}
+                    <span style={{ marginLeft: 8 }}>Totals&nbsp;{totalPassengers}</span>
+                  </Fragment>
+                }
+                type="info"
+                showIcon
+              />
             </div>
+            <br />
             <RideBookingStandardTable
+              rowKey="_id"
+              bordered
               selectedRows={selectedRows}
               loading={loading}
               data={data}
@@ -537,6 +579,14 @@ class TableList extends PureComponent {
               onChange={this.handleChange}
             />
           </div>
+
+          {userRole === 'Admin' && (
+            <div style={{ textAlign: 'right', paddingTop: 15 }}>
+              <Button type="primary" htmlType="submit" align="right" disabled>
+                Email
+              </Button>
+            </div>
+          )}
         </Card>
         <Modal
           className={styles.standardListForm}

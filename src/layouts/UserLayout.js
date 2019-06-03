@@ -25,7 +25,8 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2019@SoftPub
+    Copyright <Icon type="copyright" /> 2019@SoftPub <br />
+    Updated at: 2019/06/04
   </Fragment>
 );
 

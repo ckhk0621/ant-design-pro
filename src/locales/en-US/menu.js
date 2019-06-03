@@ -66,7 +66,7 @@ export default {
   'menu.ride-booking.location': 'Location',
   'menu.ride-booking.location.list': 'Location List',
   'menu.ride-booking.location.add': 'Add',
-  'menu.ride-booking.plate': 'Plate',
+  'menu.ride-booking.plate': 'Car Plate',
   'menu.ride-booking.plate.list': 'Plate List',
   'menu.ride-booking.plate.add': 'Add',
   'menu.ride-booking.driver': 'Driver',
