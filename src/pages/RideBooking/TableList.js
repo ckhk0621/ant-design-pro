@@ -227,7 +227,7 @@ class TableList extends PureComponent {
       {
         title: 'Passengers',
         dataIndex: 'passenger',
-        render: val => (_.isEmpty(val) ? '--' : val.map(v => <span>{v}</span>)),
+        render: val => (_.isEmpty(val) ? '--' : val.map(v => <span>{v}, </span>)),
       },
       {
         title: 'Pickup',
