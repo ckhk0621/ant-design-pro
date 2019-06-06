@@ -32,7 +32,12 @@ class TableList extends PureComponent {
     visible: false,
     done: false,
     filteredInfo: {
-      date: [moment().format('YYYY-MM-DD')],
+      date: [
+        moment().format('YYYY-MM-DD'),
+        moment()
+          .add(1, 'days')
+          .format('YYYY-MM-DD'),
+      ],
     },
     sortedInfo: null,
     current: {
@@ -278,10 +283,7 @@ class TableList extends PureComponent {
         title: 'Status',
         dataIndex: 'status',
         render: (val, row) => {
-          if (
-            val === 'Confirm' &&
-            moment(row.date, 'YYYY-MM-DD').isBefore(moment(new Date(), 'YYYY-MM-DD'))
-          ) {
+          if (val === 'Confirm' && moment(row.date).isBefore(moment())) {
             return (
               <span style={{ color: 'red' }}>
                 <b>Complete</b>
@@ -485,6 +487,9 @@ class TableList extends PureComponent {
                 </Option>
                 <Option key={2} value="Confirm">
                   Confirm
+                </Option>
+                <Option key={3} value="Other">
+                  Other
                 </Option>
               </Select>
             )}

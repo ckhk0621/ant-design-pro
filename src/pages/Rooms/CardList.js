@@ -159,6 +159,7 @@ class CardList extends PureComponent {
           payload: submitValues,
         });
         form.resetFields();
+        this.setState({ selectedValue: null });
       }
     });
   };
@@ -321,19 +322,21 @@ class CardList extends PureComponent {
                   {getFieldDecorator('remark')(<TextArea />)}
                 </FormItem>
 
-                <FormItem style={rowTwoStyle}>
-                  <Button onClick={() => this.handleReset()}>
-                    <FormattedMessage id="form.reset" />
-                  </Button>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={submitting}
-                    style={{ marginLeft: 8 }}
-                  >
-                    <FormattedMessage id="form.submit" />
-                  </Button>
-                </FormItem>
+                {!_.isEmpty(selectedValue) && (
+                  <FormItem style={rowTwoStyle}>
+                    <Button onClick={() => this.handleReset()}>
+                      <FormattedMessage id="form.reset" />
+                    </Button>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={submitting}
+                      style={{ marginLeft: 8 }}
+                    >
+                      <FormattedMessage id="form.submit" />
+                    </Button>
+                  </FormItem>
+                )}
               </Form>
             </Col>
           </Row>
