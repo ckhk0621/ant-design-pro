@@ -209,6 +209,7 @@ class TableList extends PureComponent {
       loading,
     } = this.props;
     const { selectedRows } = this.state;
+    console.log(`data===`, data);
 
     return (
       <PageHeaderWrapper title="In Out Records">

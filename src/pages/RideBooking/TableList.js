@@ -33,10 +33,10 @@ class TableList extends PureComponent {
     done: false,
     filteredInfo: {
       date: [
-        moment().format('YYYY-MM-DD'),
-        moment()
-          .add(1, 'days')
-          .format('YYYY-MM-DD'),
+        // moment().format('YYYY-MM-DD'),
+        // moment()
+        //   .add(1, 'days')
+        //   .format('YYYY-MM-DD'),
       ],
     },
     sortedInfo: null,
@@ -160,13 +160,6 @@ class TableList extends PureComponent {
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
-    });
-  };
-
-  handleChange = (pagination, filters, sorter) => {
-    this.setState({
-      filteredInfo: filters,
-      sortedInfo: sorter,
     });
   };
 
@@ -488,9 +481,6 @@ class TableList extends PureComponent {
                 <Option key={2} value="Confirm">
                   Confirm
                 </Option>
-                <Option key={3} value="Other">
-                  Other
-                </Option>
               </Select>
             )}
           </FormItem>
@@ -549,8 +539,14 @@ class TableList extends PureComponent {
     };
     const selectedDate = filteredInfo.date;
     const renderTotalObj = _.without(selectedDateAllObject, undefined);
-    const totalPassengers = renderTotalObj.reduce((result, { total }) => result + total, 0);
-    console.log(`totalPassengers---`, totalPassengers);
+    const totalPassengers = data.list.reduce(
+      (result, { passenger, numberOfGuest }) => result + passenger.length + numberOfGuest,
+      0
+    );
+    const filteredPassengers = renderTotalObj.reduce((result, { total }) => result + total, 0);
+    console.log(`DATA====`, data.list);
+    console.log(`DATA====`, renderTotalObj);
+    console.log(`totalPassengers=====`, totalPassengers);
     return (
       <PageHeaderWrapper title="Booking records">
         <Card bordered={false}>
@@ -559,13 +555,26 @@ class TableList extends PureComponent {
               <Alert
                 message={
                   <Fragment>
-                    Selected:{' '}
+                    <b>Total Passagners:</b> {totalPassengers}
+                  </Fragment>
+                }
+                type="info"
+                showIcon
+              />
+            </div>
+            <br />
+            <div className={styles.tableAlert}>
+              <Alert
+                message={
+                  <Fragment>
+                    <b>Filtered Date:</b>
                     <a style={{ fontWeight: 600 }}>
-                      {' '}
-                      {!_.isEmpty(selectedDate) && selectedDate.map(d => `${d}, `)}
+                      {!_.isEmpty(selectedDate) ? selectedDate.map(d => ` ${d}, `) : ' - '}
                     </a>
                     {/* eslint-disable-next-line no-return-assign */}
-                    <span style={{ marginLeft: 8 }}>Totals&nbsp;{totalPassengers}</span>
+                    <span style={{ marginLeft: 8 }}>
+                      <b>Total Passagners:</b> &nbsp;{filteredPassengers}
+                    </span>
                   </Fragment>
                 }
                 type="info"
