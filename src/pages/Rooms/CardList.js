@@ -154,6 +154,7 @@ class CardList extends PureComponent {
       };
 
       if (!err) {
+        console.log(`submitValues======`, submitValues);
         dispatch({
           type: 'roombooking/submitRegularForm',
           payload: submitValues,
@@ -224,7 +225,7 @@ class CardList extends PureComponent {
                   // eslint-disable-next-line no-underscore-dangle
                   <div key={d._id} style={{ marginBottom: 10 }}>
                     <b>{`${d.startTime}-${d.endTime} ${d.reservation}`} </b>
-                    {d.bookingType !== 'Others' ? `| ${d.bookingType}` : `| ${d.remark}`}
+                    {`${d.bookingType}`} {d.remark && ` | ${d.remark}`}
                     {(currentUser.role === 'Admin' || currentUser.name === d.reservation) && (
                       <Button
                         type="dashed"
@@ -299,6 +300,7 @@ class CardList extends PureComponent {
                     />
                   )}
                 </FormItem>
+                <br />
 
                 <FormItem label="Type" style={rowTwoStyle}>
                   {getFieldDecorator('bookingType', {
@@ -312,15 +314,18 @@ class CardList extends PureComponent {
                   )}
                 </FormItem>
 
+                <br />
+
                 <FormItem
                   label="Remark"
                   style={{
-                    display: getFieldValue('bookingType') === 'Others' ? 'inline-block' : 'none',
                     marginTop: 12,
                   }}
                 >
                   {getFieldDecorator('remark')(<TextArea />)}
                 </FormItem>
+
+                <br />
 
                 {!_.isEmpty(selectedValue) && (
                   <FormItem style={rowTwoStyle}>
