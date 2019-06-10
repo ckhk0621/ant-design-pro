@@ -88,7 +88,6 @@ class StandardTable extends PureComponent {
 
   renderPlusIcon = record => {
     const { passenger, guest, numberOfGuest, remark, status, date } = record;
-    console.log(`status======`, date);
     if (status === 'Confirm' && !moment(date).isAfter(moment())) {
       return 'hideSelect';
     }
