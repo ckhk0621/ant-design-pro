@@ -62,7 +62,7 @@ class CreateRideBooking extends PureComponent {
   render() {
     const { submitting, currentUser, destination, location, allUser } = this.props;
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator, getFieldValue },
     } = this.props;
     const controls = [
       'bold',
@@ -156,6 +156,7 @@ class CreateRideBooking extends PureComponent {
 
             <FormItem {...formItemLayout} label="Destination">
               {getFieldDecorator('targetLocation', {
+                initialValue: '深圳廠',
                 rules: [
                   {
                     required: true,
@@ -170,8 +171,19 @@ class CreateRideBooking extends PureComponent {
                       {d.name}
                     </Option>
                   ))}
+                  <Option key="Others" value="Others">
+                    Others
+                  </Option>
                 </Select>
               )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="Other Destination"
+              style={{ display: getFieldValue('targetLocation') === 'Others' ? 'block' : 'none' }}
+            >
+              {getFieldDecorator('otherDestination')(<Input placeholder="Other Destination" />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label="Date" {...this.formLayout}>
