@@ -23,6 +23,7 @@ const FormItem = Form.Item;
   allUser: user.allUser,
   driver: ridebooking.driver.data,
   userRole: user.currentUser.role,
+  userName: user.currentUser.name,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -183,6 +184,20 @@ class TableList extends PureComponent {
     });
   };
 
+  showAction = record => {
+    const { userRole, userName } = this.props;
+    const getTime = moment(record.createat).format('YYYY-MM-DD');
+    const hm = '17:00';
+    const timeAndDate = moment(`${getTime} ${hm}`);
+    const now = moment();
+
+    if (userRole === 'Admin' || (timeAndDate.isSameOrAfter(now) && record.orderBy === userName)) {
+      return true;
+    }
+
+    return false;
+  };
+
   render() {
     let { sortedInfo, filteredInfo } = this.state;
     sortedInfo = sortedInfo || {};
@@ -215,13 +230,6 @@ class TableList extends PureComponent {
     });
 
     const columns = [
-      // {
-      //   title: 'Order',
-      //   dataIndex: 'orderBy',
-      //   filteredValue: filteredInfo.orderBy || null,
-      //   sorter: (a, b) => (a.orderBy < b.orderBy ? -1 : 1),
-      //   sortOrder: sortedInfo.columnKey === 'orderBy' && sortedInfo.order,
-      // },
       {
         title: 'Passengers',
         dataIndex: 'passenger',
@@ -253,11 +261,6 @@ class TableList extends PureComponent {
         title: 'Guest',
         dataIndex: 'numberOfGuest',
       },
-      // {
-      //   title: 'Passenger',
-      //   dataIndex: 'passenger',
-      //   render: val => val.length,
-      // },
       {
         title: 'Driver',
         dataIndex: 'driver',
@@ -300,7 +303,7 @@ class TableList extends PureComponent {
       {
         title: 'Action',
         render: (text, record) =>
-          userRole === 'Admin' && (
+          this.showAction(record) && (
             <Fragment>
               <a onClick={() => this.showEditModal(record)}>Edit </a>
               &nbsp;|&nbsp;
@@ -463,57 +466,63 @@ class TableList extends PureComponent {
             {getFieldDecorator('guest')(<Input placeholder="Name 01, Name 02, ...etc" />)}
           </FormItem>
 
-          <FormItem {...formItemLayout} label="Status">
-            {getFieldDecorator('status', {
-              rules: [
-                {
-                  required: true,
-                  message: 'status',
-                },
-              ],
-              initialValue: current.status,
-            })(
-              <Select placeholder="Please select">
-                {/* {passengerOptions} */}
-                <Option key={1} value="Pending">
-                  Pending
-                </Option>
-                <Option key={2} value="Confirm">
-                  Confirm
-                </Option>
-              </Select>
-            )}
-          </FormItem>
-
-          <FormItem {...formItemLayout} label="Driver">
-            {getFieldDecorator('driver', {
-              initialValue: current.driver,
-            })(
-              <Select placeholder="Please select">
-                {driver.list.map(d => (
-                  // eslint-disable-next-line no-underscore-dangle
-                  <Option key={d._id} value={d.name}>
-                    {d.name}
+          {userRole === 'Admin' && (
+            <FormItem {...formItemLayout} label="Status">
+              {getFieldDecorator('status', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'status',
+                  },
+                ],
+                initialValue: current.status,
+              })(
+                <Select placeholder="Please select">
+                  {/* {passengerOptions} */}
+                  <Option key={1} value="Pending">
+                    Pending
                   </Option>
-                ))}
-              </Select>
-            )}
-          </FormItem>
-
-          <FormItem {...formItemLayout} label="Car Plate">
-            {getFieldDecorator('plate', {
-              initialValue: current.plate,
-            })(
-              <Select placeholder="Please select">
-                {plate.list.map(d => (
-                  // eslint-disable-next-line no-underscore-dangle
-                  <Option key={d._id} value={d.name}>
-                    {d.name}
+                  <Option key={2} value="Confirm">
+                    Confirm
                   </Option>
-                ))}
-              </Select>
-            )}
-          </FormItem>
+                </Select>
+              )}
+            </FormItem>
+          )}
+
+          {userRole === 'Admin' && (
+            <FormItem {...formItemLayout} label="Driver">
+              {getFieldDecorator('driver', {
+                initialValue: current.driver,
+              })(
+                <Select placeholder="Please select">
+                  {driver.list.map(d => (
+                    // eslint-disable-next-line no-underscore-dangle
+                    <Option key={d._id} value={d.name}>
+                      {d.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          )}
+
+          {userRole === 'Admin' && (
+            <FormItem {...formItemLayout} label="Car Plate">
+              {getFieldDecorator('plate', {
+                initialValue: current.plate,
+              })(
+                <Select placeholder="Please select">
+                  {plate.list.map(d => (
+                    // eslint-disable-next-line no-underscore-dangle
+                    <Option key={d._id} value={d.name}>
+                      {d.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          )}
           <FormItem {...formItemLayout} label="Remark">
             {getFieldDecorator('remark', {
               validateTrigger: 'onBlur',
