@@ -21,7 +21,6 @@ export default {
 
     *queryAllUser(_, { call, put }) {
       const response = yield call(queryAllUser);
-      console.log(`response====`, response);
       yield put({
         type: 'saveAll',
         payload: response,

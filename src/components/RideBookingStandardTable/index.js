@@ -112,6 +112,8 @@ class StandardTable extends PureComponent {
       },
     };
 
+    console.log(`...rest===`, this.props);
+
     return (
       <div className={styles.standardTable}>
         <div className={styles.tableAlert} style={{ display: 'none' }}>
@@ -138,9 +140,9 @@ class StandardTable extends PureComponent {
           />
         </div>
         <Table
-          rowKey="_id"
+          rowKey={rowKey || '_id'}
           expandedRowRender={record => this.renderExtraInfo(record)}
-          rowSelection={userRole === 'Admin' ? rowSelection : false}
+          rowSelection={userRole === 'Admin' ? rowSelection : {}}
           dataSource={list}
           rowClassName={record => (this.renderPlusIcon(record) ? '' : 'hide')}
           pagination={false}
