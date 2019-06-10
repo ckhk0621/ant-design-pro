@@ -556,24 +556,15 @@ class TableList extends PureComponent {
                 message={
                   <Fragment>
                     <b>Total Passagners:</b> {totalPassengers}
-                  </Fragment>
-                }
-                type="info"
-                showIcon
-              />
-            </div>
-            <br />
-            <div className={styles.tableAlert}>
-              <Alert
-                message={
-                  <Fragment>
-                    <b>Filtered Date:</b>
+                    <br />
+                    <b style={{ lineHeight: 2 }}>Filtered Date:</b>
                     <a style={{ fontWeight: 600 }}>
                       {!_.isEmpty(selectedDate) ? selectedDate.map(d => ` ${d}, `) : ' - '}
                     </a>
+                    <br />
                     {/* eslint-disable-next-line no-return-assign */}
-                    <span style={{ marginLeft: 8 }}>
-                      <b>Total Passagners:</b> &nbsp;{filteredPassengers}
+                    <span style={{ marginLeft: 0 }}>
+                      <b>Filtered Passagners:</b> &nbsp;{filteredPassengers}
                     </span>
                   </Fragment>
                 }

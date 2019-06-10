@@ -4,6 +4,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Table, Alert } from 'antd';
 import _ from 'lodash';
 import { connect } from 'dva';
+import moment from 'moment';
 import styles from './index.less';
 
 function initTotalList(columns) {
@@ -86,11 +87,15 @@ class StandardTable extends PureComponent {
   };
 
   renderPlusIcon = record => {
-    const { passenger, guest, numberOfGuest, remark } = record;
-    if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0 || remark !== '<p></p>') {
-      return true;
+    const { passenger, guest, numberOfGuest, remark, status, date } = record;
+    console.log(`status======`, date);
+    if (status === 'Confirm' && !moment(date).isAfter(moment())) {
+      return 'hideSelect';
     }
-    return false;
+    if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0 || remark !== '<p></p>') {
+      return null;
+    }
+    return 'hide';
   };
 
   render() {
@@ -111,8 +116,6 @@ class StandardTable extends PureComponent {
         console.log(selected, selectedRows, changeRows);
       },
     };
-
-    console.log(`...rest===`, this.props);
 
     return (
       <div className={styles.standardTable}>
@@ -144,7 +147,7 @@ class StandardTable extends PureComponent {
           expandedRowRender={record => this.renderExtraInfo(record)}
           rowSelection={userRole === 'Admin' ? rowSelection : {}}
           dataSource={list}
-          rowClassName={record => (this.renderPlusIcon(record) ? '' : 'hide')}
+          rowClassName={record => this.renderPlusIcon(record)}
           pagination={false}
           onChange={this.handleTableChange}
           {...rest}
