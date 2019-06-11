@@ -70,19 +70,23 @@ class UploadImage extends PureComponent {
   };
 
   beforeUpload = file => {
-    const isJPG = file.type === 'image/jpeg';
-    if (!isJPG) {
-      message.error('You can only upload JPG file!');
+    console.log(`file====`, file);
+    const fileType = ['image/jpeg', 'image/jpg', 'image/png'];
+    const accessFormat = file.type.indexOf(fileType) !== -1;
+    if (!accessFormat) {
+      message.error('You can only upload JPG/PNG file!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
       message.error('Image must smaller than 2MB!');
     }
-    return isJPG && isLt2M;
+    return accessFormat && isLt2M;
   };
 
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
+    const { direction } = this.props;
+    const lengthLimit = direction === 'memo' ? 1 : 3;
     const uploadButton = (
       <div>
         <Icon type="plus" />
@@ -100,7 +104,7 @@ class UploadImage extends PureComponent {
           onChange={this.handleChange}
           beforeUpload={this.beforeUpload}
         >
-          {fileList.length >= 3 ? null : uploadButton}
+          {fileList.length >= lengthLimit ? null : uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />

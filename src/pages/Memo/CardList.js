@@ -2,11 +2,8 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import BraftEditor from 'braft-editor';
-import { findDOMNode } from 'react-dom';
-import { Card, Button, Icon, List, Modal, Form, Radio, Select, Input, DatePicker } from 'antd';
+import { Card, Button, List, Modal, Form, Radio, Select, Input, DatePicker } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import router from 'umi/router';
 import _ from 'lodash';
 import moment from 'moment';
 import Ellipsis from '@/components/Ellipsis';
@@ -17,6 +14,7 @@ import styles from './CardList.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { TextArea } = Input;
 
 @connect(({ memo, loading, user }) => ({
   list: memo.list,
@@ -51,16 +49,9 @@ class CardList extends PureComponent {
       visible: true,
       current: item,
     });
-    setTimeout(() => {
-      const { form } = this.props;
-      form.setFieldsValue({
-        content: BraftEditor.createEditorState(item.content),
-      });
-    }, 300);
   };
 
   handleDone = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
     this.setState({
       done: false,
       visible: false,
@@ -68,7 +59,6 @@ class CardList extends PureComponent {
   };
 
   handleCancel = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
     this.setState({
       visible: false,
     });
@@ -82,7 +72,6 @@ class CardList extends PureComponent {
     const id = current ? current._id : '';
     /* eslint-enable */
 
-    setTimeout(() => this.addBtn.blur(), 0);
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       this.setState({
@@ -144,15 +133,6 @@ class CardList extends PureComponent {
           />
         );
       }
-      const controls = [
-        'bold',
-        'italic',
-        'underline',
-        'text-color',
-        'separator',
-        'link',
-        'separator',
-      ];
 
       return (
         <Form onSubmit={this.handleSubmit}>
@@ -184,35 +164,10 @@ class CardList extends PureComponent {
               rules: [
                 {
                   required: true,
-                  /* eslint-disable */
-                  validator: (_, value, callback) => {
-                    /* eslint-enable */
-                    if (value.isEmpty()) {
-                      callback(formatMessage({ id: 'form.content.placeholder' }));
-                    } else {
-                      callback();
-                    }
-                  },
                 },
               ],
               initialValue: current.content,
-            })(
-              <BraftEditor
-                className="my-editor"
-                controls={controls}
-                placeholder={formatMessage({ id: 'form.content.placeholder' })}
-                contentStyle={{
-                  height: 210,
-                  borderWidth: 1,
-                  borderColor: '#d9d9d9',
-                  borderStyle: 'solid',
-                  borderRadius: 4,
-                  borderTopLeftRadius: 0,
-                  borderTopRightRadius: 0,
-                  borderTop: 'none',
-                }}
-              />
-            )}
+            })(<TextArea rows={4} maxLength={100} placeholder="" />)}
           </FormItem>
 
           {/* <FormItem {...this.formLayout} label={<FormattedMessage id="form.images.label" />}>
@@ -255,15 +210,16 @@ class CardList extends PureComponent {
                     <Option value="2">
                       <FormattedMessage id="form.publicUsers.option.cn" />
                     </Option>
-                    <Option value="3">
+                    {/* <Option value="3">
                       <FormattedMessage id="form.publicUsers.option.my" />
                     </Option>
+                    */}
                   </Select>
                 )}
               </FormItem>
             </div>
           </FormItem>
-
+          {/*
           <FormItem {...this.formLayout} label={<FormattedMessage id="form.priority.label" />}>
             <div>
               {getFieldDecorator('priority', {
@@ -276,7 +232,7 @@ class CardList extends PureComponent {
                 </Radio.Group>
               )}
             </div>
-          </FormItem>
+          </FormItem> */}
 
           <br />
         </Form>
