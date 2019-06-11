@@ -206,6 +206,12 @@ export async function queryDestination() {
   });
 }
 
+export async function queryCompletedRideBooking() {
+  return request(`${SITE_URL.SERVER_API}/api/ridebooking/completed`, {
+    method: 'GET',
+  });
+}
+
 export async function queryRideBooking() {
   return request(`${SITE_URL.SERVER_API}/api/ridebooking`, {
     method: 'GET',
