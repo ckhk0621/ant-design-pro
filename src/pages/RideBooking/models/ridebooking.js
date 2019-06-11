@@ -3,6 +3,7 @@ import {
   submitRideBookingForm,
   updateRideBooking,
   queryRideBooking,
+  queryCompletedRideBooking,
   deleteRideBooking,
   submitDestinationForm,
   queryDestination,
@@ -51,6 +52,16 @@ export default {
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryRideBooking);
+      const payload = response;
+      if (response) {
+        yield put({
+          type: 'saveRideBooking',
+          payload,
+        });
+      }
+    },
+    *fetchCompletedRecord(_, { call, put }) {
+      const response = yield call(queryCompletedRideBooking);
       const payload = response;
       if (response) {
         yield put({

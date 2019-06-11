@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor';
-import { Card, Input, Button, Modal, Form, DatePicker, Select, Radio, Alert } from 'antd';
+import { Card, Input, Button, Modal, Form, DatePicker, Select, Radio, Alert, Switch } from 'antd';
 import RideBookingStandardTable from '@/components/RideBookingStandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
@@ -53,6 +53,7 @@ class TableList extends PureComponent {
       return: null,
       targetLocation: null,
     },
+    showCompleted: false,
   };
 
   componentDidMount() {
@@ -198,6 +199,16 @@ class TableList extends PureComponent {
     return false;
   };
 
+  handleDataChange = fetchCompleted => {
+    const { dispatch } = this.props;
+    if (fetchCompleted) {
+      dispatch({ type: 'ridebooking/fetchCompletedRecord' });
+    } else {
+      dispatch({ type: 'ridebooking/fetch' });
+    }
+    this.setState({ showCompleted: fetchCompleted });
+  };
+
   render() {
     let { sortedInfo, filteredInfo } = this.state;
     sortedInfo = sortedInfo || {};
@@ -209,7 +220,7 @@ class TableList extends PureComponent {
       form: { getFieldDecorator },
       allUser,
     } = this.props;
-    const { selectedRows, visible, done } = this.state;
+    const { selectedRows, visible, done, showCompleted } = this.state;
     const filterOptions = data.list.map(d => {
       const date = moment(d.date).format('YYYY-MM-DD');
       return {
@@ -463,7 +474,9 @@ class TableList extends PureComponent {
           </FormItem>
 
           <FormItem {...formItemLayout} label="Guest">
-            {getFieldDecorator('guest')(<Input placeholder="Name 01, Name 02, ...etc" />)}
+            {getFieldDecorator('guest', {
+              initialValue: !_.isEmpty(current.guest) && current.guest.toString(),
+            })(<Input placeholder="Name 01, Name 02, ...etc" />)}
           </FormItem>
 
           {userRole === 'Admin' && (
@@ -556,6 +569,7 @@ class TableList extends PureComponent {
     console.log(`DATA====`, data.list);
     console.log(`DATA====`, renderTotalObj);
     console.log(`totalPassengers=====`, totalPassengers);
+    console.log(`showCompleted=======`, showCompleted);
     return (
       <PageHeaderWrapper title="Booking records">
         <Card bordered={false}>
@@ -581,7 +595,19 @@ class TableList extends PureComponent {
                 showIcon
               />
             </div>
-            <br />
+            <div
+              className="components-table-demo-control-bar"
+              style={{ paddingTop: 10, paddingBottom: 10 }}
+            >
+              <Form layout="inline">
+                <FormItem label="Completed Records">
+                  <Switch
+                    checked={showCompleted}
+                    onChange={value => this.handleDataChange(value)}
+                  />
+                </FormItem>
+              </Form>
+            </div>
             <RideBookingStandardTable
               rowKey="_id"
               bordered
