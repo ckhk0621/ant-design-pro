@@ -1,6 +1,5 @@
 import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
-import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio } from 'antd';
@@ -10,6 +9,7 @@ import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { TextArea } = Input;
 
 @connect(({ memo, loading }) => ({
   submitting: loading.effects['memo/submitRegularForm'],
@@ -17,16 +17,6 @@ const { Option } = Select;
 }))
 @Form.create()
 class CreateMemo extends PureComponent {
-  componentDidMount() {
-    // 异步设置编辑器内容
-    setTimeout(() => {
-      const { form } = this.props;
-      form.setFieldsValue({
-        content: BraftEditor.createEditorState(''),
-      });
-    }, 1500);
-  }
-
   handleSubmit = e => {
     const { dispatch, form, images } = this.props;
     let submitValues;
@@ -44,7 +34,6 @@ class CreateMemo extends PureComponent {
 
       submitValues = {
         ...values,
-        content: values.content.toHTML(),
         images: submitImages,
       };
 
@@ -54,11 +43,6 @@ class CreateMemo extends PureComponent {
           payload: submitValues,
         });
         form.resetFields();
-        setTimeout(() => {
-          form.setFieldsValue({
-            content: BraftEditor.createEditorState(''),
-          });
-        }, 500);
       } else {
         console.log(err);
       }
@@ -75,15 +59,6 @@ class CreateMemo extends PureComponent {
     const {
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
-    const controls = [
-      'bold',
-      'italic',
-      'underline',
-      'text-color',
-      'separator',
-      'link',
-      'separator',
-    ];
 
     const formItemLayout = {
       labelCol: {
@@ -129,34 +104,9 @@ class CreateMemo extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    /* eslint-disable */
-                    validator: (_, value, callback) => {
-                      /* eslint-enable */
-                      if (value.isEmpty()) {
-                        callback(formatMessage({ id: 'form.content.placeholder' }));
-                      } else {
-                        callback();
-                      }
-                    },
                   },
                 ],
-              })(
-                <BraftEditor
-                  className="my-editor"
-                  controls={controls}
-                  placeholder={formatMessage({ id: 'form.content.placeholder' })}
-                  contentStyle={{
-                    height: 210,
-                    borderWidth: 1,
-                    borderColor: '#d9d9d9',
-                    borderStyle: 'solid',
-                    borderRadius: 4,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    borderTop: 'none',
-                  }}
-                />
-              )}
+              })(<TextArea rows={4} maxLength={100} placeholder="" />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
@@ -165,7 +115,7 @@ class CreateMemo extends PureComponent {
               })(<UploadImage direction="memo" />)}
             </FormItem>
 
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.priority.label" />}>
+            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.priority.label" />}>
               <div>
                 {getFieldDecorator('priority', {
                   initialValue: '3',
@@ -177,7 +127,7 @@ class CreateMemo extends PureComponent {
                   </Radio.Group>
                 )}
               </div>
-            </FormItem>
+            </FormItem> */}
 
             <FormItem
               {...formItemLayout}
@@ -213,9 +163,9 @@ class CreateMemo extends PureComponent {
                       <Option value="2">
                         <FormattedMessage id="form.publicUsers.option.cn" />
                       </Option>
-                      <Option value="3">
+                      {/* <Option value="3">
                         <FormattedMessage id="form.publicUsers.option.my" />
-                      </Option>
+                      </Option> */}
                     </Select>
                   )}
                 </FormItem>
