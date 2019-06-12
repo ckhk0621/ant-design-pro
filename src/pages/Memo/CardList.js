@@ -80,7 +80,7 @@ class CardList extends PureComponent {
 
       dispatch({
         type: 'memo/update',
-        payload: { id, ...fieldsValue, content: fieldsValue.content.toHTML() },
+        payload: { id, ...fieldsValue },
       });
     });
   };
