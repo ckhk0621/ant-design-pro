@@ -19,8 +19,10 @@ function initTotalList(columns) {
 
 const FormItem = Form.Item;
 
-@connect(({ user }) => ({
+@connect(({ user, loading }) => ({
   userRole: user.currentUser.role,
+  loading:
+    loading.effects['ridebooking/fetch'] || loading.effects['ridebooking/fetchCompletedRecord'],
 }))
 class StandardTable extends PureComponent {
   constructor(props) {
@@ -109,18 +111,18 @@ class StandardTable extends PureComponent {
   handleDataChange = fetchCompleted => {
     const { dispatch, resetDateFilter, setDateDefault } = this.props;
     if (fetchCompleted) {
-      resetDateFilter();
       dispatch({ type: 'ridebooking/fetchCompletedRecord' });
+      resetDateFilter();
     } else {
-      setDateDefault();
       dispatch({ type: 'ridebooking/fetch' });
+      setDateDefault();
     }
     this.setState({ showCompleted: fetchCompleted });
   };
 
   render() {
     const { selectedRowKeys, needTotalList, selectedRows, showCompleted } = this.state;
-    const { data = {}, rowKey, userRole, ...rest } = this.props;
+    const { data = {}, rowKey, userRole, loading, ...rest } = this.props;
     const { list = [] } = data;
     const dataSource = list.map(d => ({
       ...d,
@@ -178,17 +180,19 @@ class StandardTable extends PureComponent {
             </FormItem>
           </Form>
         </div>
-        <Table
-          rowKey={rowKey || '_id'}
-          expandedRowRender={record => this.renderExtraInfo(record)}
-          rowSelection={userRole === 'Admin' ? rowSelection : {}}
-          dataSource={dataSource}
-          rowClassName={record => this.renderPlusIcon(record)}
-          pagination={false}
-          onChange={this.handleTableChange}
-          {...rest}
-        />
-        {userRole === 'Admin' && (
+        {!loading && (
+          <Table
+            rowKey={rowKey || '_id'}
+            expandedRowRender={record => this.renderExtraInfo(record)}
+            rowSelection={userRole === 'Admin' ? rowSelection : {}}
+            dataSource={dataSource}
+            rowClassName={record => this.renderPlusIcon(record)}
+            pagination={false}
+            onChange={this.handleTableChange}
+            {...rest}
+          />
+        )}
+        {userRole === 'Admin' && !showCompleted && (
           <div style={{ textAlign: 'right', paddingTop: 15 }}>
             <Button
               type="primary"
