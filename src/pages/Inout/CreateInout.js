@@ -4,6 +4,7 @@ import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio, DatePicker } from 'antd';
+import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const FormItem = Form.Item;
@@ -25,7 +26,7 @@ class CreateInout extends PureComponent {
           type: 'inout/submitRegularForm',
           payload: {
             ...values,
-            remark: values.remark.toHTML(),
+            remark: !_.isEmpty(values.remark) ? values.remark.toHTML() : '',
           },
         });
         form.resetFields();
@@ -126,7 +127,7 @@ class CreateInout extends PureComponent {
                 )}
                 {/* <FormItem style={{ marginBottom: 0 }}>
                   {getFieldDecorator('typeOther')(
-                    <Input 
+                    <Input
                       style={{
                         margin: '8px 0',
                         display: getFieldValue('type') === 'Others' ? 'block' : 'none',

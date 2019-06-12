@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable no-underscore-dangle */
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Alert } from 'antd';
+import { Table, Alert, Button, Form, Switch } from 'antd';
 import _ from 'lodash';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -17,6 +17,8 @@ function initTotalList(columns) {
   return totalList;
 }
 
+const FormItem = Form.Item;
+
 @connect(({ user }) => ({
   userRole: user.currentUser.role,
 }))
@@ -27,6 +29,8 @@ class StandardTable extends PureComponent {
     const needTotalList = initTotalList(columns);
     this.state = {
       needTotalList,
+      selectedRows: [],
+      showCompleted: false,
     };
   }
 
@@ -97,10 +101,31 @@ class StandardTable extends PureComponent {
     return 'hide';
   };
 
+  sendEmail = () => {
+    const { selectedRows } = this.state;
+    console.log(`selectedRows===`, selectedRows);
+  };
+
+  handleDataChange = fetchCompleted => {
+    const { dispatch, resetDateFilter, setDateDefault } = this.props;
+    if (fetchCompleted) {
+      resetDateFilter();
+      dispatch({ type: 'ridebooking/fetchCompletedRecord' });
+    } else {
+      setDateDefault();
+      dispatch({ type: 'ridebooking/fetch' });
+    }
+    this.setState({ showCompleted: fetchCompleted });
+  };
+
   render() {
-    const { selectedRowKeys, needTotalList } = this.state;
+    const { selectedRowKeys, needTotalList, selectedRows, showCompleted } = this.state;
     const { data = {}, rowKey, userRole, ...rest } = this.props;
     const { list = [] } = data;
+    const dataSource = list.map(d => ({
+      ...d,
+      key: d._id,
+    }));
 
     // rowSelection objects indicates the need for row selection
     const rowSelection = {
@@ -108,11 +133,13 @@ class StandardTable extends PureComponent {
       onChange: (selectedRowKeys, selectedRows) => {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       },
-      onSelect: (record, selected, selectedRows) => {
+      onSelect: (record, selected, selectedRowsData) => {
+        console.log(`selectedRows=====`, selectedRows);
         console.log(record, selected, selectedRows);
+        this.setState({ selectedRows: selectedRowsData });
       },
-      onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows);
+      onSelectAll: (selected, selectedRowsData, changeRows) => {
+        console.log(selected, selectedRowsData, changeRows);
       },
     };
 
@@ -141,16 +168,39 @@ class StandardTable extends PureComponent {
             showIcon
           />
         </div>
+        <div
+          className="components-table-demo-control-bar"
+          style={{ paddingTop: 10, paddingBottom: 10 }}
+        >
+          <Form layout="inline">
+            <FormItem label="Completed Records">
+              <Switch checked={showCompleted} onChange={value => this.handleDataChange(value)} />
+            </FormItem>
+          </Form>
+        </div>
         <Table
           rowKey={rowKey || '_id'}
           expandedRowRender={record => this.renderExtraInfo(record)}
           rowSelection={userRole === 'Admin' ? rowSelection : {}}
-          dataSource={list}
+          dataSource={dataSource}
           rowClassName={record => this.renderPlusIcon(record)}
           pagination={false}
           onChange={this.handleTableChange}
           {...rest}
         />
+        {userRole === 'Admin' && (
+          <div style={{ textAlign: 'right', paddingTop: 15 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              align="right"
+              onClick={() => this.sendEmail()}
+              disabled={selectedRows.length === 0}
+            >
+              Email
+            </Button>
+          </div>
+        )}
       </div>
     );
   }

@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { formatMessage } from 'umi/locale';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import { Icon } from 'antd';
@@ -11,22 +10,22 @@ import logo from '../assets/logo.svg';
 import getPageTitle from '@/utils/getPageTitle';
 
 const links = [
-  {
-    key: 'help',
-    title: formatMessage({ id: 'layout.user.link.help' }),
-    href: '',
-  },
-  {
-    key: 'terms',
-    title: formatMessage({ id: 'layout.user.link.terms' }),
-    href: '',
-  },
+  // {
+  //   key: 'help',
+  //   title: formatMessage({ id: 'layout.user.link.help' }),
+  //   href: '',
+  // },
+  // {
+  //   key: 'terms',
+  //   title: formatMessage({ id: 'layout.user.link.terms' }),
+  //   href: '',
+  // },
 ];
 
 const copyright = (
   <Fragment>
     Copyright <Icon type="copyright" /> 2019@SoftPub <br />
-    Updated at: 2019/06/04
+    Updated at: 2019/06/12
   </Fragment>
 );
 
