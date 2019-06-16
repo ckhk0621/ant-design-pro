@@ -3,7 +3,18 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import BraftEditor from 'braft-editor';
-import { Card, Input, Button, Modal, Form, DatePicker, Select, Radio, Alert } from 'antd';
+import {
+  Card,
+  Input,
+  Button,
+  Modal,
+  Form,
+  DatePicker,
+  Select,
+  Radio,
+  Alert,
+  TimePicker,
+} from 'antd';
 import RideBookingStandardTable from '@/components/RideBookingStandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
@@ -43,6 +54,7 @@ class TableList extends PureComponent {
     sortedInfo: null,
     current: {
       date: null,
+      time: null,
       status: null,
       guest: null,
       numberOfGuest: null,
@@ -73,9 +85,14 @@ class TableList extends PureComponent {
   };
 
   showEditModal = item => {
+    const currentItem = {
+      ...item,
+      time: moment(item.time).format('HH:mm'),
+    };
+    console.log(`showEditModal===`, item);
     this.setState({
       visible: true,
-      current: item,
+      current: currentItem,
     });
     setTimeout(() => {
       const { form } = this.props;
@@ -120,6 +137,8 @@ class TableList extends PureComponent {
           remark: fieldsValue.remark.toHTML(),
         },
       });
+
+      console.log(`payload====`, moment(fieldsValue.time).format('HH:mm'));
     });
   };
 
@@ -388,6 +407,7 @@ class TableList extends PureComponent {
       const { destination, location, plate, driver } = this.props;
       const { current } = this.state;
       // let time = moment(current.date, 'YYYY-MM-DD')
+      console.log(`current.time=====`, current.time);
       return (
         <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
           <FormItem {...formItemLayout} label="Passengers">
@@ -395,7 +415,7 @@ class TableList extends PureComponent {
               initialValue: current.passenger,
             })(
               <Select mode="multiple" placeholder="Please select">
-                {allUser.map(item => {
+                {(allUser || []).map(item => {
                   return (
                     // eslint-disable-next-line no-underscore-dangle
                     <Option key={item._id} value={item.name}>
@@ -454,6 +474,12 @@ class TableList extends PureComponent {
               rules: [{ required: true, message: 'Please select time' }],
               initialValue: moment(current.date, 'YYYY-MM-DD'),
             })(<DatePicker placeholder="Select" format="YYYY-MM-DD" style={{ width: '100%' }} />)}
+          </FormItem>
+
+          <FormItem {...formItemLayout} label="Time" {...this.formLayout}>
+            {getFieldDecorator('time', {
+              initialValue: current.time ? moment(current.time, 'HH:mm') : moment('00:00', 'HH:mm'),
+            })(<TimePicker format="HH:mm" />)}
           </FormItem>
 
           <FormItem {...formItemLayout} label="Return">

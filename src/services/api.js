@@ -3,6 +3,20 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * SEND EMAIL
+ */
+
+export async function submitEmail(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/email/send`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * Get all user info
  */
 
