@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable no-underscore-dangle */
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Alert, Button, Form, Switch } from 'antd';
+import { Table, Alert, Button, Form, Switch, Input, Modal } from 'antd';
 import _ from 'lodash';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -24,6 +24,7 @@ const FormItem = Form.Item;
   loading:
     loading.effects['ridebooking/fetch'] || loading.effects['ridebooking/fetchCompletedRecord'],
 }))
+@Form.create()
 class StandardTable extends PureComponent {
   constructor(props) {
     super(props);
@@ -33,6 +34,8 @@ class StandardTable extends PureComponent {
       needTotalList,
       selectedRows: [],
       showCompleted: false,
+      demoEmail: '',
+      visible: false,
     };
   }
 
@@ -70,12 +73,14 @@ class StandardTable extends PureComponent {
   };
 
   renderExtraInfo = record => {
-    const { passenger, guest, remark, driver, plate, orderBy } = record;
+    const { passenger, guest, remark, driver, plate, orderBy, time } = record;
     return (
       <div>
         orderBy: {!_.isEmpty(orderBy) ? <b>{orderBy}</b> : '-'}
         <br />
         Passengers: {!_.isEmpty(passenger) ? passenger.map(d => <b key={d}>{d}, </b>) : '-'}
+        <br />
+        Pickup Time: {!_.isEmpty(time) ? <b>{moment(time).format('HH:mm a')}</b> : '-'}
         <br />
         Guest: {!_.isEmpty(guest) ? guest.map(d => <b key={d}>{d}, </b>) : '-'}
         <br />
@@ -104,8 +109,27 @@ class StandardTable extends PureComponent {
   };
 
   sendEmail = () => {
-    const { selectedRows } = this.state;
-    console.log(`selectedRows===`, selectedRows);
+    const { dispatch, form, setDateDefault } = this.props;
+    const { selectedRows, demoEmail } = this.state;
+
+    form.validateFields(err => {
+      if (err) return;
+      dispatch({
+        type: 'ridebooking/submitEmail',
+        payload: {
+          demoEmail,
+          selectedRows,
+        },
+      })
+        .then(this.setState({ demoEmail: '', selectedRowKeys: [], selectedRows: [] }))
+        .then(
+          form.setFieldsValue({
+            demoEmail: '',
+          })
+        )
+        .then(dispatch({ type: 'ridebooking/fetch' }))
+        .then(setDateDefault());
+    });
   };
 
   handleDataChange = fetchCompleted => {
@@ -120,8 +144,38 @@ class StandardTable extends PureComponent {
     this.setState({ showCompleted: fetchCompleted });
   };
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
   render() {
-    const { selectedRowKeys, needTotalList, selectedRows, showCompleted } = this.state;
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+    const {
+      selectedRowKeys,
+      needTotalList,
+      selectedRows,
+      showCompleted,
+      demoEmail,
+      visible,
+    } = this.state;
     const { data = {}, rowKey, userRole, loading, ...rest } = this.props;
     const { list = [] } = data;
     const dataSource = list.map(d => ({
@@ -193,18 +247,51 @@ class StandardTable extends PureComponent {
           />
         )}
         {userRole === 'Admin' && !showCompleted && (
-          <div style={{ textAlign: 'right', paddingTop: 15 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              align="right"
-              onClick={() => this.sendEmail()}
-              disabled={selectedRows.length === 0}
-            >
-              Email
-            </Button>
+          <div style={{ textAlign: 'right' }}>
+            <Form layout="inline">
+              <FormItem>
+                {getFieldDecorator('demoEmail', {
+                  rules: [
+                    {
+                      type: 'email',
+                      message: 'email wrong format',
+                    },
+                  ],
+                  validateTrigger: 'onBlur',
+                })(
+                  <Input
+                    disabled={selectedRows.length === 0}
+                    placeholder="測試接收email的電郵"
+                    style={{ width: 300, marginTop: 15 }}
+                    onChange={v => this.setState({ demoEmail: v.target.value })}
+                  />
+                )}
+              </FormItem>
+            </Form>
+
+            <div style={{ textAlign: 'right', paddingTop: 15 }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                align="right"
+                onClick={() => this.sendEmail()}
+                disabled={selectedRows.length === 0 || _.isEmpty(demoEmail)}
+              >
+                Email
+              </Button>
+            </div>
           </div>
         )}
+        <Modal
+          title="Basic Modal"
+          visible={visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
       </div>
     );
   }

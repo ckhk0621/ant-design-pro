@@ -122,7 +122,7 @@ class CreateRideBooking extends PureComponent {
                 initialValue: [currentUser.name],
               })(
                 <Select mode="multiple" placeholder="Please select">
-                  {allUser.map(item => {
+                  {(allUser || []).map(item => {
                     return (
                       // eslint-disable-next-line no-underscore-dangle
                       <Option key={item._id} value={item.name}>

@@ -9,7 +9,7 @@ const FooterView = () => (
       copyright={
         <Fragment>
           Copyright <Icon type="copyright" /> 2019@Softpub <br />
-          Version: 201906130420
+          Version: 201906180715
         </Fragment>
       }
     />

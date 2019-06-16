@@ -19,6 +19,7 @@ import {
   submitDriverForm,
   queryDriver,
   deleteDriver,
+  submitEmail,
 } from '@/services/api';
 
 export default {
@@ -216,6 +217,13 @@ export default {
       const response = yield call(submitLocationForm, payload, token);
       if (response.status === 'ok') {
         message.success('Location created');
+      }
+    },
+    *submitEmail({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitEmail, payload, token);
+      if (response.status === 'ok') {
+        message.success('Email sent');
       }
     },
   },
