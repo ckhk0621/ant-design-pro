@@ -1,6 +1,11 @@
 // import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { submitRoom2BookingForm, queryRoom2Booking, deleteRoom2Booking } from '@/services/api';
+import {
+  submitRoom2BookingForm,
+  queryRoom2Booking,
+  deleteRoom2Booking,
+  submitRoomBookingEmail,
+} from '@/services/api';
 
 export default {
   namespace: 'room2booking',
@@ -37,6 +42,13 @@ export default {
         yield put({
           type: 'fetch',
         });
+      }
+    },
+    *submitRoomBookingEmail({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitRoomBookingEmail, payload, token);
+      if (response.status === 'ok') {
+        message.success('Email sent');
       }
     },
   },
