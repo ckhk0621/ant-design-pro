@@ -196,6 +196,27 @@ class CardList extends PureComponent {
     this.setState({ disabledTime: diffHours });
   };
 
+  sendEmail = data => {
+    const { form, dispatch } = this.props;
+
+    form.validateFields(['demoEmail'], (errors, values) => {
+      if (errors || _.isEmpty(values.demoEmail)) return;
+      dispatch({
+        type: 'roombooking/submitRoomBookingEmail',
+        payload: {
+          demoEmail: values.demoEmail,
+          data,
+        },
+      })
+        .then(this.setState({ selectedValue: null }))
+        .then(
+          form.setFieldsValue({
+            demoEmail: '',
+          })
+        );
+    });
+  };
+
   render() {
     const { value, selectedValue, disabledTime, dateValue, disabledStartHours } = this.state;
     const {
@@ -215,6 +236,19 @@ class CardList extends PureComponent {
         {selectedValue && (
           <Row gutter={12}>
             <Col className="gutter-row" span={24}>
+              <FormItem>
+                {getFieldDecorator('demoEmail', {
+                  rules: [
+                    {
+                      type: 'email',
+                      message: 'email wrong format',
+                    },
+                  ],
+                  validateTrigger: 'onBlur',
+                })(
+                  <Input placeholder="測試接收email的電郵" style={{ width: 300, marginTop: 15 }} />
+                )}
+              </FormItem>
               <div
                 className="ant-alert-ant-alert ant-alert-info ant-alert-no-icon"
                 style={{ padding: 15 }}
@@ -234,6 +268,16 @@ class CardList extends PureComponent {
                         onClick={() => this.handleDelete(d._id)}
                       >
                         Delete
+                      </Button>
+                    )}
+                    {(currentUser.role === 'Admin' || currentUser.name === d.reservation) && (
+                      <Button
+                        type="dashed"
+                        style={{ padding: 5, marginLeft: 10, fontSize: 11 }}
+                        // eslint-disable-next-line no-underscore-dangle
+                        onClick={() => this.sendEmail(d)}
+                      >
+                        Email
                       </Button>
                     )}
                   </div>

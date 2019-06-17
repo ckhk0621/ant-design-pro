@@ -3,6 +3,20 @@ import SITE_URL from './setting';
 import request from '@/utils/request';
 
 /**
+ * SEND Room booking EMAIL
+ */
+
+export async function submitRoomBookingEmail(params, token) {
+  return request(`${SITE_URL.SERVER_API}/api/email/roombooking`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
+
+/**
  * SEND EMAIL
  */
 
