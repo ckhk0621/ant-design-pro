@@ -4,7 +4,9 @@ import { connect } from 'dva';
 
 @connect(({ loading }) => ({
   submitting:
-    loading.effects['notice/submitRegularForm'] || loading.effects['memo/submitRegularForm'],
+    loading.effects['notice/submitRegularForm'] ||
+    loading.effects['memo/submitRegularForm'] ||
+    loading.effects['gallery/submitPhotoForm'],
 }))
 class UploadImage extends PureComponent {
   state = {
@@ -15,7 +17,9 @@ class UploadImage extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { submitting, direction } = this.props;
+    console.log(`submitting=====`, submitting);
     if (prevProps.submitting !== submitting && submitting) {
+      console.log(`IAM HERE!!!===`, direction);
       /* eslint-disable */
       this.setState({ fileList: [] });
       /* eslint-enable */
@@ -70,9 +74,8 @@ class UploadImage extends PureComponent {
   };
 
   beforeUpload = file => {
-    console.log(`file====`, file);
     const fileType = ['image/jpeg', 'image/jpg', 'image/png'];
-    const accessFormat = file.type.indexOf(fileType) !== -1;
+    const accessFormat = fileType.indexOf(file.type) !== -1;
     if (!accessFormat) {
       message.error('You can only upload JPG/PNG file!');
     }
@@ -93,6 +96,8 @@ class UploadImage extends PureComponent {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
+
+    console.log(`fileList====`, fileList);
 
     return (
       <div className="clearfix">

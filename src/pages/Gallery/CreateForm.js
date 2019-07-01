@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi/locale';
-import { Form, Input, Button, Card } from 'antd';
+import { Form, Input, Button, Card, DatePicker } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
 
+const { MonthPicker } = DatePicker;
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
 @connect(({ user, loading }) => ({
   submitting: loading.effects['gallery/submitGalleryForm'],
@@ -66,6 +69,18 @@ class CreateForm extends PureComponent {
               {getFieldDecorator('title', {
                 rules: [{ required: true, message: 'Please input title' }],
               })(<Input placeholder="" />)}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label="Year">
+              {getFieldDecorator('year', {
+                initialValue: moment(new Date(), 'YYYY/MM'),
+              })(<MonthPicker format="YYYY/MM" />)}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label="Description">
+              {getFieldDecorator('description')(
+                <TextArea rows={4} maxLength={100} placeholder="" />
+              )}
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

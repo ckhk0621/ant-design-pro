@@ -8,7 +8,7 @@ import SITE_URL from '../../services/setting';
 // import styles from './CardList.less';
 
 @connect(({ gallery, loading }) => ({
-  title: gallery.single.title || null,
+  single: gallery.single || null,
   list: gallery.single.images || [],
   loading: loading.models.gallery,
 }))
@@ -40,10 +40,10 @@ class CardList extends PureComponent {
 
   render() {
     // const { Meta } = Card;
-    const { list, title } = this.props;
+    const { list, single } = this.props;
     const { image, visible } = this.state;
     return (
-      <PageHeaderWrapper title={title}>
+      <PageHeaderWrapper title={single.title}>
         <div style={{ background: '#FFFFFF', padding: '30px' }}>
           <Row gutter={16} type="flex">
             {list.map(d => (

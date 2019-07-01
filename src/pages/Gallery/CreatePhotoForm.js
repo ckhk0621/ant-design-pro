@@ -81,7 +81,7 @@ class CreatePhotoForm extends PureComponent {
     const { list } = this.props;
 
     return (
-      <PageHeaderWrapper title="Gallery">
+      <PageHeaderWrapper title="Add Photo">
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             {/* <FormItem {...formItemLayout} label="Title">

@@ -14,11 +14,14 @@ export default {
 
   state: {
     list: [],
+    single: {
+      title: '',
+    },
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryGallery);
+    *fetch(time, { call, put }) {
+      const response = yield call(queryGallery, time);
       const payload = response;
       if (response) {
         yield put({
