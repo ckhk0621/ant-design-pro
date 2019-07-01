@@ -115,8 +115,8 @@ export async function deleteRoomBooking(params, token) {
  * Gallery
  */
 
-export async function queryGallery() {
-  return request(`${SITE_URL.SERVER_API}/api/gallery`, {
+export async function queryGallery(params) {
+  return request(`${SITE_URL.SERVER_API}/api/gallery?time=${params.time}`, {
     method: 'GET',
   });
 }
