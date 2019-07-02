@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Select, Button, Card, Radio, DatePicker } from 'antd';
 import _ from 'lodash';
+import moment from 'moment';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const FormItem = Form.Item;
@@ -29,6 +30,20 @@ class CreateInout extends PureComponent {
             remark: !_.isEmpty(values.remark) ? values.remark.toHTML() : '',
           },
         });
+
+        const demoEmail = form.getFieldValue('demoEmail');
+
+        if (!_.isEmpty(demoEmail)) {
+          dispatch({
+            type: 'inout/submitInoutEmail',
+            payload: {
+              demoEmail: values.demoEmail,
+              values,
+              remark: !_.isEmpty(values.remark) ? values.remark.toHTML() : '',
+            },
+          });
+        }
+
         form.resetFields();
         setTimeout(() => {
           form.setFieldsValue({
@@ -44,6 +59,15 @@ class CreateInout extends PureComponent {
   handleReset = () => {
     const { form } = this.props;
     form.resetFields();
+  };
+
+  disabledDate = current => {
+    const { currentUser } = this.props;
+    if (currentUser.role === 'Admin') {
+      return false;
+    }
+    // Can not select days before today
+    return current < moment().startOf('day');
   };
 
   render() {
@@ -107,11 +131,24 @@ class CreateInout extends PureComponent {
               })(
                 <RangePicker
                   style={{ width: '100%' }}
+                  disabledDate={this.disabledDate}
                   showTime={{ format: 'HH:mm' }}
                   format="YYYY-MM-DD HH:mm"
                   placeholder={['Start Time', 'End Time']}
                 />
               )}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label="Email">
+              {getFieldDecorator('demoEmail', {
+                rules: [
+                  {
+                    type: 'email',
+                    message: 'email wrong format',
+                  },
+                ],
+                validateTrigger: 'onBlur',
+              })(<Input placeholder="測試接收email的電郵" style={{ width: 300 }} />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label="Type">
@@ -122,6 +159,7 @@ class CreateInout extends PureComponent {
                   <Radio.Group>
                     <Radio value="Annual Leave">Annual Leave</Radio>
                     <Radio value="Sick Leave">Sick Leave</Radio>
+                    <Radio value="Travel">Travel</Radio>
                     <Radio value="Others">Others</Radio>
                   </Radio.Group>
                 )}
