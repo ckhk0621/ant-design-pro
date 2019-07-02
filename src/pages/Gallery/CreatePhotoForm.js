@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi/locale';
-import { Form, Select, Button, Card } from 'antd';
+import { Form, Select, Button, Card, DatePicker } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UploadImage from '@/components/UploadImage';
 import _ from 'lodash';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { MonthPicker } = DatePicker;
 
 @connect(({ user, gallery, loading }) => ({
   list: gallery.list,
@@ -17,11 +19,20 @@ const { Option } = Select;
 }))
 @Form.create()
 class CreatePhotoForm extends PureComponent {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'gallery/fetch',
+      time: moment(new Date())
+        .utcOffset(8)
+        .format('YYYY-MM'),
+    });
+  }
+
   handleSubmit = e => {
     const { dispatch, form, images } = this.props;
     let submitValues;
     let submitImages;
-    e.preventDefault();
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!_.isEmpty(images)) {
@@ -39,6 +50,7 @@ class CreatePhotoForm extends PureComponent {
       };
 
       if (!err) {
+        console.log(`values=====`, submitValues);
         dispatch({
           type: 'gallery/submitPhotoForm',
           payload: submitValues,
@@ -51,6 +63,16 @@ class CreatePhotoForm extends PureComponent {
   handleReset = () => {
     const { form } = this.props;
     form.resetFields();
+  };
+
+  handleDateChange = value => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'gallery/fetch',
+      time: moment(value)
+        .utcOffset(8)
+        .format('YYYY-MM'),
+    });
   };
 
   render() {
@@ -91,6 +113,16 @@ class CreatePhotoForm extends PureComponent {
                 ],
               })(<Input placeholder="" />)}
             </FormItem> */}
+
+            <FormItem {...formItemLayout} label="Gallery Filter">
+              <MonthPicker
+                placeholder="Select"
+                mode="year"
+                format="YYYY-MM"
+                style={{ width: '100%' }}
+                onChange={value => this.handleDateChange(value)}
+              />
+            </FormItem>
 
             <FormItem {...formItemLayout} label="Gallery">
               {getFieldDecorator('gallery', {

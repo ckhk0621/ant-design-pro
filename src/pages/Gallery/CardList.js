@@ -47,7 +47,7 @@ class CardList extends PureComponent {
         <div style={{ background: '#FFFFFF', padding: '30px' }}>
           <Row gutter={16} type="flex">
             {list.map(d => (
-              <Col xs={24} sm={4} md={6} style={{ marginBottom: 15, height: '100%' }}>
+              <Col key={d} xs={24} sm={4} md={6} style={{ marginBottom: 15, height: '100%' }}>
                 <Card
                   bodyStyle={{ padding: 0 }}
                   hoverable
