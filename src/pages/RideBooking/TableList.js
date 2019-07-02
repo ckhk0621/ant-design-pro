@@ -249,7 +249,7 @@ class TableList extends PureComponent {
       ridebooking: { data },
       loading,
       userRole,
-      form: { getFieldDecorator },
+      form: { getFieldDecorator, getFieldValue },
       allUser,
     } = this.props;
     const { selectedRows, visible, done } = this.state;
@@ -500,19 +500,39 @@ class TableList extends PureComponent {
               initialValue: current.numberOfGuest,
             })(
               <Select placeholder="Please select">
-                <Option key={0}>0</Option>
-                <Option key={1}>1</Option>
-                <Option key={2}>2</Option>
-                <Option key={3}>3</Option>
-                <Option key={4}>4</Option>
-                <Option key={5}>5</Option>
-                <Option key={6}>6</Option>
-                <Option key={7}>7</Option>
+                <Option value={0} key={0}>
+                  0
+                </Option>
+                <Option value={1} key={1}>
+                  1
+                </Option>
+                <Option value={2} key={2}>
+                  2
+                </Option>
+                <Option value={3} key={3}>
+                  3
+                </Option>
+                <Option value={4} key={4}>
+                  4
+                </Option>
+                <Option value={5} key={5}>
+                  5
+                </Option>
+                <Option value={6} key={6}>
+                  6
+                </Option>
+                <Option value={7} key={7}>
+                  7
+                </Option>
               </Select>
             )}
           </FormItem>
 
-          <FormItem {...formItemLayout} label="Guest">
+          <FormItem
+            {...formItemLayout}
+            label="Guest"
+            style={{ display: getFieldValue('numberOfGuest') > 0 ? 'block' : 'none' }}
+          >
             {getFieldDecorator('guest', {
               initialValue: !_.isEmpty(current.guest) && current.guest.toString(),
             })(<Input placeholder="Name 01, Name 02, ...etc" />)}
