@@ -8,6 +8,7 @@ import {
   updateMemo,
   querySingleGallery,
 } from '@/services/api';
+import moment from 'moment';
 
 export default {
   namespace: 'gallery',
@@ -46,6 +47,9 @@ export default {
       if (response) {
         yield put({
           type: 'fetch',
+          time: moment(new Date())
+            .utcOffset(8)
+            .format('YYYY-MM'),
         });
       }
     },
