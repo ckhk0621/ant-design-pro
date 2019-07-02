@@ -98,14 +98,14 @@ class StandardTable extends PureComponent {
   };
 
   renderPlusIcon = record => {
-    const { passenger, guest, numberOfGuest, remark, status, date } = record;
+    const { passenger, guest, numberOfGuest, remark, status, date, emailSent } = record;
     if (status === 'Confirm' && !moment(date).isAfter(moment())) {
-      return 'hideSelect';
+      return emailSent === 'true' ? 'emailSent hideSelect' : 'hideSelect';
     }
     if (_.size(passenger) > 1 || _.size(guest) > 1 || numberOfGuest !== 0 || remark !== '<p></p>') {
-      return null;
+      return emailSent === 'true' ? 'emailSent' : null;
     }
-    return 'hide';
+    return emailSent === 'true' ? 'emailSent hide' : null;
   };
 
   sendEmail = () => {

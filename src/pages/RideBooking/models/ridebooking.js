@@ -219,11 +219,15 @@ export default {
         message.success('Location created');
       }
     },
-    *submitEmail({ payload }, { call, select }) {
+    *submitEmail({ payload }, { call, select, put }) {
       const token = yield select(state => state.login.token);
       const response = yield call(submitEmail, payload, token);
-      if (response.status === 'ok') {
+      console.log(`response=====`, response);
+      if (response.status) {
         message.success('Email sent');
+        yield put({
+          type: 'fetch',
+        });
       }
     },
   },

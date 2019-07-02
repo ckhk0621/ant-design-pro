@@ -238,7 +238,11 @@ class CreateRideBooking extends PureComponent {
               )}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="Guest">
+            <FormItem
+              {...formItemLayout}
+              label="Guest"
+              style={{ display: getFieldValue('numberOfGuest') > 0 ? 'block' : 'none' }}
+            >
               {getFieldDecorator('guest')(<Input placeholder="Name 01, Name 02, ...etc" />)}
             </FormItem>
 

@@ -228,6 +228,7 @@ class TableList extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
+              pagination={false}
             />
           </div>
         </Card>
