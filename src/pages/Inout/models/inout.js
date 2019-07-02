@@ -1,6 +1,6 @@
 // import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { submitInoutForm, queryInout, deleteInout } from '@/services/api';
+import { submitInoutForm, queryInout, deleteInout, submitInoutEmail } from '@/services/api';
 
 export default {
   namespace: 'inout',
@@ -36,6 +36,13 @@ export default {
       const response = yield call(submitInoutForm, payload, token);
       if (response.status === 'ok') {
         message.success('In out record created');
+      }
+    },
+    *submitInoutEmail({ payload }, { call, select }) {
+      const token = yield select(state => state.login.token);
+      const response = yield call(submitInoutEmail, payload, token);
+      if (response.status === 'ok') {
+        message.success('Email sent');
       }
     },
   },

@@ -116,7 +116,6 @@ export async function deleteRoomBooking(params, token) {
  */
 
 export async function queryGallery(params) {
-  console.log(`CALLED`);
   return request(`${SITE_URL.SERVER_API}/api/gallery?time=${params.time}`, {
     method: 'GET',
   });
@@ -335,6 +334,17 @@ export async function deleteRideBooking(params, token) {
 /**
  * INOUT
  */
+
+export async function submitInoutEmail(params, token) {
+  console.log(`API INOUT`, params);
+  return request(`${SITE_URL.SERVER_API}/api/email/inout`, {
+    method: 'POST',
+    body: params,
+    headers: {
+      Authorization: token,
+    },
+  });
+}
 
 export async function submitInoutForm(params, token) {
   return request(`${SITE_URL.SERVER_API}/api/inout`, {
