@@ -25,16 +25,10 @@ export default [
       // dashboard
       { path: '/', redirect: '/dashboard/Workplace' },
       {
-        path: '/dashboard',
+        path: '/dashboard/workplace',
         name: 'dashboard',
         icon: 'dashboard',
-        routes: [
-          {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
-          },
-        ],
+        component: './Dashboard/Workplace',
       },
       {
         path: '/notices',
