@@ -97,7 +97,7 @@ class TableList extends PureComponent {
     setTimeout(() => {
       const { form } = this.props;
       form.setFieldsValue({
-        remark: BraftEditor.createEditorState(item.content),
+        remark: BraftEditor.createEditorState(item.remark),
       });
     }, 300);
   };
@@ -408,6 +408,7 @@ class TableList extends PureComponent {
       const { current } = this.state;
       // let time = moment(current.date, 'YYYY-MM-DD')
       console.log(`current.time=====`, current.time);
+      console.log(`current`, current.remark);
       return (
         <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
           <FormItem {...formItemLayout} label="Passengers">
@@ -566,6 +567,11 @@ class TableList extends PureComponent {
             <FormItem {...formItemLayout} label="Driver">
               {getFieldDecorator('driver', {
                 initialValue: current.driver,
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],
               })(
                 <Select placeholder="Please select">
                   {driver.list.map(d => (
@@ -583,6 +589,11 @@ class TableList extends PureComponent {
             <FormItem {...formItemLayout} label="Car Plate">
               {getFieldDecorator('plate', {
                 initialValue: current.plate,
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],
               })(
                 <Select placeholder="Please select">
                   {plate.list.map(d => (
@@ -598,6 +609,7 @@ class TableList extends PureComponent {
           <FormItem {...formItemLayout} label="Remark">
             {getFieldDecorator('remark', {
               validateTrigger: 'onBlur',
+              initialValue: current.remark,
             })(
               <BraftEditor
                 className="my-editor"

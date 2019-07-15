@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio, DatePicker } from 'antd';
+import { Form, Input, Select, Button, Card, Radio, DatePicker, Checkbox, Row, Col } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -70,6 +70,10 @@ class CreateInout extends PureComponent {
     return current < moment().startOf('day');
   };
 
+  onCheckboxChange = (checkedValues) => {
+    console.log('checked = ', checkedValues)
+  }
+
   render() {
     const { submitting, currentUser } = this.props;
     const {
@@ -103,6 +107,10 @@ class CreateInout extends PureComponent {
         sm: { span: 10, offset: 7 },
       },
     };
+
+    const getTypeValue = getFieldValue('type') || []
+
+    console.log(`getTypeValue===`,getTypeValue);
 
     return (
       <PageHeaderWrapper title={<FormattedMessage id="app.notice.create.inout.form.title" />}>
@@ -151,7 +159,7 @@ class CreateInout extends PureComponent {
               })(<Input placeholder="測試接收email的電郵" style={{ width: 300 }} />)}
             </FormItem>
 
-            <FormItem {...formItemLayout} label="Type">
+            {/* <FormItem {...formItemLayout} label="Type">
               <div>
                 {getFieldDecorator('type', {
                   initialValue: 'Annual Leave',
@@ -163,24 +171,41 @@ class CreateInout extends PureComponent {
                     <Radio value="Others">Others</Radio>
                   </Radio.Group>
                 )}
-                {/* <FormItem style={{ marginBottom: 0 }}>
-                  {getFieldDecorator('typeOther')(
-                    <Input
-                      style={{
-                        margin: '8px 0',
-                        display: getFieldValue('type') === 'Others' ? 'block' : 'none',
-                      }}
-                      placeholder="Other type"
-                    />
-                  )}
-                </FormItem> */}
+              </div>
+            </FormItem> */}
+
+            <FormItem {...formItemLayout} label="Type">
+              <div>
+                {getFieldDecorator('type',{
+                  rules: [
+                    {
+                      required: true,
+                    },
+                  ],
+                })(
+                  <Checkbox.Group style={{ width: '100%' }} onChange={this.onCheckboxChange}>
+                    <Row>
+                      <Col span={8}>
+                        <Checkbox value="Annual Leave">Annual Leave</Checkbox>
+                      </Col>
+                      <Col span={8}>
+                        <Checkbox value="Sick Leave">Sick Leave</Checkbox>
+                      </Col>
+                      <Col span={8}>
+                        <Checkbox value="Travel">Travel</Checkbox>
+                      </Col>
+                      <Col span={8}>
+                        <Checkbox value="Others">Others</Checkbox>
+                      </Col>
+                    </Row>
+                  </Checkbox.Group>
+                )}
               </div>
             </FormItem>
-
             <FormItem
               {...formItemLayout}
               label="Remark"
-              style={{ display: getFieldValue('type') === 'Others' ? 'block' : 'none' }}
+              style={{ display: getTypeValue.indexOf('Others') === -1 ? 'none' : 'block' }}
             >
               {getFieldDecorator('remark')(
                 <BraftEditor

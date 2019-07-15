@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { Card, Form, Button, Modal } from 'antd';
+import { UI_SETTING } from '../../services/setting';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -46,6 +47,7 @@ class TableList extends PureComponent {
     {
       title: 'Type',
       dataIndex: 'type',
+      render: val => val.map(d=> <div><b>{d}</b></div>),
     },
     {
       title: 'Remark',
@@ -118,12 +120,7 @@ class TableList extends PureComponent {
     };
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    // dispatch({
-    //   type: 'rule/fetch',
-    //   payload: params,
-    // });
+    };
   };
 
   previewItem = id => {
@@ -209,7 +206,10 @@ class TableList extends PureComponent {
       loading,
     } = this.props;
     const { selectedRows } = this.state;
-    console.log(`data===`, data);
+    const paginationConfig = {
+      pageSize: UI_SETTING.PAGE_SIZE,
+      onChange: (num, pageSize)=> console.log(num, pageSize)
+    }
 
     return (
       <PageHeaderWrapper title="In Out Records">
@@ -228,7 +228,7 @@ class TableList extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
-              pagination={false}
+              pagination={paginationConfig}
             />
           </div>
         </Card>

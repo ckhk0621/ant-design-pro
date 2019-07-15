@@ -74,7 +74,7 @@ class BasicList extends PureComponent {
   };
 
   handleDone = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
+    // setTimeout(() => this.addBtn.blur(), 0);
     this.setState({
       done: false,
       visible: false,
@@ -82,7 +82,7 @@ class BasicList extends PureComponent {
   };
 
   handleCancel = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
+    // setTimeout(() => this.addBtn.blur(), 0);
     this.setState({
       visible: false,
     });
@@ -96,7 +96,7 @@ class BasicList extends PureComponent {
     const id = current ? current._id : '';
     /* eslint-enable */
 
-    setTimeout(() => this.addBtn.blur(), 0);
+    // setTimeout(() => this.addBtn.blur(), 0);
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       this.setState({
@@ -143,16 +143,6 @@ class BasicList extends PureComponent {
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
       : { okText: 'Update', onOk: this.handleSubmit, onCancel: this.handleCancel };
-
-    // const extraContent = (
-    //   <div className={styles.extraContent}>
-    //     <Search
-    //       className={styles.extraContentSearch}
-    //       placeholder="keywords"
-    //       onSearch={() => ({})}
-    //     />
-    //   </div>
-    // );
 
     const ListContent = ({ data: { author } }) => (
       <div className={styles.listContent}>
@@ -202,7 +192,6 @@ class BasicList extends PureComponent {
         'separator',
         'link',
         'separator',
-        // 'media',
       ];
 
       return (
