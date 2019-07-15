@@ -11,10 +11,10 @@ import {
   Badge,
   Row,
   Col,
-  Radio,
   Button,
   DatePicker,
   TimePicker,
+  Checkbox,
 } from 'antd';
 import moment from 'moment';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -216,6 +216,10 @@ class Card2List extends PureComponent {
     });
   };
 
+  onCheckboxChange = (checkedValues) => {
+    console.log('checked = ', checkedValues)
+  }
+
   render() {
     const { value, selectedValue, disabledTime, dateValue, disabledStartHours } = this.state;
     const {
@@ -229,6 +233,10 @@ class Card2List extends PureComponent {
     const rowTwoStyle = {
       marginTop: 12,
     };
+
+    const getBookingTypeValue = getFieldValue('bookingType') || []
+
+    console.log(`getTypeValue===`,getBookingTypeValue);
 
     return (
       <PageHeaderWrapper title="Room Two">
@@ -348,14 +356,20 @@ class Card2List extends PureComponent {
                 <br />
 
                 <FormItem label="Type" style={rowTwoStyle}>
-                  {getFieldDecorator('bookingType', {
-                    initialValue: 'Video Conference',
-                  })(
-                    <Radio.Group>
-                      <Radio value="Video Conference">Video Conference</Radio>
-                      <Radio value="Meeting">Meeting</Radio>
-                      <Radio value="Others">Others</Radio>
-                    </Radio.Group>
+                  {getFieldDecorator('bookingType')(
+                    <Checkbox.Group onChange={this.onCheckboxChange}>
+                      <Row style={{ width: '100%' }}>
+                        <Col span={8}>
+                          <Checkbox value="Video Conference">Video Conference</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="Meeting">Meeting</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="Others">Others</Checkbox>
+                        </Col>
+                      </Row>
+                    </Checkbox.Group>
                   )}
                 </FormItem>
 
@@ -365,6 +379,7 @@ class Card2List extends PureComponent {
                   label="Remark"
                   style={{
                     marginTop: 12,
+                    display: getBookingTypeValue.indexOf('Others') === -1 ? 'none' : 'block'
                   }}
                 >
                   {getFieldDecorator('remark')(<TextArea />)}
