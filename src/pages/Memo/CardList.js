@@ -96,7 +96,7 @@ class CardList extends PureComponent {
   render() {
     const { list, loading, role } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
     } = this.props;
 
     const { visible, done, current = {} } = this.state;
@@ -176,7 +176,7 @@ class CardList extends PureComponent {
             })(<UploadImage direction="memo" />)}
           </FormItem> */}
 
-          <FormItem
+          {/* <FormItem
             {...this.formLayout}
             label={<FormattedMessage id="form.public.label" />}
             help={<FormattedMessage id="form.public.label2.help" />}
@@ -210,15 +210,11 @@ class CardList extends PureComponent {
                     <Option value="2">
                       <FormattedMessage id="form.publicUsers.option.cn" />
                     </Option>
-                    {/* <Option value="3">
-                      <FormattedMessage id="form.publicUsers.option.my" />
-                    </Option>
-                    */}
                   </Select>
                 )}
               </FormItem>
             </div>
-          </FormItem>
+          </FormItem> */}
           {/*
           <FormItem {...this.formLayout} label={<FormattedMessage id="form.priority.label" />}>
             <div>

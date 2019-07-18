@@ -2,13 +2,12 @@ import 'braft-editor/dist/index.css';
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 const { TextArea } = Input;
 
 @connect(({ memo, loading }) => ({
@@ -57,7 +56,7 @@ class CreateMemo extends PureComponent {
   render() {
     const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
     } = this.props;
 
     const formItemLayout = {
@@ -129,7 +128,7 @@ class CreateMemo extends PureComponent {
               </div>
             </FormItem> */}
 
-            <FormItem
+            {/* <FormItem
               {...formItemLayout}
               label={<FormattedMessage id="form.public.label" />}
               help={<FormattedMessage id="form.public.label2.help" />}
@@ -163,14 +162,11 @@ class CreateMemo extends PureComponent {
                       <Option value="2">
                         <FormattedMessage id="form.publicUsers.option.cn" />
                       </Option>
-                      {/* <Option value="3">
-                        <FormattedMessage id="form.publicUsers.option.my" />
-                      </Option> */}
                     </Select>
                   )}
                 </FormItem>
               </div>
-            </FormItem>
+            </FormItem> */}
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button onClick={() => this.handleReset()}>
                 <FormattedMessage id="form.reset" />
