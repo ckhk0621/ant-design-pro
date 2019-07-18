@@ -18,8 +18,6 @@ import {
   Modal,
   Form,
   DatePicker,
-  Select,
-  Radio,
 } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -27,7 +25,6 @@ import Result from '@/components/Result';
 import styles from './BasicList.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
 @connect(({ notice, user, loading }) => ({
   list: notice.list,
@@ -121,7 +118,7 @@ class BasicList extends PureComponent {
   render() {
     const { list, loading, role } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
     } = this.props;
     const { visible, done, current = {} } = this.state;
 
@@ -192,6 +189,7 @@ class BasicList extends PureComponent {
         'separator',
         'link',
         'separator',
+        'media',
       ];
 
       return (
@@ -253,49 +251,6 @@ class BasicList extends PureComponent {
                 }}
               />
             )}
-          </FormItem>
-
-          <FormItem
-            {...this.formLayout}
-            label={<FormattedMessage id="form.public.label" />}
-            help={<FormattedMessage id="form.public.label2.help" />}
-          >
-            <div>
-              {getFieldDecorator('public', {
-                initialValue: current.public,
-              })(
-                <Radio.Group>
-                  <Radio value="1">
-                    <FormattedMessage id="form.public.radio.public" />
-                  </Radio>
-                  <Radio value="2">
-                    <FormattedMessage id="form.public.radio.partially-public" />
-                  </Radio>
-                </Radio.Group>
-              )}
-              <FormItem style={{ marginBottom: 0 }}>
-                {getFieldDecorator('publicUsers')(
-                  <Select
-                    mode="multiple"
-                    placeholder={formatMessage({ id: 'form.publicUsers.placeholder' })}
-                    style={{
-                      margin: '8px 0',
-                      display: getFieldValue('public') === '2' ? 'block' : 'none',
-                    }}
-                  >
-                    <Option value="1">
-                      <FormattedMessage id="form.publicUsers.option.hk" />
-                    </Option>
-                    <Option value="2">
-                      <FormattedMessage id="form.publicUsers.option.cn" />
-                    </Option>
-                    <Option value="3">
-                      <FormattedMessage id="form.publicUsers.option.my" />
-                    </Option>
-                  </Select>
-                )}
-              </FormItem>
-            </div>
           </FormItem>
         </Form>
       );

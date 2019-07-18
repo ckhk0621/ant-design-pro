@@ -89,7 +89,7 @@ class UploadImage extends PureComponent {
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
     const { direction } = this.props;
-    const lengthLimit = direction === 'memo' ? 1 : 3;
+    const lengthLimit = direction === 'memo' || direction === 'notice' ? 1 : 3;
     const uploadButton = (
       <div>
         <Icon type="plus" />

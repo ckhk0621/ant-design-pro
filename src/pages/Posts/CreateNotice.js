@@ -3,13 +3,12 @@ import React, { PureComponent } from 'react';
 import BraftEditor from 'braft-editor';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Select, Button, Card, Radio } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
 import _ from 'lodash';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UploadImage from '@/components/UploadImage';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
 @connect(({ notice, loading }) => ({
   submitting: loading.effects['notice/submitRegularForm'],
@@ -79,7 +78,7 @@ class CreateNotice extends PureComponent {
   render() {
     const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
     } = this.props;
     const controls = [
       'bold',
@@ -89,6 +88,7 @@ class CreateNotice extends PureComponent {
       'separator',
       'link',
       'separator',
+      'media',
     ];
 
     const formItemLayout = {
@@ -185,7 +185,7 @@ class CreateNotice extends PureComponent {
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.images.label" />}>
               {getFieldDecorator('images', {
                 rules: [],
-              })(<UploadImage />)}
+              })(<UploadImage direction="notice" />)}
             </FormItem>
 
             {/* <FormItem {...formItemLayout} label="files">
@@ -200,7 +200,7 @@ class CreateNotice extends PureComponent {
               )}
             </FormItem> */}
 
-            <FormItem
+            {/* <FormItem
               {...formItemLayout}
               label={<FormattedMessage id="form.public.label" />}
               help={<FormattedMessage id="form.public.label2.help" />}
@@ -234,14 +234,11 @@ class CreateNotice extends PureComponent {
                       <Option value="2">
                         <FormattedMessage id="form.publicUsers.option.cn" />
                       </Option>
-                      {/* <Option value="3">
-                        <FormattedMessage id="form.publicUsers.option.my" />
-                      </Option> */}
                     </Select>
                   )}
                 </FormItem>
               </div>
-            </FormItem>
+            </FormItem> */}
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button onClick={() => this.handleReset()}>
                 <FormattedMessage id="form.reset" />
